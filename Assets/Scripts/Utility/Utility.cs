@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Random = System.Random;
 
 public static class Utility {
-    
     private static readonly Random rng = new();  
 
     public static void Shuffle<T>(this IList<T> list) {  
