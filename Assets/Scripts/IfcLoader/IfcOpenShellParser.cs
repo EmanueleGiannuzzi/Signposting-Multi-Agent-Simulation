@@ -10,12 +10,11 @@ using System.Linq;
 using System.Globalization;
 
 public class IfcOpenShellParser : MonoBehaviour {
-    //private string fileName;
-    [Header("Walkable Areas")]
+    [Header("Special Areas")]
     [SerializeField] private string[] walkableAreas = { "IfcSlab", "IfcStair", "IfcStairFlight", "IfcWallStandardCase", "IfcSite" };
     [SerializeField] private string[] navMeshIgnoredAreas = { "IfcDoor" };
 
-    [Header("IFCSignboard Standard")]
+    [Header("IFC Signboard Definition")]
     [SerializeField] private string ifcSignTag = "IfcSign";
     [SerializeField] private string ifcSignboardPropertiesName = "Pset_SignboardCommon";
     [SerializeField] private string ifcSignViewingDistanceProperty = "ViewingDistance";
@@ -49,7 +48,7 @@ public class IfcOpenShellParser : MonoBehaviour {
         Dependencies.IfcConverter.StartConvertAndWait(ifcPath, objPath, xmlPath);
 
         if(File.Exists(objPath) && File.Exists(mtlPath) && File.Exists(xmlPath)) {
-            LoadOBJ(objPath, mtlPath);
+            loadOBJ(objPath, mtlPath);
             LoadXML(xmlPath);
         }
         else {
@@ -71,14 +70,14 @@ public class IfcOpenShellParser : MonoBehaviour {
                 string xmlPath = EditorUtility.OpenFilePanel("Import XML", "", "xml");
 
                 if(!string.IsNullOrEmpty(xmlPath)) {
-                    LoadOBJ(objPath, mtlPath);
+                    loadOBJ(objPath, mtlPath);
                     LoadXML(xmlPath);
                 }
             }
         }
     }
 
-    private void LoadOBJ(string objPath, string mtlPath) {
+    private void loadOBJ(string objPath, string mtlPath) {
         loadedOBJ = objLoader.Load(objPath, mtlPath);
 
         if(loadedOBJ != null) {
@@ -99,7 +98,7 @@ public class IfcOpenShellParser : MonoBehaviour {
         };
 
         foreach(XmlNode node in loadedXML.SelectNodes(basePath + "/IfcProject")) {
-            AddElements(node, root);
+            addElements(node, root);
         }
 
         DestroyImmediate(loadedOBJ);
@@ -107,7 +106,7 @@ public class IfcOpenShellParser : MonoBehaviour {
         Debug.Log("Loaded XML");
     }
 
-    private void AddElements(XmlNode node, GameObject parent) {
+    private void addElements(XmlNode node, GameObject parent) {
         if(node.Attributes.GetNamedItem("id") != null) {
             string id = node.Attributes.GetNamedItem("id").Value;
             string name = "";
@@ -130,41 +129,41 @@ public class IfcOpenShellParser : MonoBehaviour {
                     goElement.transform.SetParent(parent.transform);
                 }
 
-                AddProperties(node, goElement);
-                HandleSpecialObjects(ref goElement, node);
+                addProperties(node, goElement);
+                handleSpecialObjects(ref goElement, node);
 
                 foreach(XmlNode child in node.ChildNodes) {
-                    AddElements(child, goElement);
+                    addElements(child, goElement);
                 }
             }
         }
     }
 
-    private bool IsIfcWalkableArea(string ifcClass) {
+    private bool isIfcWalkableArea(string ifcClass) {
         return this.walkableAreas.Contains(ifcClass);
     }
 
-    private bool IsIfcIgnoreFromBuildArea(string ifcClass) {
+    private bool isIfcIgnoreFromBuildArea(string ifcClass) {
         return this.navMeshIgnoredAreas.Contains(ifcClass);
     }
 
-    private bool IsIfcSign(string ifcClass) {
+    private bool isIfcSign(string ifcClass) {
         return ifcClass.Equals(ifcSignTag);
     }
 
-    private void HandleSpecialObjects(ref GameObject goElement, XmlNode node) {
+    private void handleSpecialObjects(ref GameObject goElement, XmlNode node) {
         MeshFilter goMeshFilter = goElement.GetComponent<MeshFilter>();
         if(goMeshFilter != null && goMeshFilter.sharedMesh != null) {
             goElement.AddComponent<MeshCollider>();
-            if(IsIfcIgnoreFromBuildArea(node.Name)) {
+            if(isIfcIgnoreFromBuildArea(node.Name)) {
                 NavMeshModifier navmeshModifier = goElement.AddComponent<NavMeshModifier>();
                 navmeshModifier.ignoreFromBuild = true;
             }
-            else if(IsIfcSign(node.Name)) {
-                LoadSignboardData(ref goElement);
+            else if(isIfcSign(node.Name)) {
+                loadSignboardData(ref goElement);
             }
             else {
-                if (IsIfcWalkableArea(node.Name)) {
+                if (isIfcWalkableArea(node.Name)) {
                     goElement.layer = WALKABLE_LAYER;
                 }
                 else{
@@ -176,15 +175,15 @@ public class IfcOpenShellParser : MonoBehaviour {
         }
     }
 
-    private void LoadSignboardData(ref GameObject goElement) {
+    private void loadSignboardData(ref GameObject goElement) {
         if(goElement.TryGetComponent<IFCData>(out IFCData signboardIFCData)) {
             List<IFCProperty> signboardProperties = signboardIFCData.propertySets.Find(property => property.propSetName == ifcSignboardPropertiesName).properties;
             if(signboardProperties != null) {
-                SignBoard signBoard = goElement.AddComponent<SignBoard>();
+                IFCSignBoard signBoard = goElement.AddComponent<IFCSignBoard>();
                 try {
-                    signBoard.ViewingDistance = StringToFloat(signboardProperties.Find(property => property.propName == ifcSignViewingDistanceProperty).propValue);
-                    signBoard.ViewingAngle = StringToFloat(signboardProperties.Find(property => property.propName == ifcSignViewingAngleProperty).propValue);
-                    signBoard.MinimumReadingTime = StringToFloat(signboardProperties.Find(property => property.propName == ifcSignMinimumReadingTimeProperty).propValue);
+                    signBoard.ViewingDistance = stringToFloat(signboardProperties.Find(property => property.propName == ifcSignViewingDistanceProperty).propValue);
+                    signBoard.ViewingAngle = stringToFloat(signboardProperties.Find(property => property.propName == ifcSignViewingAngleProperty).propValue);
+                    signBoard.MinimumReadingTime = stringToFloat(signboardProperties.Find(property => property.propName == ifcSignMinimumReadingTimeProperty).propValue);
                 }
                 catch(Exception e) {
                     Debug.LogError($"Error parsing properties from Signboard {goElement.name} ({e.Message}).");
@@ -199,7 +198,7 @@ public class IfcOpenShellParser : MonoBehaviour {
         }
     }
 
-    private void AddProperties(XmlNode node, GameObject go) {
+    private void addProperties(XmlNode node, GameObject go) {
         IFCData ifcData = go.AddComponent(typeof(IFCData)) as IFCData;
 
         ifcData.IFCClass = node.Name;
@@ -271,7 +270,7 @@ public class IfcOpenShellParser : MonoBehaviour {
         }
     }
 
-    private float StringToFloat(string str) {
+    private static float stringToFloat(string str) {
         return float.Parse(str, CultureInfo.InvariantCulture.NumberFormat);
     }
 }
