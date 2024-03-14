@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = Unity.Mathematics.Random;
 
-public class InputArea : SpawnAreaBase, IRouteMarker {
+public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
     Vector3 IRouteMarker.Position => transform.position;
 
     private RoutingGraphCPTSolver routingGraph;
@@ -13,13 +14,11 @@ public class InputArea : SpawnAreaBase, IRouteMarker {
     
     private Random rand;
     
-
     private void Awake() {
         rand = new Random((uint)DateTime.Now.Millisecond);
-        //base.Start();
         MarkerGenerator markerGen = FindObjectOfType<MarkerGenerator>();
         if (markerGen == null) {
-            // Debug.LogError($"Unable to find {nameof(MarkerGenerator)}");
+            Debug.LogError($"Unable to find {nameof(MarkerGenerator)}");
             return;
         }
         markerGen.OnMarkersGeneration += OnMarkersGenerated;
@@ -39,6 +38,9 @@ public class InputArea : SpawnAreaBase, IRouteMarker {
         markersConnected.Insert(0,this);
         routingGraph = new RoutingGraphCPTSolver(markersConnected.ToArray());
         route = routingGraph.GetRoute(this);
+        if (this.Enabled) {
+            StartSpawn();
+        }
     }
 
     public Agent SpawnRoutedAgent(GameObject agentPrefab, IEnumerable<IRouteMarker> agentRoute) {
@@ -57,7 +59,7 @@ public class InputArea : SpawnAreaBase, IRouteMarker {
         return agent;
     }
 
-    private int RandomExponential(int max, float rateParameter) {
+    private int randomExponential(int max, float rateParameter) {
         float randomUniform = rand.NextFloat(0f, 1f);
         float expValue = -Mathf.Log(1 - randomUniform) / rateParameter;
         return Mathf.Min(Mathf.FloorToInt(expValue) + 1, max);
@@ -66,8 +68,6 @@ public class InputArea : SpawnAreaBase, IRouteMarker {
     private Queue<IRouteMarker> thinPath(Queue<IRouteMarker> path) {
         Queue<IRouteMarker> newPath = new Queue<IRouteMarker>(path);
         int maxItemsToRemove = (int)Mathf.Floor(newPath.Count * 0.8f);
-        float rateParameter = 1 / (((float)maxItemsToRemove + 1) / 10);
-        // int itemsToRemove = maxItemsToRemove - RandomExponential(maxItemsToRemove, rateParameter);
         int itemsToRemove = rand.NextInt(0, maxItemsToRemove);
 
         for (int i = 0; i < itemsToRemove; i++) {
@@ -87,12 +87,12 @@ public class InputArea : SpawnAreaBase, IRouteMarker {
             return null;
         }
         
-        RoutedAgent routedAgent = agent.GetComponent<RoutedAgent>();
+        RoutedAgent routedAgent = agent.AddComponent<RoutedAgent>();
         if (routedAgent != null && route != null) {
             routedAgent.SetRoute(thinPath(route));
         }
         else {
-            Destroy(routedAgent.gameObject);
+            agentsHandler.DestroyAgent(agent);
         }
         
         return agent;

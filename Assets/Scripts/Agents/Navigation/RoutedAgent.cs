@@ -5,24 +5,19 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
-[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(NavMeshAgent), typeof(Agent))]
 public class RoutedAgent : MonoBehaviour {
-    private NavMeshAgent agent;
+    private const bool DEBUG = true;
+    
+    private NavMeshAgent navMeshAgent;
+    private static AgentsHandler agentsHandler;
 
     private Queue<IRouteMarker> route;
     public float Error { get; set; } = 0f;
-    
-    // private const float ARRIVED_DISTANCE_SQR = 0.09f;
 
-    public Vector3 Target {
-        get {
-            route.TryPeek(out IRouteMarker destination);
-            return destination.Position;
-        }
-    }
-    
-    void Awake() {
-        agent = GetComponent<NavMeshAgent>();
+    private void Awake() {
+        agentsHandler ??= FindObjectOfType<AgentsHandler>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -45,7 +40,7 @@ public class RoutedAgent : MonoBehaviour {
     }
 
     private void OnExitReached([NotNull] IRouteMarker exit) {
-        Destroy(this.gameObject);
+        agentsHandler.DestroyAgent(this.GetComponent<Agent>());
     }
 
     public void SetRoute(Queue<IRouteMarker> newRoute) {
@@ -61,7 +56,7 @@ public class RoutedAgent : MonoBehaviour {
             float randZOffset = Random.Range(-Error, Error);
             destination = new Vector3(destination.x + randXOffset, destination.y, destination.z + randZOffset);
         }
-        agent.SetDestination(destination);
+        navMeshAgent.SetDestination(destination);
     }
 
     public void AddDestination(IRouteMarker newDestination) {
@@ -69,9 +64,13 @@ public class RoutedAgent : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
+        if (!DEBUG) {
+            return;
+        }
+        
         if (route?.Count > 0) {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, agent.destination);
+            Gizmos.DrawLine(transform.position, navMeshAgent.destination);
         }
     }
 }

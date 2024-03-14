@@ -6,10 +6,21 @@ using Random = UnityEngine.Random;
 
 public abstract class SpawnAreaBase : MonoBehaviour {
     public GameObject AgentPrefab;
-    
-    public bool Enabled = true;
-    [Header("Agent Spawn Settings")]
-    public bool EnableSpawn = true;
+
+    [Header("Agent Spawn Settings")] [SerializeField]
+    private bool _enabled = false;
+    public bool Enabled {
+        get => _enabled;
+        set {
+            _enabled = value;
+            if (Enabled) {
+                StartSpawn();
+            }
+            else {
+                StopSpawn();
+            }
+        } 
+    }
     [Tooltip("Agents per second.")]
     [Range(0.0f, 100.0f)]
     public float SpawnRate;
@@ -19,12 +30,10 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     private const float SPAWNED_AGENTS_INITIAL_MIN_DISTANCE = 5f;
     private const float SPAWNED_AGENTS_MIN_DISTANCE = 1f;
 
-    private static AgentsHandler agentsHandler;
-    private void Awake() {
-        agentsHandler ??= FindObjectOfType<AgentsHandler>();
-    }
-
+    protected static AgentsHandler agentsHandler;
+    
     private void Start() {
+        agentsHandler ??= FindObjectOfType<AgentsHandler>();
         if(ShouldSpawnAgents()) {
             StartSpawn();
         }
@@ -32,13 +41,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
 
     private void Update() {
         if(Input.GetKeyDown(KeyCode.F)) {
-            EnableSpawn = !EnableSpawn;
-            if(EnableSpawn) {
-                StartSpawn();
-            }
-            else {
-                StopSpawn();
-            }
+            Enabled = !Enabled;
         }
     }
     // ReSharper disable Unity.PerformanceAnalysis
@@ -120,8 +123,13 @@ public abstract class SpawnAreaBase : MonoBehaviour {
             return null;
         }
 
-        Agent agent = agentsHandler.SpawnAgent(agentPrefab, spawnPoint, Quaternion.identity);
-
+        Agent agent = null;
+        if (agentsHandler != null) {
+            agent = agentsHandler.SpawnAgent(agentPrefab, spawnPoint, Quaternion.identity);
+        }
+        else {
+            Debug.LogError($"Unable to spawn Agent from {GetType().Name}: Unable to find {nameof(agentsHandler)} component.");
+        }
         agentsSpawned.Add(agent);
         return agent;
     }

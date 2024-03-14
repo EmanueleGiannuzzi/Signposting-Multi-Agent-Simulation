@@ -22,16 +22,16 @@ public class MarkerGenerator : MonoBehaviour {
         AddMarkersToTraversables();
     }
 
-    private bool IsTraversableTag(string ifcTag) {
+    private bool isTraversableTag(string ifcTag) {
         return IfcTraversableTags.Contains(ifcTag);
     }
 
-    private IEnumerable<IFCData> IfcTraversables() {
-        return ifcGameObject.GetComponentsInChildren<IFCData>().Where(ifcData => IsTraversableTag(ifcData.IFCClass));
+    private IEnumerable<IFCData> ifcTraversables() {
+        return ifcGameObject.GetComponentsInChildren<IFCData>().Where(ifcData => isTraversableTag(ifcData.IFCClass));
     }
 
     public void AddMarkersToTraversables() {
-        ResetMarkers();
+        resetMarkers();
 
         List<IRouteMarker> markers = new();
 
@@ -41,7 +41,7 @@ public class MarkerGenerator : MonoBehaviour {
         }
 
         float progress = 0f;
-        IEnumerable<IFCData> traversables = IfcTraversables();
+        IEnumerable<IFCData> traversables = ifcTraversables();
         float progressBarStep = 1f / traversables.Count();
 
         int spawnedMarkers = 0;
@@ -57,13 +57,13 @@ public class MarkerGenerator : MonoBehaviour {
             Vector3 traversableCenter = traversableRendererBounds.center;
 
             const float MIN_SIZE = 0.5f;
-            if(TraversableCenterProjectionOnNavMesh(traversableCenter, out Vector3 projectionOnNavmesh)
+            if(traversableCenterProjectionOnNavMesh(traversableCenter, out Vector3 projectionOnNavmesh)
                && traversableCenter.y > projectionOnNavmesh.y) {
                 float widthX = traversableRendererBounds.extents.x*2;
                 float widthZ = traversableRendererBounds.extents.z*2;
                 widthX = Mathf.Max(MIN_SIZE, widthX);
                 widthZ = Mathf.Max(MIN_SIZE, widthZ);
-                IntermediateMarker marker = SpawnMarker(projectionOnNavmesh, widthX, widthZ, $"IntermediateMarker-{spawnedMarkers}");
+                IntermediateMarker marker = spawnMarker(projectionOnNavmesh, widthX, widthZ, $"IntermediateMarker-{spawnedMarkers}");
                 spawnedMarkers++;
                 
                 markers.Add(marker);
@@ -79,7 +79,7 @@ public class MarkerGenerator : MonoBehaviour {
     }
 
     [CanBeNull]
-    private string GetStoreyName(GameObject traversableGO) {
+    private string getStoreyName(GameObject traversableGO) {
         while (true) {
             Transform parent = traversableGO.transform.parent;
             if (!parent) {
@@ -96,7 +96,7 @@ public class MarkerGenerator : MonoBehaviour {
         }
     }
 
-    private bool TraversableCenterProjectionOnNavMesh(Vector3 traversableCenter, out Vector3 result) {
+    private static bool traversableCenterProjectionOnNavMesh(Vector3 traversableCenter, out Vector3 result) {
         if (NavMesh.SamplePosition(traversableCenter, out NavMeshHit hit, 2.5f, NavMesh.AllAreas)) {
             result = hit.position;
             return true;
@@ -105,7 +105,7 @@ public class MarkerGenerator : MonoBehaviour {
         return false;
     }
 
-    private void ResetMarkers() {
+    private void resetMarkers() {
         foreach (var markerGroup in GameObject.FindGameObjectsWithTag(MARKERS_GROUP_NAME)) {
             DestroyImmediate(markerGroup);
         }
@@ -114,7 +114,7 @@ public class MarkerGenerator : MonoBehaviour {
         };
     }
 
-    private IntermediateMarker SpawnMarker(Vector3 pos, float widthX, float widthZ, string name) {
+    private IntermediateMarker spawnMarker(Vector3 pos, float widthX, float widthZ, string name) {
         // const float MIN_SIZE = 1.5f;
         // widthX = Mathf.Max(MIN_SIZE, widthX);
         // widthZ = Mathf.Max(MIN_SIZE, widthZ);

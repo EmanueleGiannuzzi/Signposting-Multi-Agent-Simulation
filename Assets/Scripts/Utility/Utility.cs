@@ -41,7 +41,6 @@ public static class Utility {
                 || PolyContainsPoint(trianglePoly, new Vector3(aLocalPoint.x - squareWidthLength, aLocalPoint.y, aLocalPoint.z - squareHeightLenght))
                 || PolyContainsPoint(trianglePoly, new Vector3(aLocalPoint.x - squareWidthLength, aLocalPoint.y, aLocalPoint.z + squareHeightLenght))
                 || PolyContainsPoint(trianglePoly, new Vector3(aLocalPoint.x + squareWidthLength, aLocalPoint.y, aLocalPoint.z - squareHeightLenght))
-                //|| PolyContainsPoint(trianglePoly, new Vector3(aLocalPoint.x + squareWidthLength, aLocalPoint.y, aLocalPoint.z + squareHeightLenght))
                 ) {
                 return true;
             }
