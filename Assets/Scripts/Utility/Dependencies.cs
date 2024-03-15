@@ -1,7 +1,6 @@
 using System.IO;
-using UnityEngine;
 
-public class Dependencies {
+public static class Dependencies {
     public static class IfcConverter {
         private static readonly string IfcConverterExePath = Path.GetFullPath("Plugins/IFC_Converter/IfcConvert.exe");
 

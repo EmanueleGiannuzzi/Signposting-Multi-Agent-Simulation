@@ -6,7 +6,7 @@ using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(Agent))]
-public class RoutedAgent : MonoBehaviour {
+public class AgentRouted : MonoBehaviour {
     private const bool DEBUG = true;
     
     private NavMeshAgent navMeshAgent;

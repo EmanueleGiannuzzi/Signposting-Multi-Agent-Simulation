@@ -46,7 +46,7 @@ public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
     public Agent SpawnRoutedAgent(GameObject agentPrefab, IEnumerable<IRouteMarker> agentRoute) {
         Agent agent = SpawnAgent(agentPrefab);
         if(agent != null)
-            agent.GetComponent<RoutedAgent>().SetRoute(new Queue<IRouteMarker>(agentRoute));
+            agent.GetComponent<AgentRouted>().SetRoute(new Queue<IRouteMarker>(agentRoute));
 
         return agent;
     }
@@ -54,7 +54,7 @@ public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
     public Agent SpawnAgentWithDestination(GameObject agentPrefab, Vector3 destination) {
         Agent agent = SpawnAgent(agentPrefab);
         if(agent != null)
-            agent.GetComponent<RoutedAgent>().SetDestination(destination);
+            agent.GetComponent<AgentRouted>().SetDestination(destination);
 
         return agent;
     }
@@ -87,9 +87,9 @@ public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
             return null;
         }
         
-        RoutedAgent routedAgent = agent.AddComponent<RoutedAgent>();
-        if (routedAgent != null && route != null) {
-            routedAgent.SetRoute(thinPath(route));
+        AgentRouted agentRouted = agent.AddComponent<AgentRouted>();
+        if (agentRouted != null && route != null) {
+            agentRouted.SetRoute(thinPath(route));
         }
         else {
             agentsHandler.DestroyAgent(agent);
