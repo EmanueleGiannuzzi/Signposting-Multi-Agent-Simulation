@@ -73,14 +73,13 @@ public class RoutingGraphCPTSolver : OpenCPTSolver {
     }
     
     private static bool doesPathIntersectOtherMarkers(NavMeshPath path, IRouteMarker startMarker, IRouteMarker destinationMarker) {
-        const int MARKER_LAYER_MASK = 1 << 10;
         const float SPHERE_RADIUS = 0.5f;
 
         for (int i = 1; i < path.corners.Length; i++) {
             Vector3 directionTowardsNextCorner = (path.corners[i - 1] - path.corners[i]).normalized;
             float distanceToNextCorner = Vector3.Distance(path.corners[i - 1], path.corners[i]);
             //DrawPhysicsSettings.SetDuration(60f);
-            if (Physics.SphereCast(path.corners[i], SPHERE_RADIUS, directionTowardsNextCorner, out RaycastHit hit, distanceToNextCorner + 0.3f, MARKER_LAYER_MASK)) {
+            if (Physics.SphereCast(path.corners[i], SPHERE_RADIUS, directionTowardsNextCorner, out RaycastHit hit, distanceToNextCorner + 0.3f, Constants.ONLY_MARKERS_LAYER_MASK)) {
                 IRouteMarker markerHit = hit.collider.GetComponent<IRouteMarker>();
                 if (markerHit != null && markerHit != startMarker && markerHit != destinationMarker) {
                     return true;

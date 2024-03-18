@@ -11,7 +11,6 @@ public class MarkerGenerator : MonoBehaviour {
     public Material markerMaterial;
 
     private GameObject markerParent;
-    private const string MARKERS_GROUP_NAME = "MarkersGroup";
 
     public string[] IfcTraversableTags = { "IfcDoor" };
     
@@ -78,24 +77,6 @@ public class MarkerGenerator : MonoBehaviour {
         OnMarkersGeneration?.Invoke(markers);
     }
 
-    [CanBeNull]
-    private string getStoreyName(GameObject traversableGO) {
-        while (true) {
-            Transform parent = traversableGO.transform.parent;
-            if (!parent) {
-                return null;
-            }
-
-            IFCData parentData = parent.GetComponent<IFCData>();
-            if (!parentData || parentData.IFCClass != "IfcBuildingStorey") {
-                traversableGO = parent.gameObject;
-                continue;
-            }
-
-            return parentData.STEPName;
-        }
-    }
-
     private static bool traversableCenterProjectionOnNavMesh(Vector3 traversableCenter, out Vector3 result) {
         if (NavMesh.SamplePosition(traversableCenter, out NavMeshHit hit, 2.5f, NavMesh.AllAreas)) {
             result = hit.position;
@@ -106,11 +87,11 @@ public class MarkerGenerator : MonoBehaviour {
     }
 
     private void resetMarkers() {
-        foreach (var markerGroup in GameObject.FindGameObjectsWithTag(MARKERS_GROUP_NAME)) {
+        foreach (var markerGroup in GameObject.FindGameObjectsWithTag(Constants.MARKERS_TAG)) {
             DestroyImmediate(markerGroup);
         }
-        markerParent = new GameObject(MARKERS_GROUP_NAME) {
-            tag = MARKERS_GROUP_NAME
+        markerParent = new GameObject(Constants.MARKERS_GROUP_NAME) {
+            tag = Constants.MARKERS_TAG
         };
     }
 
@@ -126,7 +107,7 @@ public class MarkerGenerator : MonoBehaviour {
         markerGO.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         markerGO.transform.localScale = new Vector3(widthX, widthZ, 1.6f);
         markerGO.GetComponent<Renderer>().sharedMaterial = markerMaterial;
-        markerGO.layer = 10;
+        markerGO.layer = Constants.MARKERS_LAYER;
         markerGO.name = name;
         IntermediateMarker marker = markerGO.AddComponent<IntermediateMarker>();
         MeshCollider markerCollider = markerGO.GetComponent<MeshCollider>();

@@ -17,6 +17,7 @@ public class AgentsHandler : MonoBehaviour{
     // ReSharper disable Unity.PerformanceAnalysis
     public Agent SpawnAgent(GameObject agentPrefab, Vector3 spawnPoint, Quaternion rotation) {
         GameObject agentGameObject = Instantiate(agentPrefab, spawnPoint, rotation);
+        agentGameObject.layer = Constants.AGENTS_LAYER;
         Agent agent = agentGameObject.AddComponent<Agent>();
         OnAgentSpawned(agent);
         return agent;

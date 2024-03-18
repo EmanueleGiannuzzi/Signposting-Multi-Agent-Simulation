@@ -2,6 +2,7 @@
 using System.IO;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Random = System.Random;
 
 public static class Utility {
@@ -171,5 +172,30 @@ public static class Utility {
 
     public static Vector2 Vector3ToVerctor2NoY(Vector3 v3) {
         return new Vector2(v3.x, v3.z);
+    }
+    
+    public static float[,] NormalizeData01(float[,] dataMatrix) {
+        int rows = dataMatrix.GetLength(0);
+        int cols = dataMatrix.GetLength(1);
+
+        float dataMin = float.MaxValue;
+        float dataMax = float.MinValue;
+        foreach (float data in dataMatrix) {
+            if (data < dataMin) 
+                dataMin = data;
+            if (data > dataMax)
+                dataMax = data;
+        }
+        float range = dataMax - dataMin;
+        if (range == 0)
+            return dataMatrix;
+        
+        float[,] normalizedMatrix = new float[rows, cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                normalizedMatrix[i, j] = (dataMatrix[i, j] - dataMin) / range;
+            }
+        }
+        return normalizedMatrix;
     }
 }

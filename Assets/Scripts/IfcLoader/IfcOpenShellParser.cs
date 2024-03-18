@@ -11,8 +11,9 @@ using System.Globalization;
 
 public class IfcOpenShellParser : MonoBehaviour {
     [Header("Special Areas")]
-    [SerializeField] private string[] walkableAreas = { "IfcSlab", "IfcStair", "IfcStairFlight", "IfcWallStandardCase", "IfcSite" };
-    [SerializeField] private string[] navMeshIgnoredAreas = { "IfcDoor" };
+    [SerializeField] private string[] walkableObjects = { "IfcSlab", "IfcStair", "IfcStairFlight", "IfcSite" };
+    [SerializeField] private string[] navMeshIgnoredObjects = { "IfcDoor" };
+    // [SerializeField] private string[] wallObjects = { "IfcWallStandardCase", "IfcWallElementedCase", "IfcWall" };
 
     [Header("IFC Signboard Definition")]
     [SerializeField] private string ifcSignTag = "IfcSign";
@@ -21,15 +22,12 @@ public class IfcOpenShellParser : MonoBehaviour {
     [SerializeField] private string ifcSignViewingAngleProperty = "ViewingAngle";
     [SerializeField] private string ifcSignMinimumReadingTimeProperty = "MinimumReadingTime";
 
-
     [Header("Loader")]
     public bool deleteTemporaryFiles = true;
 
     private GameObject loadedOBJ;
     private XmlDocument loadedXML;
 
-    private const int NAVMESH_NOT_WALKABLE_AREA_TYPE = 1;
-    private const int WALKABLE_LAYER = 9;
 
     private readonly Dummiesman.OBJLoader objLoader = new() {
         SplitMode = Dummiesman.SplitMode.Object
@@ -140,18 +138,18 @@ public class IfcOpenShellParser : MonoBehaviour {
     }
 
     private bool isIfcWalkableArea(string ifcClass) {
-        return this.walkableAreas.Contains(ifcClass);
+        return this.walkableObjects.Contains(ifcClass);
     }
 
     private bool isIfcIgnoreFromBuildArea(string ifcClass) {
-        return this.navMeshIgnoredAreas.Contains(ifcClass);
+        return this.navMeshIgnoredObjects.Contains(ifcClass);
     }
-
+    
     private bool isIfcSign(string ifcClass) {
         return ifcClass.Equals(ifcSignTag);
     }
 
-    private void handleSpecialObjects(ref GameObject goElement, XmlNode node) {
+    private void handleSpecialObjects(ref GameObject goElement, XmlNode node) {//TODO: If orders doesn't look good
         MeshFilter goMeshFilter = goElement.GetComponent<MeshFilter>();
         if(goMeshFilter != null && goMeshFilter.sharedMesh != null) {
             goElement.AddComponent<MeshCollider>();
@@ -164,19 +162,19 @@ public class IfcOpenShellParser : MonoBehaviour {
             }
             else {
                 if (isIfcWalkableArea(node.Name)) {
-                    goElement.layer = WALKABLE_LAYER;
+                    goElement.layer = Constants.WALKABLE_LAYER;
                 }
                 else{
                     NavMeshModifier navmeshModifier = goElement.AddComponent<NavMeshModifier>();
                     navmeshModifier.overrideArea = true;
-                    navmeshModifier.area = NAVMESH_NOT_WALKABLE_AREA_TYPE;
+                    navmeshModifier.area = Constants.NAVMESH_NOT_WALKABLE_AREA_TYPE;
                 }
             }
         }
     }
 
     private void loadSignboardData(ref GameObject goElement) {
-        if(goElement.TryGetComponent<IFCData>(out IFCData signboardIFCData)) {
+        if(goElement.TryGetComponent(out IFCData signboardIFCData)) {
             List<IFCProperty> signboardProperties = signboardIFCData.propertySets.Find(property => property.propSetName == ifcSignboardPropertiesName).properties;
             if(signboardProperties != null) {
                 IFCSignBoard signBoard = goElement.AddComponent<IFCSignBoard>();
@@ -210,10 +208,8 @@ public class IfcOpenShellParser : MonoBehaviour {
         }
         ifcData.STEPName = nameProperty;
         // Initialize PropertySets and QuantitySets
-        if(ifcData.propertySets == null)
-            ifcData.propertySets = new List<IFCPropertySet>();
-        if(ifcData.quantitySets == null)
-            ifcData.quantitySets = new List<IFCPropertySet>();
+        ifcData.propertySets ??= new List<IFCPropertySet>();
+        ifcData.quantitySets ??= new List<IFCPropertySet>();
 
 
         // Go through Properties (and Quantities and ...)
@@ -223,48 +219,48 @@ public class IfcOpenShellParser : MonoBehaviour {
                 case "IfcElementQuantity":
                     // we only receive a link beware of # character
                     string link = child.Attributes.GetNamedItem("xlink:href").Value.TrimStart('#');
-                    string path = String.Format("//ifc/properties/IfcPropertySet[@id='{0}']", link);
+                    string path = $"//ifc/properties/IfcPropertySet[@id='{link}']";
                     if(child.Name == "IfcElementQuantity")
-                        path = String.Format("//ifc/quantities/IfcElementQuantity[@id='{0}']", link);
+                        path = $"//ifc/quantities/IfcElementQuantity[@id='{link}']";
                     XmlNode propertySet = loadedXML.SelectSingleNode(path);
                     if(propertySet != null) {
 
                         // initialize this propertyset (Name, Id)
-                        IFCPropertySet myPropertySet = new IFCPropertySet();
-                        myPropertySet.propSetName = propertySet.Attributes.GetNamedItem("Name").Value;
-                        myPropertySet.propSetId = propertySet.Attributes.GetNamedItem("id").Value;
-                        if(myPropertySet.properties == null)
-                            myPropertySet.properties = new List<IFCProperty>();
+                        IFCPropertySet myPropertySet = new IFCPropertySet {
+                            propSetName = propertySet.Attributes.GetNamedItem("Name").Value,
+                            propSetId = propertySet.Attributes.GetNamedItem("id").Value
+                        };
+                        myPropertySet.properties ??= new List<IFCProperty>();
 
                         // run through property values
                         foreach(XmlNode property in propertySet.ChildNodes) {
-                            string propName, propValue = "";
+                            var propValue = "";
                             IFCProperty myProp = new IFCProperty();
-                            propName = property.Attributes.GetNamedItem("Name").Value;
+                            var propName = property.Attributes.GetNamedItem("Name").Value;
 
-                            if(property.Name == "IfcPropertySingleValue")
-                                propValue = property.Attributes.GetNamedItem("NominalValue").Value;
-                            if(property.Name == "IfcQuantityLength")
-                                propValue = property.Attributes.GetNamedItem("LengthValue").Value;
-                            if(property.Name == "IfcQuantityArea")
-                                propValue = property.Attributes.GetNamedItem("AreaValue").Value;
-                            if(property.Name == "IfcQuantityVolume")
-                                propValue = property.Attributes.GetNamedItem("VolumeValue").Value;
+                            propValue = property.Name switch {
+                                "IfcPropertySingleValue" => property.Attributes.GetNamedItem("NominalValue").Value,
+                                "IfcQuantityLength" => property.Attributes.GetNamedItem("LengthValue").Value,
+                                "IfcQuantityArea" => property.Attributes.GetNamedItem("AreaValue").Value,
+                                "IfcQuantityVolume" => property.Attributes.GetNamedItem("VolumeValue").Value,
+                                _ => propValue
+                            };
                             // Write property (name & value)
                             myProp.propName = propName;
                             myProp.propValue = propValue;
                             myPropertySet.properties.Add(myProp);
                         }
 
-                        // add propertyset to IFCData
-                        if(child.Name == "IfcPropertySet")
-                            ifcData.propertySets.Add(myPropertySet);
-                        if(child.Name == "IfcElementQuantity")
-                            ifcData.quantitySets.Add(myPropertySet);
-
+                        switch (child.Name) {
+                            // add propertyset to IFCData
+                            case "IfcPropertySet":
+                                ifcData.propertySets.Add(myPropertySet);
+                                break;
+                            case "IfcElementQuantity":
+                                ifcData.quantitySets.Add(myPropertySet);
+                                break;
+                        }
                     }
-                    break;
-                default:
                     break;
             }
         }

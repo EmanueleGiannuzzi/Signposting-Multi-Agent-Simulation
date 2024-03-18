@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEditor;
 
 public class VisibilityPlaneData : MonoBehaviour {
+    private const bool DEBUG = false;
+    
     [ReadOnly]
     [SerializeField]
-    private float originalFloorHeight;
+    private float _originalFloorHeight;
     public float OriginalFloorHeight {
-        set { originalFloorHeight = value; }
-        get { return originalFloorHeight; }
+        set => _originalFloorHeight = value;
+        get => _originalFloorHeight;
     }
 
     private readonly Dictionary<Vector2, Vector2Int> analyzablePoints = new();
@@ -66,11 +68,14 @@ public class VisibilityPlaneData : MonoBehaviour {
         EditorUtility.ClearProgressBar();
     }
 
-    // private void OnDrawGizmos() {
-    //     foreach (Vector2 vi2 in AnalyzablePoints.Keys) {
-    //         Vector3 vi = new Vector3(vi2.x, transform.position.y + 0.5f, vi2.y);
-    //         Gizmos.color = Color.blue;//TODO: Remove
-    //         Gizmos.DrawSphere(vi, 0.05f);//TODO: Remove
-    //     }
-    // }
+    private void OnDrawGizmos() {
+        if (!DEBUG) {
+            return;
+        }
+        foreach (Vector2 vi2 in analyzablePoints.Keys) {
+            Vector3 vi = new Vector3(vi2.x, transform.position.y + 0.5f, vi2.y);
+            Gizmos.color = Color.blue;//TODO: Remove
+            Gizmos.DrawSphere(vi, 0.05f);//TODO: Remove
+        }
+    }
 }
