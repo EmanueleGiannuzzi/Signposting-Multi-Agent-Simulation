@@ -13,4 +13,6 @@ public class SignboardVisibility : MonoBehaviour {
         get => _visibilityPerAgentType;
         set => _visibilityPerAgentType = value;
     }
+    
+    
 }

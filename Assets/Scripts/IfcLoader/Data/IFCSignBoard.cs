@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 
 public class IFCSignBoard : MonoBehaviour {
-    [Header("Signage Board Parameters")] 
+    [Header("Signboard Parameters")] 
     [SerializeField] private float _viewingDistance;
     [SerializeField] private float _viewingAngle;
     [SerializeField] private Color _color;
     [SerializeField] private float _minimumReadingTime;
+    
+    public Vector3 Direction => this.transform.up;
+    public Vector3 WorldCenterPoint => this.transform.position;
+    
     
     public float ViewingDistance { 
         get => _viewingDistance;

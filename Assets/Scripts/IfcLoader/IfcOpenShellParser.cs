@@ -178,12 +178,16 @@ public class IfcOpenShellParser : MonoBehaviour {
             List<IFCProperty> signboardProperties = signboardIFCData.propertySets.Find(property => property.propSetName == ifcSignboardPropertiesName).properties;
             if(signboardProperties != null) {
                 IFCSignBoard signBoard = goElement.AddComponent<IFCSignBoard>();
+                signBoard.tag = Constants.SIGNBOARDS_TAG;
                 try {
-                    signBoard.ViewingDistance = stringToFloat(signboardProperties.Find(property => property.propName == ifcSignViewingDistanceProperty).propValue);
-                    signBoard.ViewingAngle = stringToFloat(signboardProperties.Find(property => property.propName == ifcSignViewingAngleProperty).propValue);
-                    signBoard.MinimumReadingTime = stringToFloat(signboardProperties.Find(property => property.propName == ifcSignMinimumReadingTimeProperty).propValue);
+                    signBoard.ViewingDistance = stringToFloat(signboardProperties
+                        .Find(property => property.propName == ifcSignViewingDistanceProperty).propValue);
+                    signBoard.ViewingAngle = stringToFloat(signboardProperties
+                        .Find(property => property.propName == ifcSignViewingAngleProperty).propValue);
+                    signBoard.MinimumReadingTime = stringToFloat(signboardProperties
+                        .Find(property => property.propName == ifcSignMinimumReadingTimeProperty).propValue);
                 }
-                catch(Exception e) {
+                catch (Exception e) {
                     Debug.LogError($"Error parsing properties from Signboard {goElement.name} ({e.Message}).");
                 }
             }

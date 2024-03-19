@@ -2,21 +2,14 @@
 using System.IO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using JetBrains.Annotations;
+using Object = UnityEngine.Object;
 using Random = System.Random;
 
 public static class Utility {
-    private static readonly Random rng = new();  
-
-    public static void Shuffle<T>(this IList<T> list) {  
-        int n = list.Count;  
-        while (n > 1) {  
-            n--;  
-            int k = rng.Next(n + 1);  
-            (list[k], list[n]) = (list[n], list[k]);
-        }  
-    }
-
+    private static readonly Random rng = new();
+    
+    //TODO: Move
     public static bool PolyContainsPoint(Vector3[] polyPoints, Vector3 p) {
         var j = polyPoints.Length - 1;
         var inside = false;
@@ -48,53 +41,7 @@ public static class Utility {
         }
         return false;
     }
-
-    public static void FillArray<T>(this T[] arr, T value) {
-        for(int i = 0; i < arr.Length; ++i) {
-            arr[i] = value;
-        }
-    }
-
-    public static void DeleteFile(string path) {
-        if(File.Exists(path)) {
-            File.Delete(path);
-        }
-    }
-
-    public static System.Diagnostics.Process RunCommand(string commandFileName, string arg, bool showConsole) {
-        System.Diagnostics.Process process = new System.Diagnostics.Process();
-        System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-
-        if(!showConsole) {
-            startInfo.UseShellExecute = false;
-            startInfo.CreateNoWindow = false;
-        }
-
-        startInfo.FileName = commandFileName;
-        startInfo.Arguments = arg;
-        process.StartInfo = startInfo;
-
-        try {
-            process.Start();
-        }
-        catch(Exception ex) {
-            throw new Exception("Error starting process", ex);
-        }
-
-        return process;
-    }
-
-    public static T[] RemoveAt<T>(this T[] source, int index) {
-        T[] dest = new T[source.Length - 1];
-        if(index > 0)
-            Array.Copy(source, 0, dest, 0, index);
-
-        if(index < source.Length - 1)
-            Array.Copy(source, index + 1, dest, index, source.Length - index - 1);
-
-        return dest;
-    }
-
+    
     //TODO: Move
     public static Mesh GetTopMeshFromGameObject(GameObject gameObject, out float floorHeight) {
         MeshFilter goMeshFilter = gameObject.GetComponent<MeshFilter>();
@@ -170,10 +117,12 @@ public static class Utility {
         return mesh;
     }
 
+    
+#region Math
     public static Vector2 Vector3ToVerctor2NoY(Vector3 v3) {
         return new Vector2(v3.x, v3.z);
     }
-    
+        
     public static float[,] NormalizeData01(float[,] dataMatrix) {
         int rows = dataMatrix.GetLength(0);
         int cols = dataMatrix.GetLength(1);
@@ -189,7 +138,7 @@ public static class Utility {
         float range = dataMax - dataMin;
         if (range == 0)
             return dataMatrix;
-        
+            
         float[,] normalizedMatrix = new float[rows, cols];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -198,4 +147,117 @@ public static class Utility {
         }
         return normalizedMatrix;
     }
+#endregion
+
+#region Collections
+    public static void Shuffle<T>(this IList<T> list) {  
+        int n = list.Count;  
+        while (n > 1) {  
+            n--;  
+            int k = rng.Next(n + 1);  
+            (list[k], list[n]) = (list[n], list[k]);
+        }  
+    }
+    
+    public static void FillArray<T>(this T[] arr, T value) {
+        for(int i = 0; i < arr.Length; ++i) {
+            arr[i] = value;
+        }
+    }
+    
+    public static T[] RemoveAt<T>(this T[] source, int index) {
+        T[] dest = new T[source.Length - 1];
+        if(index > 0)
+            Array.Copy(source, 0, dest, 0, index);
+
+        if(index < source.Length - 1)
+            Array.Copy(source, index + 1, dest, index, source.Length - index - 1);
+
+        return dest;
+    }
+#endregion
+
+#region OS
+    public static void DeleteFile(string path) {
+        if(File.Exists(path)) {
+            File.Delete(path);
+        }
+    }
+    
+    public static System.Diagnostics.Process RunCommand(string commandFileName, string arg, bool showConsole) {
+        System.Diagnostics.Process process = new System.Diagnostics.Process();
+        System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+
+        if(!showConsole) {
+            startInfo.UseShellExecute = false;
+            startInfo.CreateNoWindow = false;
+        }
+
+        startInfo.FileName = commandFileName;
+        startInfo.Arguments = arg;
+        process.StartInfo = startInfo;
+
+        try {
+            process.Start();
+        }
+        catch(Exception ex) {
+            throw new Exception("Error starting process", ex);
+        }
+
+        return process;
+    }
+
+#endregion
+
+#region Groups
+    public static GameObject CreateNewGroup(string groupTag) {
+        return CreateNewGroup(groupTag, groupTag);
+    }
+    
+    public static GameObject CreateNewGroup(string groupTag, string groupName) {
+        if (GetGroup(groupTag) != null) {
+            Debug.LogWarning($"An Object with tag {groupTag} have been already created. Deleting it.");
+            DeleteGroup(groupTag);
+        } 
+        
+        GameObject newGroup = new GameObject(groupName) {
+            tag = groupTag
+        };
+        return newGroup;
+    }
+
+    [CanBeNull]
+    public static GameObject GetGroup(string groupTag) {
+        return GameObject.FindGameObjectWithTag(groupTag);
+    }
+
+    public static void DeleteGroup(string groupTag) {
+        GameObject group = GetGroup(groupTag);
+        if (group != null) {
+            #if UNITY_EDITOR
+            Object.DestroyImmediate(group);
+            #else
+                Object.Destroy(group);
+            #endif
+        }
+    }
+    
+    public static T[] GetComponentsFromTag<T>(string tag) {
+        GameObject[] objectsArray = GameObject.FindGameObjectsWithTag(tag);
+        if (objectsArray == null) {
+            return null;
+        }
+
+        int arraySize = objectsArray.Length;
+        T[] componentsArray = new T[arraySize];
+        for (int i = 0; i < arraySize; i++) {
+            componentsArray[i] = objectsArray[i].GetComponent<T>();
+            if (componentsArray[i] == null) {
+                Debug.LogError($"Component of type {nameof(T)} not find in object {objectsArray[i].name}, with tag {tag}");
+            }
+        }
+        return componentsArray;
+    }
+#endregion
+    
 }
