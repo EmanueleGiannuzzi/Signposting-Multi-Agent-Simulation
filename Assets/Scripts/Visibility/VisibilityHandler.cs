@@ -11,6 +11,10 @@ public class VisibilityHandler : MonoBehaviour {
     
     public Dictionary<Vector2Int, VisibilityInfo>[][] visibilityInfos;//1 for each visibility plane mesh
     
+    [Header("Texture Color")]
+    public Color nonVisibleColor = new(1f, 0f, 0f, 0.5f);//red
+    private Texture2D[,] resultTextures;
+    
     [HideInInspector]
     public float progressAnalysis = -1f;
     private bool _done = false;
@@ -56,6 +60,24 @@ public class VisibilityHandler : MonoBehaviour {
         _done = true;
         Debug.Log("Done Calculating Visibility Areas");
     }
+    
+    private Texture2D textureFromVisibilityData(Dictionary<Vector2Int, VisibilityInfo> visibilityData, int width, int height) {
+        Texture2D texture = new Texture2D(width, height);
+
+        IFCSignBoard[] signboards = getIFCSignboardArray();
+        foreach((Vector2Int coords, VisibilityInfo visibilityInfo) in visibilityData) {
+            Color visibleColor = new Color(0, 0, 0, 0);
+            foreach(int signboardID in visibilityInfo.GetVisibleBoards()) {
+                visibleColor += signboards[signboardID].Color;
+            }
+            visibleColor /= visibilityInfo.GetVisibleBoards().Count;
+
+            visibleColor.a = nonVisibleColor.a;
+
+            texture.SetPixel(coords.x, coords.y, visibleColor);
+        }
+        return texture;
+    }
 
     private void generateTextures() {
         VisibilityPlaneData[] visibilityPlanes = getVisibilityPlanes();
@@ -64,21 +86,19 @@ public class VisibilityHandler : MonoBehaviour {
         resultTextures = new Texture2D[visPlaneSize, agentTypes.Length];
         
         for (int visPlaneId = 0; visPlaneId < visPlaneSize; visPlaneId++) {
-            GameObject visibilityPlane = GetVisibilityPlane(visPlaneId);
+            VisibilityPlaneData visibilityPlane = visibilityPlanes[visPlaneId];
             Dictionary<Vector2Int, VisibilityInfo>[] visInfos = this.visibilityInfos[visPlaneId];
-            VisibilityPlaneData planeData = visibilityPlane.GetComponent<VisibilityPlaneData>();
             
-            int widthResolution = planeData.GetAxesResolution().x;
-            int heightResolution = planeData.GetAxesResolution().y;
+            int widthResolution = visibilityPlane.GetAxesResolution().x;
+            int heightResolution = visibilityPlane.GetAxesResolution().y;
     
             for (int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
-                resultTextures[visPlaneId, agentTypeID] = VisibilityTextureGenerator.TextureFromVisibilityData(visInfos[agentTypeID],
-                    GetSignboardArray(), widthResolution, heightResolution, nonVisibleColor);
+                resultTextures[visPlaneId, agentTypeID] = textureFromVisibilityData(visInfos[agentTypeID], widthResolution, heightResolution);
             }
         }
     }
     
-    public Texture2D GetResultTexture(int visPlaneId, int agentTypeID) {
+    private Texture2D getResultTexture(int visPlaneId, int agentTypeID) {
         return resultTextures[visPlaneId, agentTypeID];
     }
     
@@ -113,7 +133,7 @@ public class VisibilityHandler : MonoBehaviour {
             visibilityPlane.GetComponent<MeshFilter>().sharedMesh.uv = uvs;
     
             MeshRenderer meshRenderer = visibilityPlane.GetComponent<MeshRenderer>();
-            meshRenderer.sharedMaterial.mainTexture = GetResultTexture(visPlaneId, agentTypeID);
+            meshRenderer.sharedMaterial.mainTexture = getResultTexture(visPlaneId, agentTypeID);
         }
     }
 
