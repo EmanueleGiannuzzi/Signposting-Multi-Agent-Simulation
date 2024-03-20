@@ -19,12 +19,12 @@ public class SignboardGridGenerator {
     }
 
     public void DeleteObjects() {
-        Utility.DeleteGroup(Constants.SIGNBOARD_GRID_GROUP_NAME);
+        Utility.DeleteGroup(Constants.SIGNBOARD_GRID_GROUP_TAG);
     }
 
     public void GenerateGrid() {
         DeleteObjects();
-        signboardGridGroup = Utility.CreateNewGroup(Constants.SIGNBOARD_GRID_GROUP_NAME);
+        signboardGridGroup = Utility.CreateNewGroup(Constants.SIGNBOARD_GRID_GROUP_TAG);
         GenerateGrid(signboardGridGroup);
     }
 

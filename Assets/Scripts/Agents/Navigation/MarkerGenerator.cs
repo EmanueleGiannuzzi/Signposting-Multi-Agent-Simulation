@@ -90,7 +90,7 @@ public class MarkerGenerator : MonoBehaviour {
         foreach (var markerGroup in GameObject.FindGameObjectsWithTag(Constants.MARKERS_TAG)) {
             DestroyImmediate(markerGroup);
         }
-        markerParent = new GameObject(Constants.MARKERS_GROUP_NAME) {
+        markerParent = new GameObject(Constants.MARKERS_GROUP_TAG) {
             tag = Constants.MARKERS_TAG
         };
     }

@@ -22,7 +22,7 @@ public class VisibilityHandler : MonoBehaviour {
 
     public void ClearAllData() {
         visibilityInfos = null;
-        // resultTextures = null;
+        resultTextures = null;
         
         _done = false;
     }
@@ -152,7 +152,6 @@ public class VisibilityHandler : MonoBehaviour {
     
             IFCSignBoard[] ifcSignboardsArray = getIFCSignboardArray();
             int ifcSignboardsArraySize = ifcSignboardsArray.Length;
-            //float agentTypeProgress = planesProgress / agentTypes.Length;
             for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
                 StringFloatTuple tuple = agentTypes[agentTypeID];
 

@@ -17,9 +17,7 @@ public static class Constants {
     //Tags
     public const string MARKERS_TAG = "Markers";
     public const string SIGNBOARDS_TAG = "Signboards";
-    
-    //Group Names
-    public const string MARKERS_GROUP_NAME = "MarkersGroup";//TODO NAME -> TAG
-    public const string VISIBILITY_GROUP_NAME = "VisibilityPlanesGroup";
-    public const string SIGNBOARD_GRID_GROUP_NAME = "SignboardsGrid";
+    public const string MARKERS_GROUP_TAG = "MarkersGroup";
+    public const string VISIBILITY_PLANES_GROUP_TAG = "VisibilityPlanesGroup";
+    public const string SIGNBOARD_GRID_GROUP_TAG = "SignboardsGrid";
 }

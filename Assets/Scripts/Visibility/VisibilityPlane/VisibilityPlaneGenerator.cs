@@ -1,27 +1,32 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Linq;
 using Unity.AI.Navigation;
 
-[System.Serializable]
-public class VisibilityPlaneGenerator {
+
+[RequireComponent(typeof(VisibilityHandler))]
+public class VisibilityPlaneGenerator : MonoBehaviour {
     public GameObject ifcGameObject;
     public string[] areaToAnalyze = { "IfcSlab" };
 
-    public GameObject VisibilityPlanesGroup { get; private set; }
+    private GameObject visibilityPlanesGroup;
+    private int analysisResolution => GetComponent<VisibilityHandler>().resolution;
 
 
     private bool ShouldAnalyzeArea(string ifcClass) {
         return this.areaToAnalyze.Contains(ifcClass);
     }
 
-    public void GenerateVisibilityPlanes(int analysisResolution) {
-        Object.DestroyImmediate(GameObject.Find(Constants.VISIBILITY_GROUP_NAME));
-        VisibilityPlanesGroup = new GameObject(Constants.VISIBILITY_GROUP_NAME);
+    public void GenerateVisibilityPlanes() {
+        DestroyImmediate(GameObject.Find(Constants.VISIBILITY_PLANES_GROUP_TAG));
+        visibilityPlanesGroup = new GameObject(Constants.VISIBILITY_PLANES_GROUP_TAG) {
+            tag = Constants.VISIBILITY_PLANES_GROUP_TAG
+        };
 
-        GeneratePlaneForGameObject(analysisResolution, ifcGameObject);
+        GeneratePlaneForGameObject(ifcGameObject);
     }
 
-    private void GeneratePlaneForGameObject(int analysisResolution, GameObject goElement) {
+    private void GeneratePlaneForGameObject(GameObject goElement) {
         if(!goElement.activeSelf) {
             return;
         }
@@ -49,7 +54,7 @@ public class VisibilityPlaneGenerator {
 
                 meshFilter.mesh = topMesh;
 
-                plane.transform.parent = VisibilityPlanesGroup.transform;
+                plane.transform.parent = visibilityPlanesGroup.transform;
 
                 VisibilityPlaneData planeData = plane.AddComponent<VisibilityPlaneData>();
                 planeData.OriginalFloorHeight = floorHeight;
@@ -67,7 +72,7 @@ public class VisibilityPlaneGenerator {
         }
         foreach(Transform childTransform in goElement.transform) {
             GameObject child = childTransform.gameObject;
-            GeneratePlaneForGameObject(analysisResolution, child);
+            GeneratePlaneForGameObject(child);
         }
     }
 }
