@@ -2,10 +2,7 @@
 using UnityEngine;
 
 [CustomEditor(typeof(IfcOpenShellParser))]
-public class IfcOpenShellParserEditor : Editor
-{
-    private IfcOpenShellParser handler;
-
+public class IfcOpenShellParserEditor : GenericEditor<IfcOpenShellParser> {
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
 
@@ -24,9 +21,5 @@ public class IfcOpenShellParserEditor : Editor
                 handler.LoadXML(xmlPath);
             }
         }
-    }
-
-    void OnEnable() {
-        handler = (IfcOpenShellParser)target;
     }
 }

@@ -3,8 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(VisibilityPlaneGenerator))]
-public class VisibilityPlaneGeneratorEditor : Editor {
-    private VisibilityPlaneGenerator handler;
+public class VisibilityPlaneGeneratorEditor : GenericEditor<VisibilityPlaneGenerator> {
 
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
@@ -20,9 +19,5 @@ public class VisibilityPlaneGeneratorEditor : Editor {
             
             
         }
-    }
-
-    void OnEnable() {
-        handler = (VisibilityPlaneGenerator)target;
     }
 }

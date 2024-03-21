@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class TextureGenerator {
+public class TextureGenerator {//TODO: Remove
     private Texture2D[][] resultTextures;
 
     private Gradient gradient;

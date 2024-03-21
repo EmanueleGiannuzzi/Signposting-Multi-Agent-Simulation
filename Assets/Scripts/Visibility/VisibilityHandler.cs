@@ -9,22 +9,26 @@ public class VisibilityHandler : MonoBehaviour {
     [Header("Resolution (point/meter)")]
     public int resolution = 10;
     
-    public Dictionary<Vector2Int, VisibilityInfo>[][] visibilityInfos;//1 for each visibility plane mesh
+    public Dictionary<Vector2Int, VisibilityInfo>[][] visibilityInfo;//1 for each visibility plane mesh
     
     [Header("Texture Color")]
     public Color nonVisibleColor = new(1f, 0f, 0f, 0.5f);//red
-    private Texture2D[,] resultTextures;
+    private Texture2D[,] resultTextures; //[visPlaneId, agentTypeID]
     
     [HideInInspector]
     public float progressAnalysis = -1f;
-    private bool _done = false;
-    public bool IsCoverageReady => _done;
+
+    public bool IsCoverageReady { get; private set; } = false;
+
+    private void OnValidate() {
+        IsCoverageReady = false;
+    }
 
     public void ClearAllData() {
-        visibilityInfos = null;
+        visibilityInfo = null;
         resultTextures = null;
         
-        _done = false;
+        IsCoverageReady = false;
     }
 
     private static VisibilityPlaneData[] getVisibilityPlanes() {
@@ -40,42 +44,43 @@ public class VisibilityHandler : MonoBehaviour {
     }
 
     public void GenerateVisibilityData() {
-        if(getSignboardArray().Length <= 0) {
-            Debug.LogError("No Signboards found, please press Init first.");
+        int signboardsFound = getSignboardArray().Length;
+        if(signboardsFound <= 0) {
+            Debug.LogError("No Signboards found.");
             return;
         }
+        Debug.Log($"{signboardsFound} Signboards found.");
         
         int visPlaneSize = getVisibilityPlanes().Length;
-        visibilityInfos = new Dictionary<Vector2Int, VisibilityInfo>[visPlaneSize][];
+        visibilityInfo = new Dictionary<Vector2Int, VisibilityInfo>[visPlaneSize][];
         for(int i = 0; i < visPlaneSize; i++) {
-            visibilityInfos[i] = new Dictionary<Vector2Int, VisibilityInfo>[agentTypes.Length];
+            visibilityInfo[i] = new Dictionary<Vector2Int, VisibilityInfo>[agentTypes.Length];
             for(int j = 0; j < agentTypes.Length; j++) {
-                visibilityInfos[i][j] = new Dictionary<Vector2Int, VisibilityInfo>();
+                visibilityInfo[i][j] = new Dictionary<Vector2Int, VisibilityInfo>();
             }
         }
 
         analyzeSignboards();
         generateTextures();
         
-        _done = true;
+        IsCoverageReady = true;
         Debug.Log("Done Calculating Visibility Areas");
     }
     
     private Texture2D textureFromVisibilityData(Dictionary<Vector2Int, VisibilityInfo> visibilityData, int width, int height) {
         Texture2D texture = new Texture2D(width, height);
 
-        IFCSignBoard[] signboards = getIFCSignboardArray();
         foreach((Vector2Int coords, VisibilityInfo visibilityInfo) in visibilityData) {
             Color visibleColor = new Color(0, 0, 0, 0);
-            foreach(int signboardID in visibilityInfo.GetVisibleBoards()) {
-                visibleColor += signboards[signboardID].Color;
+            foreach(IFCSignBoard signboard in visibilityInfo.GetVisibleBoards()) {
+                visibleColor += signboard.Color;
             }
             visibleColor /= visibilityInfo.GetVisibleBoards().Count;
-
             visibleColor.a = nonVisibleColor.a;
 
             texture.SetPixel(coords.x, coords.y, visibleColor);
         }
+        texture.Apply();
         return texture;
     }
 
@@ -87,7 +92,7 @@ public class VisibilityHandler : MonoBehaviour {
         
         for (int visPlaneId = 0; visPlaneId < visPlaneSize; visPlaneId++) {
             VisibilityPlaneData visibilityPlane = visibilityPlanes[visPlaneId];
-            Dictionary<Vector2Int, VisibilityInfo>[] visInfos = this.visibilityInfos[visPlaneId];
+            Dictionary<Vector2Int, VisibilityInfo>[] visInfos = this.visibilityInfo[visPlaneId];
             
             int widthResolution = visibilityPlane.GetAxesResolution().x;
             int heightResolution = visibilityPlane.GetAxesResolution().y;
@@ -98,43 +103,8 @@ public class VisibilityHandler : MonoBehaviour {
         }
     }
     
-    private Texture2D getResultTexture(int visPlaneId, int agentTypeID) {
-        return resultTextures[visPlaneId, agentTypeID];
-    }
-    
-    public void ShowVisibilityPlane(int agentTypeID) {
-        if(this.visibilityInfos == null) {
-            return;
-        }
-        
-        VisibilityPlaneData[] visibilityPlanes = getVisibilityPlanes();
-        int visPlaneSize = visibilityPlanes.Length;
-        for(int visPlaneId = 0; visPlaneId < visPlaneSize; visPlaneId++) {
-            VisibilityPlaneData visibilityPlane = visibilityPlanes[visPlaneId];
-
-            var visPlaneTransform = visibilityPlane.transform;
-            Vector3 position = visPlaneTransform.position;
-            float originalFloorHeight = visibilityPlane.OriginalFloorHeight;
-            position[1] = originalFloorHeight + agentTypes[agentTypeID].Value; // the Y value
-            visPlaneTransform.position = position;
-    
-            Bounds meshRendererBounds = visibilityPlane.GetComponent<MeshRenderer>().bounds;
-            
-            Vector3[] meshVertices = visibilityPlane.GetComponent<MeshFilter>().sharedMesh.vertices;
-            Vector2[] uvs = new Vector2[meshVertices.Length];
-    
-            Vector3 localMin = visibilityPlane.transform.InverseTransformPoint(meshRendererBounds.min);
-            Vector3 localMax = visibilityPlane.transform.InverseTransformPoint(meshRendererBounds.max) - localMin;
-    
-            for(int i = 0; i < meshVertices.Length; i++) {
-                Vector3 normVertex = meshVertices[i] - localMin;
-                uvs[i] = new Vector2(1f - normVertex.x / localMax.x, 1f - normVertex.z / localMax.z);
-            }
-            visibilityPlane.GetComponent<MeshFilter>().sharedMesh.uv = uvs;
-    
-            MeshRenderer meshRenderer = visibilityPlane.GetComponent<MeshRenderer>();
-            meshRenderer.sharedMaterial.mainTexture = getResultTexture(visPlaneId, agentTypeID);
-        }
+    public Texture2D[] GetTexturesFromAgentID(int agentTypeID) {
+        return Utility.Get2DMatrixColumn(resultTextures, agentTypeID);
     }
 
     private void analyzeSignboards() {
@@ -145,13 +115,12 @@ public class VisibilityHandler : MonoBehaviour {
         float progressBarStep = 1f / visPlaneSize / agentTypes.Length / getSignboardArray().Length;
         
         for(int visPlaneId = 0; visPlaneId < visPlaneSize; visPlaneId++) {
-            Dictionary<Vector2Int, VisibilityInfo>[] visInfos = this.visibilityInfos[visPlaneId];
+            Dictionary<Vector2Int, VisibilityInfo>[] visInfos = this.visibilityInfo[visPlaneId];
     
             VisibilityPlaneData visibilityPlane = visibilityPlanes[visPlaneId];
             float originalFloorHeight = visibilityPlane.OriginalFloorHeight;
     
             IFCSignBoard[] ifcSignboardsArray = getIFCSignboardArray();
-            int ifcSignboardsArraySize = ifcSignboardsArray.Length;
             for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
                 StringFloatTuple tuple = agentTypes[agentTypeID];
 
@@ -161,12 +130,11 @@ public class VisibilityHandler : MonoBehaviour {
                 visPlaneTransform.position = position;
                 
                 
-                for(int signboardID = 0; signboardID < ifcSignboardsArraySize; signboardID++) {
-                    IFCSignBoard signBoard = ifcSignboardsArray[signboardID];
-                    Vector3 p = signBoard.WorldCenterPoint;
-                    Vector3 n = signBoard.Direction;
-                    float theta = (signBoard.ViewingAngle * Mathf.PI) / 180;
-                    float d = signBoard.ViewingDistance;
+                foreach(IFCSignBoard signboard in ifcSignboardsArray) {
+                    Vector3 p = signboard.WorldCenterPoint;
+                    Vector3 n = signboard.Direction;
+                    float theta = (signboard.ViewingAngle * Mathf.PI) / 180;
+                    float d = signboard.ViewingDistance;
     
                     foreach(Vector2 vi2 in visibilityPlane.GetPointsForAnalysis().Keys) {
                         Vector3 vi = new Vector3(vi2.x, visibilityPlane.transform.position.y, vi2.y);
@@ -186,12 +154,12 @@ public class VisibilityHandler : MonoBehaviour {
                         if(isVisible) {
                             Vector2Int coordsToSave = visibilityPlane.GetPointsForAnalysis()[vi2];
                             if(visInfos[agentTypeID].ContainsKey(coordsToSave)) {
-                                visInfos[agentTypeID][coordsToSave].AddVisibleBoard(signboardID);
+                                visInfos[agentTypeID][coordsToSave].AddVisibleBoard(signboard);
                             }
                             else {
-                                VisibilityInfo vinfo = new VisibilityInfo(vi);
-                                vinfo.AddVisibleBoard(signboardID);
-                                visInfos[agentTypeID].Add(coordsToSave, vinfo);
+                                VisibilityInfo visInfo = new VisibilityInfo(vi);
+                                visInfo.AddVisibleBoard(signboard);
+                                visInfos[agentTypeID].Add(coordsToSave, visInfo);
                             }
                         }
                     }
@@ -214,34 +182,58 @@ public class VisibilityHandler : MonoBehaviour {
     }
     
     
-    public void CalculateSignCoverage(VisibilityPlaneData[] visibilityPlanes) {
-        int visPlaneSize = visibilityPlanes.Length;
+    public void CalculateSignCoverage(VisibilityPlaneData[] visibilityPlanes) {//TODO: Rewrite from scratch
+        // int visPlaneSize = visibilityPlanes.Length;
+        //
+        // int[,] signboardCoverage = new int[getSignboardArray().Length, agentTypes.Length];
+        // int visibilityGroupMaxSize = 0;
+        // for(int visPlaneId = 0; visPlaneId < visPlaneSize; visPlaneId++) {
+        //     Dictionary<Vector2Int, VisibilityInfo>[] visInfosPerMesh = this.visibilityInfo[visPlaneId];
+        //     for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
+        //         Dictionary<Vector2Int, VisibilityInfo> visInfosPerAgentType = visInfosPerMesh[agentTypeID];
+        //         foreach(KeyValuePair<Vector2Int, VisibilityInfo> entry in visInfosPerAgentType) {
+        //             signboardCoverage[signboardID, agentTypeID] += entry.Value.GetVisibleBoards().Count;
+        //         }
+        //     }
+        //     visibilityGroupMaxSize += visibilityPlanes[visPlaneId].ValidMeshPointsCount;
+        // }
+        //
+        // SignboardVisibility[] signboardsArray = getSignboardArray();
+        // int signboardsArraySize = signboardsArray.Length;
+        //
+        // for(int signboardID = 0; signboardID < signboardsArraySize; signboardID++) {
+        //     SignboardVisibility signboard = signboardsArray[signboardID];
+        //     signboard.CoveragePerAgentType = new float[agentTypes.Length];
+        //     for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
+        //         float coverage = (float)signboardCoverage[signboardID, agentTypeID] / visibilityGroupMaxSize;
+        //         signboard.CoveragePerAgentType[agentTypeID] = coverage;
+        //     }
+        // }
+    }
+    
+    public List<IFCSignBoard> GetSignboardIDsVisible(Vector3 agentPosition, int agentTypeID) {
+        if(visibilityInfo == null) {
+            Debug.LogError("Visibility Info Unavailable");
+            return null;
+        }
         
-        int[,] signboardCoverage = new int[getSignboardArray().Length, agentTypes.Length];
-        int visibilityGroupMaxSize = 0;
+        float positionSensitivity = 1f / resolution;
+        
+        VisibilityPlaneData[] visibilityPlanes = getVisibilityPlanes();
+        int visPlaneSize = visibilityPlanes.Length;
         for(int visPlaneId = 0; visPlaneId < visPlaneSize; visPlaneId++) {
-            Dictionary<Vector2Int, VisibilityInfo>[] visInfosPerMesh = this.visibilityInfos[visPlaneId];
-            for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
-                Dictionary<Vector2Int, VisibilityInfo> visInfosPerAgentType = visInfosPerMesh[agentTypeID];
-                foreach(KeyValuePair<Vector2Int, VisibilityInfo> entry in visInfosPerAgentType) {
-                    foreach(int signboardID in entry.Value.GetVisibleBoards()) {
-                        signboardCoverage[signboardID, agentTypeID]++;
-                    }
+            Dictionary<Vector2Int, VisibilityInfo>[] visInfo = visibilityInfo[visPlaneId];
+            Dictionary<Vector2Int, VisibilityInfo> visInfoDictionary = visInfo[agentTypeID];
+            foreach(VisibilityInfo value in visInfoDictionary.Values) {
+                float headingX = value.CachedWorldPos.x - agentPosition.x;
+                float headingZ = value.CachedWorldPos.z - agentPosition.z;
+
+                float distanceSquared = headingX * headingX + headingZ * headingZ;
+                if(distanceSquared < positionSensitivity * positionSensitivity) {
+                    return value.GetVisibleBoards();
                 }
             }
-            visibilityGroupMaxSize += visibilityPlanes[visPlaneId].ValidMeshPointsCount;
         }
-
-        SignboardVisibility[] signboardsArray = getSignboardArray();
-        int signboardsArraySize = signboardsArray.Length;
-        
-        for(int signboardID = 0; signboardID < signboardsArraySize; signboardID++) {
-            SignboardVisibility signboard = signboardsArray[signboardID];
-            signboard.CoveragePerAgentType = new float[agentTypes.Length];
-            for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
-                float coverage = (float)signboardCoverage[signboardID, agentTypeID] / visibilityGroupMaxSize;
-                signboard.CoveragePerAgentType[agentTypeID] = coverage;
-            }
-        }
+        return new List<IFCSignBoard>();
     }
 }

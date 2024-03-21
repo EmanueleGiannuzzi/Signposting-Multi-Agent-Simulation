@@ -2,18 +2,18 @@
 using UnityEngine;
 
 public class VisibilityInfo {
-    private readonly Vector3 cachedWorldPos;
-    private readonly List<int> visibleBoards = new();
+    private readonly List<IFCSignBoard> visibleBoards = new();
+    public Vector3 CachedWorldPos { get; }
 
     public VisibilityInfo(Vector3 worldPos) {
-        this.cachedWorldPos = worldPos;
+        this.CachedWorldPos = worldPos;
     }
 
-    public void AddVisibleBoard(int boardID) {
+    public void AddVisibleBoard(IFCSignBoard boardID) {
         visibleBoards.Add(boardID);
     }
 
-    public List<int> GetVisibleBoards() {
+    public List<IFCSignBoard> GetVisibleBoards() {
         return visibleBoards;
     }
 }

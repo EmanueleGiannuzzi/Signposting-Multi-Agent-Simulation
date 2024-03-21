@@ -2,6 +2,7 @@
 using System.IO;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Object = UnityEngine.Object;
 using Random = System.Random;
@@ -116,7 +117,16 @@ public static class Utility {
 
         return mesh;
     }
-
+    
+    public static void DestroyObject(Object obj) {
+        if (obj != null) {
+#if UNITY_EDITOR
+            Object.DestroyImmediate(obj);
+#else
+            Object.Destroy(obj);
+#endif
+        }
+    }
     
 #region Math
     public static Vector2 Vector3ToVerctor2NoY(Vector3 v3) {
@@ -174,6 +184,18 @@ public static class Utility {
             Array.Copy(source, index + 1, dest, index, source.Length - index - 1);
 
         return dest;
+    }
+    
+    public static T[] Get2DMatrixColumn<T>(T[,] matrix, int columnNumber) {
+        return Enumerable.Range(0, matrix.GetLength(0))
+            .Select(x => matrix[x, columnNumber])
+            .ToArray();
+    }
+
+    public static T[] Get2DMatrixRow<T>(T[,] matrix, int rowNumber) {
+        return Enumerable.Range(0, matrix.GetLength(1))
+            .Select(x => matrix[rowNumber, x])
+            .ToArray();
     }
 #endregion
 
@@ -233,13 +255,7 @@ public static class Utility {
 
     public static void DeleteGroup(string groupTag) {
         GameObject group = GetGroup(groupTag);
-        if (group != null) {
-            #if UNITY_EDITOR
-            Object.DestroyImmediate(group);
-            #else
-                Object.Destroy(group);
-            #endif
-        }
+        DestroyObject(group);
     }
     
     public static T[] GetComponentsFromTag<T>(string tag) {

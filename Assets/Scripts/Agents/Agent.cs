@@ -4,6 +4,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Agent : MonoBehaviour {
     private NavMeshAgent navMeshAgent;
+    public float AgentFOVDegrees;
 
     private void Awake() {
         navMeshAgent = GetComponent<NavMeshAgent>();

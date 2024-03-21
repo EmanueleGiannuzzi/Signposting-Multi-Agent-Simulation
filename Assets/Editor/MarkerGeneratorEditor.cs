@@ -2,8 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(MarkerGenerator))]
-public class MarkerGeneratorEditor : Editor {
-    private MarkerGenerator handler;
+public class MarkerGeneratorEditor : GenericEditor<MarkerGenerator> {
 
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
@@ -11,9 +10,5 @@ public class MarkerGeneratorEditor : Editor {
         if (GUILayout.Button("Generate Markers")) {
             handler.AddMarkersToTraversables();
         }
-    }
-
-    void OnEnable() {
-        handler = (MarkerGenerator)target;
     }
 }
