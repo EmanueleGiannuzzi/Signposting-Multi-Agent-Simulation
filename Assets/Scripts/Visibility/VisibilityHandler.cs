@@ -211,7 +211,7 @@ public class VisibilityHandler : MonoBehaviour {
         // }
     }
     
-    public List<IFCSignBoard> GetSignboardIDsVisible(Vector3 agentPosition, int agentTypeID) {
+    public List<IFCSignBoard> GetSignboardsVisible(Vector3 agentPosition, int agentTypeID) {
         if(visibilityInfo == null) {
             Debug.LogError("Visibility Info Unavailable");
             return null;
@@ -235,5 +235,17 @@ public class VisibilityHandler : MonoBehaviour {
             }
         }
         return new List<IFCSignBoard>();
+    }
+    
+    public static bool IsSignboardInFOV(Transform agentTransform, Transform signboardTransform, float agentFOV) {
+        Vector2 signboardPos = Utility.Vector3ToVerctor2NoY(signboardTransform.position);
+        Vector2 agentPos = Utility.Vector3ToVerctor2NoY(agentTransform.position);
+
+        Vector2 directionLooking = Utility.Vector3ToVerctor2NoY(agentTransform.forward);
+        Vector2 directionSignboard = (signboardPos - agentPos).normalized;
+
+        float angleToPoint = Mathf.Rad2Deg * Mathf.Acos(Vector2.Dot(directionLooking, directionSignboard));
+
+        return angleToPoint <= agentFOV / 2;
     }
 }
