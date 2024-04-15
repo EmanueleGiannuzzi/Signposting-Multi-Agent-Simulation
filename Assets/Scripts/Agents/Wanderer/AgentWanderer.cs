@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Agent))]
 public class AgentWanderer : MonoBehaviour {
@@ -17,29 +16,29 @@ public class AgentWanderer : MonoBehaviour {
     }
 
     private void Start() {
-        InvokeRepeating(nameof(lookAround),0f, 1 / UPDATE_FREQUENCY_HZ);
+        // InvokeRepeating(nameof(lookAround),0f, 1 / UPDATE_FREQUENCY_HZ);
     }
 
-    private void lookAround() {
-        List<IFCSignBoard> signboardsVisible = visibilityHandler.GetSignboardsVisible(this.transform.position, agentTypeID);
-        HashSet<RoutingSignboard> visibleRoutingSignboards = new HashSet<RoutingSignboard>();
-
-        foreach (IFCSignBoard ifcSignboard in signboardsVisible) {
-            RoutingSignboard routingSignboard = ifcSignboard.GetComponent<RoutingSignboard>();
-            if (routingSignboard != null && VisibilityHandler.IsSignboardInFOV(this.transform, routingSignboard.transform, agentFOV)) {
-                visibleRoutingSignboards.Add(routingSignboard);
-            }
-        }
-
-        Vector3 wanderingDirection = calculateWanderingDirection(visibleRoutingSignboards);
-        wanderTowards(wanderingDirection);
-    }
-
-    private Vector3 calculateWanderingDirection(HashSet<RoutingSignboard> visibleRoutingSignboards) {
-        throw new System.NotImplementedException();
-    }
-
-    private void wanderTowards(Vector3 wanderingDirection) {
-        throw new System.NotImplementedException();
-    }
+    // private void lookAround() {
+    //     List<IFCSignBoard> signboardsVisible = visibilityHandler.GetSignboardsVisible(this.transform.position, agentTypeID);
+    //     HashSet<RoutingSignboard> visibleRoutingSignboards = new HashSet<RoutingSignboard>();
+    //
+    //     foreach (IFCSignBoard ifcSignboard in signboardsVisible) {
+    //         RoutingSignboard routingSignboard = ifcSignboard.GetComponent<RoutingSignboard>();
+    //         if (routingSignboard != null && VisibilityHandler.IsSignboardInFOV(this.transform, routingSignboard.transform, agentFOV)) {
+    //             visibleRoutingSignboards.Add(routingSignboard);
+    //         }
+    //     }
+    //
+    //     Vector3 wanderingDirection = calculateWanderingDirection(visibleRoutingSignboards);
+    //     wanderTowards(wanderingDirection);
+    // }
+    //
+    // private Vector3 calculateWanderingDirection(HashSet<RoutingSignboard> visibleRoutingSignboards) {
+    //     throw new System.NotImplementedException();
+    // }
+    //
+    // private void wanderTowards(Vector3 wanderingDirection) {
+    //     throw new System.NotImplementedException();
+    // }
 }
