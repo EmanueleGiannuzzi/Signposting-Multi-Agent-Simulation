@@ -2,10 +2,10 @@
 
 public class SignboardGridGenerator : MonoBehaviour {
     public IFCSignBoard SignboardTemplate;
-    public float resolution; // point/meter
+    public float resolution = 0.5f; // point/meter
 
-    public float signboardHeight;
-    public float signboardOrientation;
+    public float signboardHeight = 2f;
+    public float signboardOrientation = -90f;
 
     private GameObject signboardGridGroup;//Child of this object are the signboards generated
 
