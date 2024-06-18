@@ -16,6 +16,10 @@ public class MarkerGenerator : MonoBehaviour {
     
     public delegate void OnMarkersGenerated(List<IRouteMarker> markers);
     public event OnMarkersGenerated OnMarkersGeneration;
+    
+    private readonly List<IRouteMarker> markers = new();
+    private bool ready = false;
+    public List<IRouteMarker> Markers => ready ? markers : null;
 
     private void Start() {
         AddMarkersToTraversables();
@@ -31,8 +35,6 @@ public class MarkerGenerator : MonoBehaviour {
 
     public void AddMarkersToTraversables() {
         resetMarkers();
-
-        List<IRouteMarker> markers = new();
 
         if (!ifcGameObject) {
             Debug.LogError("[MarkerGenerator]: No IFC Object found");
@@ -74,6 +76,8 @@ public class MarkerGenerator : MonoBehaviour {
             }
         }
         EditorUtility.ClearProgressBar();
+        
+        ready = true;
         OnMarkersGeneration?.Invoke(markers);
     }
 
@@ -115,5 +119,19 @@ public class MarkerGenerator : MonoBehaviour {
         markerCollider.isTrigger = true;
 
         return marker;
+    }
+
+    public static List<IRouteMarker> RemoveUnreachableMarkersFromPosition(IEnumerable<IRouteMarker> markers, Vector3 startPosition, bool drawDebug = false) {
+        List<IRouteMarker> markersConnected = new (markers);
+        markersConnected.RemoveAll(marker => {
+            NavMeshPath path = new NavMeshPath();
+            NavMesh.CalculatePath(startPosition, marker.Position, NavMesh.AllAreas, path);
+            bool pathExists = path.status == NavMeshPathStatus.PathComplete;
+            if (drawDebug && !pathExists) {
+                Debug.DrawLine(marker.Position, startPosition, Color.red, 120f, false);
+            }
+            return !pathExists;
+        });
+        return markersConnected;
     }
 }

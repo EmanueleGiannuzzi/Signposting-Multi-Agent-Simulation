@@ -7,7 +7,7 @@ public class SignboardGridGenerator : MonoBehaviour {
     public float signboardHeight = 2f;
     public float signboardOrientation = -90f;
 
-    private GameObject signboardGridGroup;//Child of this object are the signboards generated
+    private GameObject signboardGridGroup;// The children of this object are the signboards generated
 
     public GameObject GetSignboardGridGroup() {
         return signboardGridGroup;
@@ -27,7 +27,7 @@ public class SignboardGridGenerator : MonoBehaviour {
         GenerateGrid(signboardGridGroup);
     }
 
-    private void generateSignboardBack(GameObject signboardObj, Material signboardBackMaterial) {
+    private static void generateSignboardBack(GameObject signboardObj, Material signboardBackMaterial) {
         Transform parentTransform = signboardObj.transform;
         
         GameObject signboardBackObj = GameObject.CreatePrimitive(PrimitiveType.Plane);

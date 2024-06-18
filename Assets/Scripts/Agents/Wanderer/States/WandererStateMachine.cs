@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Agents.Wanderer.States {
     [RequireComponent(typeof(AgentWanderer))]
@@ -25,8 +26,34 @@ namespace Agents.Wanderer.States {
         private ExecuteSignageState ExecuteSignageState => (ExecuteSignageState)states[4];
         private DisorientationState DisorientationState => (DisorientationState)states[5];
         private FailSafeState FailSafeState => (FailSafeState)states[6];
+        
+        
+        MarkerGenerator markerGen = FindObjectOfType<MarkerGenerator>();
+        private RoutingGraphCPTSolver routingGraph;
+        private bool ready = false;
+        private void Awake() {
+            if (markerGen == null) {
+                Debug.LogError($"Unable to find {nameof(MarkerGenerator)}");
+                return;
+            }
+        }
+
+        private void initMarkers(List<IRouteMarker> markers) {
+            List<IRouteMarker> markersConnected = MarkerGenerator.RemoveUnreachableMarkersFromPosition(markers, this.transform.position);
+            routingGraph = new RoutingGraphCPTSolver(markersConnected.ToArray());
+        }
+
+        private void OnMarkersGenerated(List<IRouteMarker> markers) {
+            markerGen.OnMarkersGeneration -= OnMarkersGenerated;
+            initMarkers(markers);
+        }
 
         private void Start() {
+            if (markerGen.Markers != null) 
+                initMarkers(markerGen.Markers);
+            else
+                markerGen.OnMarkersGeneration += OnMarkersGenerated;
+            
             foreach (AbstractWandererState state in states) {
                 state.Setup();
             }

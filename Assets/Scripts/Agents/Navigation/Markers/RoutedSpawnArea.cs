@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 using Random = Unity.Mathematics.Random;
 
 public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
@@ -25,16 +24,7 @@ public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
     }
 
     private void OnMarkersGenerated(List<IRouteMarker> markers) {
-        List<IRouteMarker> markersConnected = new (markers);
-        markersConnected.RemoveAll(marker => {
-            NavMeshPath path = new NavMeshPath();
-            NavMesh.CalculatePath(((IRouteMarker)this).Position, marker.Position, NavMesh.AllAreas, path);
-            bool pathExists = path.status == NavMeshPathStatus.PathComplete;
-            if (!pathExists) {
-                Debug.DrawLine(marker.Position, ((IRouteMarker)this).Position, Color.red, 120f, false);
-            }
-            return !pathExists;
-        });
+        List<IRouteMarker> markersConnected = MarkerGenerator.RemoveUnreachableMarkersFromPosition(markers, ((IRouteMarker)this).Position);
         markersConnected.Insert(0,this);
         routingGraph = new RoutingGraphCPTSolver(markersConnected.ToArray());
         route = routingGraph.GetRoute(this);
