@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -6,8 +7,11 @@ public class Agent : MonoBehaviour {
     private NavMeshAgent navMeshAgent;
     public float AgentFOVDegrees;
 
+    [SerializeField] private TMP_Text debugNameplate;
+
     private void Awake() {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        SetDebugNameplateText("");
     }
     
     public void MoveTo(Vector3 destination) {
@@ -19,5 +23,9 @@ public class Agent : MonoBehaviour {
         MoveTo(destination);
         DestroyOnCollision destroyOnCollision = this.gameObject.AddComponent<DestroyOnCollision>();
         destroyOnCollision.destroyer = destroyer;
+    }
+
+    public void SetDebugNameplateText(string text) {
+        debugNameplate.text = text;
     }
 }

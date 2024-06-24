@@ -237,8 +237,8 @@ public class VisibilityHandler : MonoBehaviour {
         return new List<IFCSignBoard>();
     }
     
-    public static bool IsSignboardInFOV(Transform agentTransform, Transform signboardTransform, float agentFOV) {
-        Vector2 signboardPos = Utility.Vector3ToVerctor2NoY(signboardTransform.position);
+    public static bool IsSignboardInFOV(Transform agentTransform, IFCSignBoard signboard, float agentFOVDeg) {
+        Vector2 signboardPos = Utility.Vector3ToVerctor2NoY(signboard.transform.position);
         Vector2 agentPos = Utility.Vector3ToVerctor2NoY(agentTransform.position);
 
         Vector2 directionLooking = Utility.Vector3ToVerctor2NoY(agentTransform.forward);
@@ -246,6 +246,6 @@ public class VisibilityHandler : MonoBehaviour {
 
         float angleToPoint = Mathf.Rad2Deg * Mathf.Acos(Vector2.Dot(directionLooking, directionSignboard));
 
-        return angleToPoint <= agentFOV / 2;
+        return angleToPoint <= agentFOVDeg / 2;
     }
 }

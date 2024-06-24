@@ -15,8 +15,12 @@ public class AgentWanderer : MonoBehaviour {
         agent = GetComponent<Agent>();
     }
 
-    private void Start() {
+    // private void Start() {
         // InvokeRepeating(nameof(lookAround),0f, 1 / UPDATE_FREQUENCY_HZ);
+    // }
+    
+    public void SetDebugText(string text) {
+        agent.SetDebugNameplateText(text);
     }
 
     // private void lookAround() {

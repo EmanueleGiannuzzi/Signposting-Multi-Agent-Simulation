@@ -2,10 +2,11 @@
 using UnityEngine;
 
 namespace Agents.Wanderer.States {
-    [RequireComponent(typeof(AgentWanderer))]
+    [RequireComponent(typeof(AgentWanderer), typeof(SignboardAwareAgent))]
     public class WandererStateMachine : MonoBehaviour {
-        
-        
+        private AgentWanderer agentWanderer;
+        private SignboardAwareAgent signboardAwareAgent;
+
         private AbstractWandererState currentState;
         
         private IRouteMarker currentDestination;
@@ -32,13 +33,26 @@ namespace Agents.Wanderer.States {
         private RoutingGraphCPTSolver routingGraph;
         private bool ready = false;
         private void Awake() {
+            agentWanderer = GetComponent<AgentWanderer>();
             if (markerGen == null) {
                 Debug.LogError($"Unable to find {nameof(MarkerGenerator)}");
-                return;
             }
         }
 
-        private void initMarkers(List<IRouteMarker> markers) {
+        private void Start() {
+            if (markerGen.Markers != null) 
+                initMarkers(markerGen.Markers);
+            else
+                markerGen.OnMarkersGeneration += OnMarkersGenerated;
+            
+            signboardAwareAgent.OnAgentEnterVisibilityArea += OnAgentEnterVisibilityArea;
+            
+            foreach (AbstractWandererState state in states) {
+                state.Setup();
+            }
+        }
+
+        private void initMarkers(IEnumerable<IRouteMarker> markers) {
             List<IRouteMarker> markersConnected = MarkerGenerator.RemoveUnreachableMarkersFromPosition(markers, this.transform.position);
             routingGraph = new RoutingGraphCPTSolver(markersConnected.ToArray());
         }
@@ -48,15 +62,8 @@ namespace Agents.Wanderer.States {
             initMarkers(markers);
         }
 
-        private void Start() {
-            if (markerGen.Markers != null) 
-                initMarkers(markerGen.Markers);
-            else
-                markerGen.OnMarkersGeneration += OnMarkersGenerated;
+        private void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
             
-            foreach (AbstractWandererState state in states) {
-                state.Setup();
-            }
         }
 
         private void Update() {
@@ -64,10 +71,10 @@ namespace Agents.Wanderer.States {
         }
 
         private void FixedUpdate() {
-            if (currentState.isDone) {
+            if (currentState == null || currentState.isDone) {
                 SelectState();
             }
-            currentState.FixedDo();
+            currentState?.FixedDo();
         }
 
         public void SetState(AbstractWandererState newState, bool forceReset = false) {
@@ -112,7 +119,12 @@ namespace Agents.Wanderer.States {
             }
             
             currentState.Enter();
+            setDebugText(currentState.GetType().Name);
         }
-
+    
+        private void setDebugText(string text) {
+            agentWanderer.SetDebugText(text);
+        }
     }
+    
 }
