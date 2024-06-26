@@ -5,6 +5,5 @@
         // Goal is visible and agent in goal VCA -> Success
         // Goal not visible -> Explore State
         
-        
     }
 }

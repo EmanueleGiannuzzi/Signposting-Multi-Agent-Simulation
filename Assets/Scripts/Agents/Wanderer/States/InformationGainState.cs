@@ -6,6 +6,6 @@
         // Look at grid cells around (Greater LD = loot at more cells)
         // Go to cell with lower entropy
         // If cell has entropy < TE -> Execute Sign State
-        
+
     }
 }

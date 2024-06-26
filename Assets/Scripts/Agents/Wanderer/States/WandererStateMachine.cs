@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Agents.Wanderer.States {
@@ -31,7 +32,7 @@ namespace Agents.Wanderer.States {
         
         MarkerGenerator markerGen = FindObjectOfType<MarkerGenerator>();
         private RoutingGraphCPTSolver routingGraph;
-        private bool ready = false;
+        
         private void Awake() {
             agentWanderer = GetComponent<AgentWanderer>();
             if (markerGen == null) {
@@ -45,10 +46,8 @@ namespace Agents.Wanderer.States {
             else
                 markerGen.OnMarkersGeneration += OnMarkersGenerated;
             
-            signboardAwareAgent.OnAgentEnterVisibilityArea += OnAgentEnterVisibilityArea;
-            
             foreach (AbstractWandererState state in states) {
-                state.Setup();
+                state.Setup(signboardAwareAgent);
             }
         }
 
@@ -62,16 +61,12 @@ namespace Agents.Wanderer.States {
             initMarkers(markers);
         }
 
-        private void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
-            
-        }
-
         private void Update() {
             currentState.Do();
         }
 
         private void FixedUpdate() {
-            if (currentState == null || currentState.isDone) {
+            if (currentState == null || currentState.IsDone) {
                 SelectState();
             }
             currentState?.FixedDo();
@@ -88,10 +83,24 @@ namespace Agents.Wanderer.States {
 
         private void SelectState() {
             switch (currentState) {
-                case ExploreState _:
+                case ExploreState exploreState:
                     // One or more signs found -> SignageDiscoveryState
                     // Intersection -> DecisionNodeState
                     // No sign found -> DisorientationState
+                    switch (exploreState.ExitReason) {
+                        case ExploreState.Reason.EnteredVCA:
+                            SetState(SignageDiscoveryState);
+                            break;
+                        case ExploreState.Reason.ReachedMarker:
+                            SetState(DecisionNodeState);
+                            break;
+                        case ExploreState.Reason.OverWalked:
+                            SetState(DisorientationState);
+                            break;
+                        case ExploreState.Reason.None:
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                     break;
                 case DecisionNodeState _:
                     // Decision Executed -> ExploreState
