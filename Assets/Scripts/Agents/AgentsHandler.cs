@@ -1,6 +1,8 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class AgentsHandler : MonoBehaviour{
     private static readonly List<Agent> Agents = new();
@@ -18,7 +20,10 @@ public class AgentsHandler : MonoBehaviour{
     public Agent SpawnAgent(GameObject agentPrefab, Vector3 spawnPoint, Quaternion rotation) {
         GameObject agentGameObject = Instantiate(agentPrefab, spawnPoint, rotation);
         agentGameObject.layer = Constants.AGENTS_LAYER;
-        Agent agent = agentGameObject.AddComponent<Agent>();
+        Agent agent = agentGameObject.GetComponent<Agent>();
+        if (agent == null) {
+            throw new ArgumentException($"Unable to find {nameof(Agent)} component in Agent Prefab");
+        }
         OnAgentSpawned(agent);
         return agent;
     }

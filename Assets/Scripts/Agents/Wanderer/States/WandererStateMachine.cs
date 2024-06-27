@@ -29,12 +29,12 @@ namespace Agents.Wanderer.States {
         private DisorientationState DisorientationState => (DisorientationState)states[5];
         private FailSafeState FailSafeState => (FailSafeState)states[6];
         
-        
-        MarkerGenerator markerGen = FindObjectOfType<MarkerGenerator>();
+        private static MarkerGenerator markerGen;
         private RoutingGraphCPTSolver routingGraph;
         
         private void Awake() {
             agentWanderer = GetComponent<AgentWanderer>();
+            markerGen ??= FindObjectOfType<MarkerGenerator>();
             if (markerGen == null) {
                 Debug.LogError($"Unable to find {nameof(MarkerGenerator)}");
             }

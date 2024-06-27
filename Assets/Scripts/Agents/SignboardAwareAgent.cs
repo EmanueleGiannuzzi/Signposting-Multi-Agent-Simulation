@@ -22,6 +22,7 @@ public class SignboardAwareAgent : MonoBehaviour {
     }
 
     private void Start() {
+        //TODO: Check if visibility info is available
         InvokeRepeating(nameof(simulationUpdate), 0f, 1f / updateFrequencyHz);
     }
 

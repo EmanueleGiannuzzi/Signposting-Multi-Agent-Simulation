@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Agent))]
 public class MarkersAwareAgent : MonoBehaviour {
-    protected static MarkerGenerator markerGenerator;
+    public static MarkerGenerator markerGenerator;
     protected Agent agent;
     protected bool markersReady => markerGenerator.Ready;
     
@@ -13,6 +13,9 @@ public class MarkersAwareAgent : MonoBehaviour {
 
     private void Awake() {
         markerGenerator ??= FindObjectOfType<MarkerGenerator>();
+        if (markerGenerator == null) {
+            Debug.LogError($"Unable to find {nameof(MarkerGenerator)}");
+        }
         agent = GetComponent<Agent>();
     }
 

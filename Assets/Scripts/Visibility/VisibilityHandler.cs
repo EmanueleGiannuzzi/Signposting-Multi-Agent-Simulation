@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,8 +9,8 @@ public class VisibilityHandler : MonoBehaviour {
     
     [Header("Resolution (point/meter)")]
     public int resolution = 10;
-    
-    public Dictionary<Vector2Int, VisibilityInfo>[][] visibilityInfo;//1 for each visibility plane mesh
+
+    private Dictionary<Vector2Int, VisibilityInfo>[][] visibilityInfo;//1 for each visibility plane mesh
     
     [Header("Texture Color")]
     public Color nonVisibleColor = new(1f, 0f, 0f, 0.5f);//red
