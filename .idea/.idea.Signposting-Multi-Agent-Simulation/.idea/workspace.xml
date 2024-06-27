@@ -2,16 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa69fa30-2d10-43b0-9659-b7890d89d5eb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkersAwareAgent.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkersAwareAgent.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/WandererSpawnArea.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/WandererSpawnArea.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/AbstractWandererState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/AbstractWandererState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DisorientationState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DisorientationState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExecuteSignageState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExecuteSignageState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/FailSafeState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/FailSafeState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/InformationGainState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/InformationGainState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/SignageDiscoveryState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/SignageDiscoveryState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/WandererStateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/WandererStateMachine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Agent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Agent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/AgentRouted.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/AgentRouted.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/Markers/RoutedSpawnArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/Markers/RoutedSpawnArea.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +180,8 @@
       <workItem from="1718961523178" duration="6481000" />
       <workItem from="1719050228385" duration="596000" />
       <workItem from="1719215116877" duration="4354000" />
-      <workItem from="1719393934555" duration="2531000" />
+      <workItem from="1719393934555" duration="3211000" />
+      <workItem from="1719476815684" duration="5805000" />
     </task>
     <servers />
   </component>

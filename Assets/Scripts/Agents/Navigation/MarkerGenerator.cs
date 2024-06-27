@@ -18,8 +18,8 @@ public class MarkerGenerator : MonoBehaviour {
     public event OnMarkersGenerated OnMarkersGeneration;
     
     private readonly List<IRouteMarker> markers = new();
-    private bool ready = false;
-    public List<IRouteMarker> Markers => ready ? markers : null;
+    public bool Ready {get; private set;} = false;
+    public List<IRouteMarker> Markers => Ready ? markers : null;
 
     private void Start() {
         AddMarkersToTraversables();
@@ -77,7 +77,7 @@ public class MarkerGenerator : MonoBehaviour {
         }
         EditorUtility.ClearProgressBar();
         
-        ready = true;
+        Ready = true;
         OnMarkersGeneration?.Invoke(markers);
     }
 

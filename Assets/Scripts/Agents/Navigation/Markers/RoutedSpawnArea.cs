@@ -44,7 +44,7 @@ public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
     public Agent SpawnAgentWithDestination(GameObject agentPrefab, Vector3 destination) {
         Agent agent = SpawnAgent(agentPrefab);
         if(agent != null)
-            agent.GetComponent<AgentRouted>().SetDestination(destination);
+            agent.GetComponent<AgentRouted>().SetDestinationWithError(destination);
 
         return agent;
     }
