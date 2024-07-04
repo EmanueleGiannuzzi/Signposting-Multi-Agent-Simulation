@@ -2,20 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa69fa30-2d10-43b0-9659-b7890d89d5eb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/AgentWanderer.prefab" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/AgentWanderer.prefab.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/Handlers.prefab" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/Handlers.prefab.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor/VisibilityHandlerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/VisibilityHandlerEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/Markers/RoutedSpawnArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/RoutedSpawnArea.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/Markers/RoutedSpawnArea.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/RoutedSpawnArea.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkersAwareAgent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkersAwareAgent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/SignboardAwareAgent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/SignboardAwareAgent.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/WandererSpawnArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/WandererSpawnArea.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/AbstractWandererState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/AbstractWandererState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/WandererStateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/WandererStateMachine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Visibility/VisibilityHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Visibility/VisibilityHandler.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,7 +179,11 @@
       <workItem from="1719050228385" duration="596000" />
       <workItem from="1719215116877" duration="4354000" />
       <workItem from="1719393934555" duration="3211000" />
-      <workItem from="1719476815684" duration="9327000" />
+      <workItem from="1719476815684" duration="9559000" />
+      <workItem from="1719842463331" duration="1838000" />
+      <workItem from="1719910954635" duration="595000" />
+      <workItem from="1719999705370" duration="2814000" />
+      <workItem from="1720083805286" duration="5634000" />
     </task>
     <servers />
   </component>

@@ -134,4 +134,23 @@ public class MarkerGenerator : MonoBehaviour {
         });
         return markersConnected;
     }
+
+    [CanBeNull]
+    public IRouteMarker GetClosestMarkerToPoint(Vector3 point) {
+        if (!Ready) {
+            return null;
+        }
+        
+        IRouteMarker closestMarker = null;
+        float closestDistanceSqr = Mathf.Infinity;
+        foreach (IRouteMarker marker in markers) {
+            Vector3 directionToTarget = marker.Position - point;
+            float distanceSqr = directionToTarget.sqrMagnitude;
+            if(distanceSqr < closestDistanceSqr) {
+                closestDistanceSqr = distanceSqr;
+                closestMarker = marker;
+            }
+        }
+        return closestMarker;
+    }
 }

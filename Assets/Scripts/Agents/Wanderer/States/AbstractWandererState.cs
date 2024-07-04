@@ -9,8 +9,9 @@ namespace Agents.Wanderer.States {
         private float startTime;
         protected float runningTime => Time.time - startTime;
 
-        public void Setup(SignboardAwareAgent signboardAwareAgent) {
+        public void Setup(SignboardAwareAgent signboardAwareAgent, MarkersAwareAgent markersAwareAgent) {
             signboardAwareAgent.OnAgentEnterVisibilityArea += onAgentEnterVisibilityArea;
+            markersAwareAgent.MarkerReachedEvent += onMarkerReached;
         }
         
         private void onAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
@@ -18,6 +19,14 @@ namespace Agents.Wanderer.States {
                 OnAgentEnterVisibilityArea(visibleBoards, agentTypeID);
             }
         }
+        
+        private void onMarkerReached(IRouteMarker marker) {
+            if (isActive) {
+                OnMarkerReached(marker);
+            }
+        }
+
+        protected virtual void OnMarkerReached(IRouteMarker marker) {}
 
         protected virtual void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {}
 

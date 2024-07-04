@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Agent))]
 public class MarkersAwareAgent : MonoBehaviour {
-    public static MarkerGenerator markerGenerator;
+    private static MarkerGenerator markerGenerator;
     protected Agent agent;
     protected bool markersReady => markerGenerator.Ready;
     

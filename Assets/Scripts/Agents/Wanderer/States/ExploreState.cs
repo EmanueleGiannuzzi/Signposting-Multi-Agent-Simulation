@@ -25,6 +25,11 @@ namespace Agents.Wanderer.States {
             ExitReason = Reason.EnteredVCA;
         }
 
+        protected override void OnMarkerReached(IRouteMarker marker) {
+            this.IsDone = true;
+            ExitReason = Reason.ReachedMarker;
+        }
+
         protected override void EnterState() {
             ExitReason = Reason.None;
         }

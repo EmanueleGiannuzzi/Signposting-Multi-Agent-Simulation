@@ -7,6 +7,7 @@ namespace Agents.Wanderer.States {
     public class WandererStateMachine : MonoBehaviour {
         private AgentWanderer agentWanderer;
         private SignboardAwareAgent signboardAwareAgent;
+        private MarkersAwareAgent markersAwareAgent;
 
         private AbstractWandererState currentState;
         
@@ -34,6 +35,9 @@ namespace Agents.Wanderer.States {
         
         private void Awake() {
             agentWanderer = GetComponent<AgentWanderer>();
+            signboardAwareAgent = GetComponent<SignboardAwareAgent>();
+            markersAwareAgent = GetComponent<MarkersAwareAgent>();
+            
             markerGen ??= FindObjectOfType<MarkerGenerator>();
             if (markerGen == null) {
                 Debug.LogError($"Unable to find {nameof(MarkerGenerator)}");
@@ -47,7 +51,7 @@ namespace Agents.Wanderer.States {
                 markerGen.OnMarkersGeneration += OnMarkersGenerated;
             
             foreach (AbstractWandererState state in states) {
-                state.Setup(signboardAwareAgent);
+                state.Setup(signboardAwareAgent, markersAwareAgent);
             }
         }
 
@@ -123,7 +127,7 @@ namespace Agents.Wanderer.States {
                     break;
                 default:
                     SetState(ExploreState, true);
-                    // ExploreState.SetDestination();
+                    ExploreState.SetDestination(markerGen.GetClosestMarkerToPoint(this.transform.position));
                     break;
             }
             
