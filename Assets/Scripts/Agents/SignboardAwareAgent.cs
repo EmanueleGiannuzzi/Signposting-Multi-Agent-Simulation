@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Agent))]
@@ -34,7 +33,9 @@ public class SignboardAwareAgent : MonoBehaviour {
             }
             
             visibleBoards.RemoveAll(visibleBoard => !VisibilityHandler.IsSignboardInFOV(this.transform, visibleBoard, agent.AgentFOVDegrees));
-            OnAgentEnterVisibilityArea?.Invoke(visibleBoards, agentTypeID);
+            if (visibleBoards.Count > 0) {
+                OnAgentEnterVisibilityArea?.Invoke(visibleBoards, agentTypeID); //TODO: Check if it's already inside
+            }
         }
     }
     

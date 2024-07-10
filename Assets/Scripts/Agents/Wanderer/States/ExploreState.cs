@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Agents.Wanderer.States {
     public class ExploreState : AbstractWandererState {
@@ -14,15 +15,16 @@ namespace Agents.Wanderer.States {
         // Reach a marker -> Decision Node State
         // Enter VCA -> Signage Discovery State
         // The agent has walked more than two times the inter-sign distance (parameter) -> Disorientation State 
-        public Reason ExitReason { get; private set; }
-        
-        public void SetDestination(IRouteMarker destination) {
-            
-        }
+        public Reason ExitReason { get; private set; } = Reason.None;
 
         protected override void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
             this.IsDone = true;
             ExitReason = Reason.EnteredVCA;
+            
+            Debug.Log($"Found {visibleBoards.Count} boards");
+            foreach (IFCSignBoard board in visibleBoards) {
+                Debug.Log(board.name);
+            }
         }
 
         protected override void OnMarkerReached(IRouteMarker marker) {

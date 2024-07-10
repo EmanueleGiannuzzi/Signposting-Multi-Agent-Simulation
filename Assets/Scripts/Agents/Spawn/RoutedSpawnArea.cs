@@ -7,6 +7,9 @@ using Random = Unity.Mathematics.Random;
 
 public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
     Vector3 IRouteMarker.Position => transform.position;
+    string IRouteMarker.getName() {
+        return this.name;
+    }
 
     private RoutingGraphCPTSolver routingGraph;
     private Queue<IRouteMarker> route;

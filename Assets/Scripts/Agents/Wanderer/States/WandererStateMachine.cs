@@ -51,7 +51,7 @@ namespace Agents.Wanderer.States {
                 markerGen.OnMarkersGeneration += OnMarkersGenerated;
             
             foreach (AbstractWandererState state in states) {
-                state.Setup(signboardAwareAgent, markersAwareAgent);
+                state.Setup(agentWanderer, signboardAwareAgent, markersAwareAgent);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Agents.Wanderer.States {
         }
 
         private void Update() {
-            currentState.Do();
+            currentState?.Do();
         }
 
         private void FixedUpdate() {
@@ -106,8 +106,9 @@ namespace Agents.Wanderer.States {
                             throw new ArgumentOutOfRangeException();
                     }
                     break;
-                case DecisionNodeState _:
-                    // Decision Executed -> ExploreState
+                case DecisionNodeState decisionNodeState:
+                    agentWanderer.SetDestination(decisionNodeState.NextDestination);
+                    SetState(ExploreState);
                     break;
                 case SignageDiscoveryState _:
                     // No Correct sign found -> ExploreState
@@ -127,7 +128,10 @@ namespace Agents.Wanderer.States {
                     break;
                 default:
                     SetState(ExploreState, true);
-                    ExploreState.SetDestination(markerGen.GetClosestMarkerToPoint(this.transform.position));
+                    IRouteMarker closestMarker = markerGen.GetClosestMarkerToPoint(this.transform.position);
+                    if (closestMarker != null) {
+                        agentWanderer.SetDestination(closestMarker.Position);
+                    }
                     break;
             }
             

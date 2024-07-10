@@ -9,7 +9,8 @@ public class AgentWanderer : MarkersAwareAgent {
     private static VisibilityHandler visibilityHandler;
     private float agentFOV => agent.AgentFOVDegrees;
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         visibilityHandler ??= FindObjectOfType<VisibilityHandler>();
         if (visibilityHandler == null) {
             Debug.LogError($"Unable to find {nameof(VisibilityHandler)}");
@@ -18,6 +19,11 @@ public class AgentWanderer : MarkersAwareAgent {
     
     public void SetDebugText(string text) {
         agent.SetDebugNameplateText(text);
+    }
+
+    public void SetDestination(Vector3 destination) {
+        Debug.DrawLine(this.transform.position, destination, Color.red, 2f);
+        agent.SetDestination(destination);
     }
 
     public void DestroyAgent() {

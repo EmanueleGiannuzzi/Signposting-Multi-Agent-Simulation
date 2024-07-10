@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 public class VisibilityHandler : MonoBehaviour {
+    [SerializeField] private bool generateVisibilityDataOnStart = false;
+    
     [Header("Agent Types(Eye level)")]
     public StringFloatTuple[] agentTypes;
     
@@ -23,6 +24,12 @@ public class VisibilityHandler : MonoBehaviour {
 
     private void OnValidate() {
         IsCoverageReady = false;
+    }
+
+    private void Start() {
+        if (generateVisibilityDataOnStart) {
+            GenerateVisibilityData();
+        }
     }
 
     public void ClearAllData() {

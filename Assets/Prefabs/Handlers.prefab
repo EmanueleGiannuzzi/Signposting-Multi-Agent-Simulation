@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6126661656602394309}
-  - component: {fileID: 7493648478506582134}
-  - component: {fileID: 8564686239520146505}
   - component: {fileID: 5108653514951702100}
+  - component: {fileID: 8564686239520146505}
+  - component: {fileID: 7493648478506582134}
   m_Layer: 0
   m_Name: Environment
   m_TagString: Untagged
@@ -34,41 +34,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4492798950823485242}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7493648478506582134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 599944689233823050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f6206e3dde420f92d859a4b1921432, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agentTypes:
-  - key: Adult - Male
-    value: 1.75
-  - key: Wheelchair User
-    value: 1.25
-  resolution: 10
-  nonVisibleColor: {r: 1, g: 0, b: 0, a: 0.5}
-  progressAnalysis: -1
---- !u!114 &8564686239520146505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 599944689233823050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ae078cb375aaf44f8e4306bade37762, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ifcGameObject: {fileID: 0}
-  areaToAnalyze:
-  - IfcSlab
 --- !u!114 &5108653514951702100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,6 +50,42 @@ MonoBehaviour:
   resolution: 0.5
   signboardHeight: 2
   signboardOrientation: -90
+--- !u!114 &8564686239520146505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599944689233823050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae078cb375aaf44f8e4306bade37762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ifcGameObject: {fileID: 0}
+  areaToAnalyze:
+  - IfcSlab
+--- !u!114 &7493648478506582134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599944689233823050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05f6206e3dde420f92d859a4b1921432, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generateVisibilityDataOnStart: 0
+  agentTypes:
+  - key: Adult - Male
+    value: 1.75
+  - key: Wheelchair User
+    value: 1.25
+  resolution: 10
+  nonVisibleColor: {r: 1, g: 0, b: 0, a: 0.5}
+  progressAnalysis: -1
 --- !u!1 &2680564268314003082
 GameObject:
   m_ObjectHideFlags: 0

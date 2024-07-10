@@ -4,6 +4,9 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class IntermediateMarker : MonoBehaviour, IRouteMarker {
     Vector3 IRouteMarker.Position => transform.position;
+    string IRouteMarker.getName() {
+        return this.name;
+    }
 
     private new Collider collider;
 
@@ -13,4 +16,6 @@ public class IntermediateMarker : MonoBehaviour, IRouteMarker {
             throw new ArgumentException($"IntermediateMarker: {gameObject.name} has no trigger collider");
         }
     }
+    
+    
 }

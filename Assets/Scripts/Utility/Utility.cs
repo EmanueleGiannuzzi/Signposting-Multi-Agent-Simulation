@@ -197,6 +197,23 @@ public static class Utility {
             .Select(x => matrix[rowNumber, x])
             .ToArray();
     }
+    
+    public static int GetRandomWeightedIndex(float[] weights) {
+        float weightSum = 0f;
+        foreach (float weight in weights) {
+            weightSum += weight;
+        }
+ 
+        int index = 0;
+        int lastIndex = weights.Length - 1;
+        while (index < lastIndex) {
+            if (UnityEngine.Random.Range(0, weightSum) < weights[index]) {
+                return index;
+            }
+            weightSum -= weights[index++];
+        }
+        return index;
+    }
 #endregion
 
 #region OS

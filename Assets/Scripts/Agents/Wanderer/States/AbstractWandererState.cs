@@ -9,7 +9,14 @@ namespace Agents.Wanderer.States {
         private float startTime;
         protected float runningTime => Time.time - startTime;
 
-        public void Setup(SignboardAwareAgent signboardAwareAgent, MarkersAwareAgent markersAwareAgent) {
+        protected SignboardAwareAgent signboardAwareAgent;
+        protected MarkersAwareAgent markersAwareAgent;
+        protected AgentWanderer agentWanderer;
+
+        public void Setup(AgentWanderer agentWanderer, SignboardAwareAgent signboardAwareAgent, MarkersAwareAgent markersAwareAgent) {
+            this.signboardAwareAgent = signboardAwareAgent;
+            this.markersAwareAgent = markersAwareAgent;
+            this.agentWanderer = agentWanderer;
             signboardAwareAgent.OnAgentEnterVisibilityArea += onAgentEnterVisibilityArea;
             markersAwareAgent.MarkerReachedEvent += onMarkerReached;
         }

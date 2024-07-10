@@ -2,7 +2,11 @@
 using UnityEngine.Assertions;
 
 public class WandererSpawnArea : SpawnAreaBase {
+    private static MarkerGenerator markerGen;
+    
     private void Awake() {
+        markerGen ??= FindObjectOfType<MarkerGenerator>();
+        
         if (AgentPrefab.GetComponent<AgentWanderer>() == null) {
             throw new AssertionException($"Invalid Agent Prefab",
                 $"Trying to Spawn non {nameof(AgentWanderer)} from {nameof(WandererSpawnArea)}");
@@ -19,6 +23,6 @@ public class WandererSpawnArea : SpawnAreaBase {
     }
     
     protected override bool ShouldSpawnAgents() {
-        return base.ShouldSpawnAgents() && true; //TODO
+        return base.ShouldSpawnAgents() && markerGen.Ready;
     }
 }
