@@ -36,4 +36,23 @@ public class Agent : MonoBehaviour {
     public void DestroyAgent() {
         agentsHandler.DestroyAgent(this);
     }
+
+    public void SetModelHeight(float height) {
+        float currentHeight = getModelBounds().size.y;
+        float currentScaleY = transform.localScale.y;
+
+        Vector3 scale = this.transform.localScale;
+        scale.y = currentScaleY * height / currentHeight;
+        this.transform.localScale = scale;
+        
+        //TODO: Under a certain height maybe change model to wheelchair
+    }
+    
+    private Bounds getModelBounds() {
+        var total = new Bounds(transform.position, Vector3.zero);
+        foreach (var child in GetComponentsInChildren<Collider>()) {
+            total.Encapsulate(child.bounds);
+        }
+        return total;
+    }
 }

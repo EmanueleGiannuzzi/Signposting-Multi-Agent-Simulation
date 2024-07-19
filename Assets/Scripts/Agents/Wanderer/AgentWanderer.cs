@@ -4,7 +4,7 @@ using UnityEngine;
 //Information gatherer class
 [RequireComponent(typeof(WandererStateMachine))]
 public class AgentWanderer : MarkersAwareAgent {
-    private const int agentTypeID = 0; //TODO
+    public int agentTypeID { get; } = -1; //TODO
 
     private static VisibilityHandler visibilityHandler;
     private float agentFOV => agent.AgentFOVDegrees;
@@ -12,9 +12,15 @@ public class AgentWanderer : MarkersAwareAgent {
     protected override void Awake() {
         base.Awake();
         visibilityHandler ??= FindObjectOfType<VisibilityHandler>();
-        if (visibilityHandler == null) {
+        if (!visibilityHandler) {
             Debug.LogError($"Unable to find {nameof(VisibilityHandler)}");
         }
+    }
+
+    private void Start() {
+        int randomAgentType = Random.Range(0, visibilityHandler.agentTypes.Length);
+        float agentHeight = visibilityHandler.agentTypes[randomAgentType].Value;
+        agent.SetModelHeight(agentHeight);
     }
     
     public void SetDebugText(string text) {
@@ -22,7 +28,7 @@ public class AgentWanderer : MarkersAwareAgent {
     }
 
     public void SetDestination(Vector3 destination) {
-        Debug.DrawLine(this.transform.position, destination, Color.red, 2f);
+        Debug.DrawLine(this.transform.position + new Vector3(0f, 0.5f, 0f), destination + new Vector3(0f, 0.5f, 0f), Color.red, 2f);
         agent.SetDestination(destination);
     }
 

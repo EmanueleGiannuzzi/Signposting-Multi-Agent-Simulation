@@ -18,6 +18,10 @@ namespace Agents.Wanderer.States {
         public Reason ExitReason { get; private set; } = Reason.None;
 
         protected override void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
+            if (agentTypeID != agentWanderer.agentTypeID) {
+                return;
+            }
+            
             this.IsDone = true;
             ExitReason = Reason.EnteredVCA;
             
