@@ -8,7 +8,7 @@ namespace Agents.Wanderer.States {
             None,
             EnteredVCA,
             ReachedMarker,
-            OverWalked
+            OverWalked //TODO
         }
         
         // Follow the path between markers

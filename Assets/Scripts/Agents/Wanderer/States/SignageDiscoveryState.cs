@@ -1,16 +1,24 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
+
+// Add all visible signs to a list
+// Walk towards the nearest sign
+// Repeat for each new sign
+// Keep the signs in the list so that the agent can ignore them
+
+// Correct Sign is found -> Information Gain State
+// None of the Signs around contains useful information -> Explore State
 
 namespace Agents.Wanderer.States {
     public class SignageDiscoveryState : AbstractWandererState {
         private List<IFCSignBoard> visitedSigns = new ();
 
-        // Add all visible signs to a list
-        // Walk towards the nearest sign
-        // Repeat for each new sign
-        // Keep the signs in the list so that the agent can ignore them
-
-        // Correct Sign is found -> Information Gain State
-        // None of the Signs around contains useful information -> Explore State
+        public enum Reason {
+            None,
+            SignFound,
+            NoSignFound
+        }
+        public Reason ExitReason { get; private set; } = Reason.None;
         
         protected override void EnterState() {
             List<IFCSignBoard> visibleBoards = signboardAwareAgent.visibleSigns;
@@ -29,7 +37,33 @@ namespace Agents.Wanderer.States {
             }
 
             if (closestSign) {
-                agentWanderer.SetDestination(closestSign.WorldCenterPoint);
+                agentWanderer.SetDestination(closestSign.WorldCenterPoint, 1f, onSignboardReached);
+            }
+        }
+
+        private void onSignboardReached() {
+            ExitReason = Reason.NoSignFound;
+            this.IsDone = true;
+        }
+        
+        protected override void FixedDoState() {
+            foreach (IFCSignBoard signboard in signboardAwareAgent.visibleSigns) {
+                checkSignboard(signboard);
+            }
+        }
+
+        private void checkSignboard(IFCSignBoard signboard) {
+            if (visitedSigns.Contains(signboard)) {
+                return;
+            }
+            visitedSigns.Add(signboard);
+
+            SignboardDirections signDirection = signboard.GetComponent<SignboardDirections>();
+            if (signDirection) {
+                Vector3 nextGoal = signDirection.GetDirection(agentWanderer.Goal);
+                agentWanderer.SetDestination(nextGoal);
+                this.IsDone = true;
+                ExitReason = Reason.NoSignFound;
             }
         }
     }
