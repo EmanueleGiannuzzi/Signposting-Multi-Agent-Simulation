@@ -37,7 +37,7 @@ public class Agent : MonoBehaviour {
         agentsHandler.DestroyAgent(this);
     }
 
-    public void SetModelHeight(float height) {
+    public void SetModelHeight(float height) {//TODO: Changinging scale moves the model
         float currentHeight = getModelBounds().size.y;
         float currentScaleY = transform.localScale.y;
 

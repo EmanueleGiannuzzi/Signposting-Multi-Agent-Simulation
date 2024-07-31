@@ -10,6 +10,8 @@ namespace Agents.Wanderer.States {
             ReachedMarker,
             OverWalked //TODO
         }
+
+        public List<IFCSignBoard> VisibleBoards = new ();
         
         // Follow the path between markers
         // Reach a marker -> Decision Node State
@@ -22,6 +24,8 @@ namespace Agents.Wanderer.States {
                 return;
             }
             
+            VisibleBoards.Clear();
+            VisibleBoards.AddRange(visibleBoards);
             this.IsDone = true;
             ExitReason = Reason.EnteredVCA;
             

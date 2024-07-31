@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // Add all visible signs to a list
@@ -19,10 +20,15 @@ namespace Agents.Wanderer.States {
             NoSignFound
         }
         public Reason ExitReason { get; private set; } = Reason.None;
+
+        public bool IsThereAnyUnvisitedSignboard(List<IFCSignBoard> signboards) {
+            return signboards.Any(signboard => !visitedSigns.Contains(signboard));
+        }
         
         protected override void EnterState() {
             List<IFCSignBoard> visibleBoards = signboardAwareAgent.visibleSigns;
             if (visibleBoards.Count <= 0) {
+                onNoSignFound();
                 return;
             }
 
@@ -37,11 +43,13 @@ namespace Agents.Wanderer.States {
             }
 
             if (closestSign) {
-                agentWanderer.SetDestination(closestSign.WorldCenterPoint, 1f, onSignboardReached);
+                agentWanderer.SetDestination(closestSign.WorldCenterPoint, 1f, onNoSignFound);
             }
         }
+        
+        
 
-        private void onSignboardReached() {
+        private void onNoSignFound() {
             ExitReason = Reason.NoSignFound;
             this.IsDone = true;
         }
@@ -61,6 +69,9 @@ namespace Agents.Wanderer.States {
             SignboardDirections signDirection = signboard.GetComponent<SignboardDirections>();
             if (signDirection) {
                 Vector3 nextGoal = signDirection.GetDirection(agentWanderer.Goal);
+                if (nextGoal == SignboardDirections.NO_DIRECTION) {
+                    return;
+                }
                 agentWanderer.SetDestination(nextGoal);
                 this.IsDone = true;
                 ExitReason = Reason.NoSignFound;

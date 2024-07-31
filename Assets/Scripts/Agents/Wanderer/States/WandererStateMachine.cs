@@ -93,7 +93,9 @@ namespace Agents.Wanderer.States {
                     // No sign found -> DisorientationState
                     switch (exploreState.ExitReason) {
                         case ExploreState.Reason.EnteredVCA:
-                            SetState(SignageDiscoveryState);
+                            if (SignageDiscoveryState.IsThereAnyUnvisitedSignboard(exploreState.VisibleBoards)) {
+                                SetState(SignageDiscoveryState);
+                            }
                             break;
                         case ExploreState.Reason.ReachedMarker:
                             SetState(DecisionNodeState);
@@ -110,13 +112,13 @@ namespace Agents.Wanderer.States {
                     agentWanderer.SetDestination(decisionNodeState.NextDestination);
                     SetState(ExploreState);
                     break;
-                case SignageDiscoveryState _:
+                case SignageDiscoveryState signageDiscoveryState:
                     // No Correct sign found -> ExploreState
                     // Correct Sign found -> InformationGainState
                     break;
-                case InformationGainState _:
-                    // Enough information perceived -> ExecuteSignageState
-                    break;
+                // case InformationGainState _:
+                //     // Enough information perceived -> ExecuteSignageState
+                //     break;
                 case ExecuteSignageState _:
                     // Goal not visible -> ExploreState
                     // Goal not visible -> SUCCESS

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -190,33 +191,40 @@ public class VisibilityHandler : MonoBehaviour {
     }
     
     
-    public void CalculateSignCoverage(VisibilityPlaneData[] visibilityPlanes) {//TODO: Rewrite from scratch
-        // int visPlaneSize = visibilityPlanes.Length;
-        //
-        // int[,] signboardCoverage = new int[getSignboardArray().Length, agentTypes.Length];
-        // int visibilityGroupMaxSize = 0;
-        // for(int visPlaneId = 0; visPlaneId < visPlaneSize; visPlaneId++) {
-        //     Dictionary<Vector2Int, VisibilityInfo>[] visInfosPerMesh = this.visibilityInfo[visPlaneId];
-        //     for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
-        //         Dictionary<Vector2Int, VisibilityInfo> visInfosPerAgentType = visInfosPerMesh[agentTypeID];
-        //         foreach(KeyValuePair<Vector2Int, VisibilityInfo> entry in visInfosPerAgentType) {
-        //             signboardCoverage[signboardID, agentTypeID] += entry.Value.GetVisibleBoards().Count;
-        //         }
-        //     }
-        //     visibilityGroupMaxSize += visibilityPlanes[visPlaneId].ValidMeshPointsCount;
-        // }
-        //
-        // SignboardVisibility[] signboardsArray = getSignboardArray();
-        // int signboardsArraySize = signboardsArray.Length;
-        //
-        // for(int signboardID = 0; signboardID < signboardsArraySize; signboardID++) {
-        //     SignboardVisibility signboard = signboardsArray[signboardID];
-        //     signboard.CoveragePerAgentType = new float[agentTypes.Length];
-        //     for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
-        //         float coverage = (float)signboardCoverage[signboardID, agentTypeID] / visibilityGroupMaxSize;
-        //         signboard.CoveragePerAgentType[agentTypeID] = coverage;
-        //     }
-        // }
+    public void CalculateSignCoverage(VisibilityPlaneData[] visibilityPlanes) {//TODO: Check if data make sense
+        int visPlaneSize = visibilityPlanes.Length;
+        
+        Dictionary<Tuple<IFCSignBoard, int>, int> signboardCoverage = new ();
+        int visibilityGroupMaxSize = 0;
+        for(int visPlaneId = 0; visPlaneId < visPlaneSize; visPlaneId++) {
+            Dictionary<Vector2Int, VisibilityInfo>[] visInfosPerMesh = this.visibilityInfo[visPlaneId];
+            for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
+                Dictionary<Vector2Int, VisibilityInfo> visInfosPerAgentType = visInfosPerMesh[agentTypeID];
+                foreach(KeyValuePair<Vector2Int, VisibilityInfo> entry in visInfosPerAgentType) {
+                    foreach (IFCSignBoard signboard in entry.Value.GetVisibleBoards()) {
+                        Tuple<IFCSignBoard, int> key = Tuple.Create(signboard, agentTypeID);
+                        signboardCoverage.TryAdd(key, 0);
+                        signboardCoverage[key] += entry.Value.GetVisibleBoards().Count;
+                    }
+                }
+            }
+            visibilityGroupMaxSize += visibilityPlanes[visPlaneId].ValidMeshPointsCount;
+        }
+        
+        
+        IFCSignBoard[] signboardsArray = getIFCSignboardArray();
+        foreach (IFCSignBoard ifcSignboard in signboardsArray) {
+            SignboardVisibility signboardVisibility = ifcSignboard.GetComponent<SignboardVisibility>();
+            signboardVisibility.CoveragePerAgentType = new float[agentTypes.Length];
+            for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
+                Tuple<IFCSignBoard, int> key = Tuple.Create(ifcSignboard, agentTypeID);
+                if (!signboardCoverage.TryGetValue(key, out var coverage)) {
+                    continue;
+                }
+                float coverageNormalized = (float)coverage / visibilityGroupMaxSize;
+                signboardVisibility.CoveragePerAgentType[agentTypeID] = coverageNormalized;
+            }
+        }
     }
     
     public List<IFCSignBoard> GetSignboardsVisible(Vector3 agentPosition, int agentTypeID) {

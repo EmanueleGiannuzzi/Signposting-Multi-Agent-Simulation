@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class SignboardDirections : MonoBehaviour {
     [SerializeField] private List<Transform> destinations = new();
 
-    public readonly Vector3 NO_DIRECTION = Vector3.negativeInfinity;
+    public static readonly Vector3 NO_DIRECTION = Vector3.negativeInfinity;
 
     private Vector3 getDirectionFromDestination(Transform destination) {
         NavMeshPath path = new NavMeshPath();
