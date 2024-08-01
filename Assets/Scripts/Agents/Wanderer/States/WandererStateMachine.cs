@@ -93,7 +93,7 @@ namespace Agents.Wanderer.States {
                     // No sign found -> DisorientationState
                     switch (exploreState.ExitReason) {
                         case ExploreState.Reason.EnteredVCA:
-                            if (SignageDiscoveryState.IsThereAnyUnvisitedSignboard(exploreState.VisibleBoards)) {
+                            if (InformationGainState.IsThereAnyUnvisitedSignboard(exploreState.VisibleBoards)) {
                                 SetState(SignageDiscoveryState);
                             }
                             break;
@@ -115,10 +115,35 @@ namespace Agents.Wanderer.States {
                 case SignageDiscoveryState signageDiscoveryState:
                     // No Correct sign found -> ExploreState
                     // Correct Sign found -> InformationGainState
+                    switch (signageDiscoveryState.ExitReason) {
+                        case SignageDiscoveryState.Reason.None:
+                            break;
+                        case SignageDiscoveryState.Reason.SignFound:
+                            SetState(InformationGainState);
+                            break;
+                        case SignageDiscoveryState.Reason.NoSignFound:
+                            SetState(ExploreState);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                     break;
-                // case InformationGainState _:
-                //     // Enough information perceived -> ExecuteSignageState
-                //     break;
+                case InformationGainState informationGainState:
+                    // Enough information perceived -> ExecuteSignageState
+                    switch (informationGainState.ExitReason) {
+                        case InformationGainState.Reason.None:
+                            break;
+                        case InformationGainState.Reason.InformationFound:
+                            SetState(ExecuteSignageState);
+                            break;
+                        case InformationGainState.Reason.NoInformationFound:
+                            SetState(ExploreState);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    break;
                 case ExecuteSignageState _:
                     // Goal not visible -> ExploreState
                     // Goal not visible -> SUCCESS
@@ -129,15 +154,14 @@ namespace Agents.Wanderer.States {
                 case FailSafeState _:
                     break;
                 default:
-                    SetState(ExploreState, true);
                     IRouteMarker closestMarker = markerGen.GetClosestMarkerToPoint(this.transform.position);
                     if (closestMarker != null) {
                         agentWanderer.SetDestination(closestMarker.Position);
                     }
+                    SetState(ExploreState, true);
                     break;
             }
             
-            currentState.Enter();
             setDebugText(currentState.GetType().Name);
         }
     

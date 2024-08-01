@@ -8,7 +8,7 @@ public class Agent : MonoBehaviour {
     [SerializeField] private TMP_Text debugNameplate;
     
     private static AgentsHandler agentsHandler;
-    private NavMeshAgent navMeshAgent;
+    public NavMeshAgent navMeshAgent;
 
     public Vector3 currentDestination => navMeshAgent.destination;
 

@@ -4,23 +4,23 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(IFCSignBoard))]
 public class SignboardDirections : MonoBehaviour {
-    [SerializeField] private List<Transform> destinations = new();
+    [SerializeField] private List<Vector3> destinations = new();
 
     public static readonly Vector3 NO_DIRECTION = Vector3.negativeInfinity;
 
-    private Vector3 getDirectionFromDestination(Transform destination) {
+    private Vector3 getDirectionFromDestination(Vector3 destination) {
         NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(this.transform.position, destination.position, NavMesh.AllAreas, path);
+        NavMesh.CalculatePath(this.transform.position, destination, NavMesh.AllAreas, path);
         bool pathExists = path.status == NavMeshPathStatus.PathComplete;
         if (pathExists) {
             IRouteMarker marker = getFirstMarkerOnPath(path);
             //TODO: Debug line
-            return marker?.Position ?? destination.position;
+            return marker?.Position ?? destination;
         }
         return NO_DIRECTION;
     }
 
-    public Vector3 GetDirection(Transform destination) {
+    public Vector3 GetDirection(Vector3 destination) {
         return destinations.Contains(destination) ? getDirectionFromDestination(destination) : NO_DIRECTION;
     }
     

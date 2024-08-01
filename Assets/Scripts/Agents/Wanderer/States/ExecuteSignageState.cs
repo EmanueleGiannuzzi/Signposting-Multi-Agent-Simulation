@@ -5,5 +5,12 @@
         // Goal is visible and agent in goal VCA -> Success
         // Goal not visible -> Explore State
         
+        private const float LOOKAHEAD_DISTANCE = 5f;
+
+        protected override void FixedDoState() {
+            if (isDestinationVisible(LOOKAHEAD_DISTANCE)) {
+                
+            }
+        }
     }
 }

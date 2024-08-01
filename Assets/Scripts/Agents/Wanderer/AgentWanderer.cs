@@ -1,6 +1,8 @@
 ﻿using System;
 using Agents.Wanderer.States;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 //Information gatherer class
@@ -13,8 +15,10 @@ public class AgentWanderer : MarkersAwareAgent {
 
     private bool checkDestinationDistance = false;
     private float stopDistanceSqr = 0f;
+
+    [SerializeField] private IRouteMarker GoalMarker; //TODO: Set in prefab
+    public Vector3 Goal => GoalMarker.Position;
     
-    public Transform Goal { get; } //TODO: Set in prefab
     public delegate void OnWithinDestinationRange();
     private OnWithinDestinationRange _withinDestinationRangeDelegate;
 
@@ -56,7 +60,7 @@ public class AgentWanderer : MarkersAwareAgent {
         checkDestinationDistance = false;
     }
 
-    public void SetDestination(Vector3 destination, float stopDistance, OnWithinDestinationRange withinDestinationRangeDelegate) {
+    public void SetDestination(Vector3 destination, float stopDistance, [CanBeNull] OnWithinDestinationRange withinDestinationRangeDelegate) {
         SetDestination(destination);
         checkDestinationDistance = true;
         this.stopDistanceSqr = stopDistance * stopDistance;
@@ -65,5 +69,14 @@ public class AgentWanderer : MarkersAwareAgent {
 
     public void DestroyAgent() {
         agent.DestroyAgent();
+    }
+
+    public bool IsAgentNearDestination(float maxDistance) {
+        return this.agent.navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete ||
+               this.agent.navMeshAgent.remainingDistance < maxDistance;
+    }
+
+    public float GetEyeHeight() {
+        return visibilityHandler.agentTypes[agentTypeID].Value;
     }
 }

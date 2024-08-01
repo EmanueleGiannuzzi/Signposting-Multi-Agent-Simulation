@@ -2,7 +2,6 @@
 public static class Constants {
     public const int NAVMESH_NOT_WALKABLE_AREA_TYPE = 1;
     
-    
     //Layers
     public const int AGENTS_LAYER = 7;
     public const int VISIBILITY_OBJECT_LAYER = 8;

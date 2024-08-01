@@ -12,6 +12,21 @@ namespace Agents.Wanderer.States {
         protected SignboardAwareAgent signboardAwareAgent;
         protected MarkersAwareAgent markersAwareAgent;
         protected AgentWanderer agentWanderer;
+        
+
+        protected bool isDestinationVisible(float lookaheadDistance) {
+            
+            Vector3 agentEyePos = agentWanderer.transform.position;
+            agentEyePos.y += agentWanderer.GetEyeHeight() / 2f; // Agent center is in the middle
+
+            Vector3 goalDirection = agentWanderer.Goal - agentEyePos;
+                
+            if (goalDirection.sqrMagnitude > lookaheadDistance * lookaheadDistance) {
+                return false;
+            }
+            Physics.Raycast(agentEyePos, goalDirection, out RaycastHit hit, lookaheadDistance, Constants.ALL_BUT_AGENTS_LAYER_MASK);
+            return (hit.point - agentWanderer.Goal).sqrMagnitude < 0.1f;
+        }
 
         public void Setup(AgentWanderer agentWanderer, SignboardAwareAgent signboardAwareAgent, MarkersAwareAgent markersAwareAgent) {
             this.signboardAwareAgent = signboardAwareAgent;

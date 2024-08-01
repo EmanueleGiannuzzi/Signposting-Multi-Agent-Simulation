@@ -4,6 +4,8 @@ using UnityEditor;
 using UnityEngine;
 
 public class VisibilityHandler : MonoBehaviour {
+    private VisibilityPlaneGenerator VisibilityPlaneGenerator;
+    
     [SerializeField] private bool generateVisibilityDataOnStart = false;
     
     [Header("Agent Types(Eye level)")]
@@ -27,8 +29,13 @@ public class VisibilityHandler : MonoBehaviour {
         IsCoverageReady = false;
     }
 
+    private void Awake() {
+        VisibilityPlaneGenerator = FindObjectOfType<VisibilityPlaneGenerator>();
+    }
+
     private void Start() {
         if (generateVisibilityDataOnStart) {
+            VisibilityPlaneGenerator.GenerateVisibilityPlanes();
             GenerateVisibilityData();
         }
     }
@@ -74,17 +81,19 @@ public class VisibilityHandler : MonoBehaviour {
         
         IsCoverageReady = true;
         Debug.Log("Done Calculating Visibility Areas");
+        
+        ShowVisibilityPlane(0);
     }
     
     private Texture2D textureFromVisibilityData(Dictionary<Vector2Int, VisibilityInfo> visibilityData, int width, int height) {
         Texture2D texture = new Texture2D(width, height);
 
-        foreach((Vector2Int coords, VisibilityInfo visibilityInfo) in visibilityData) {
+        foreach((Vector2Int coords, VisibilityInfo visInfo) in visibilityData) {
             Color visibleColor = new Color(0, 0, 0, 0);
-            foreach(IFCSignBoard signboard in visibilityInfo.GetVisibleBoards()) {
+            foreach(IFCSignBoard signboard in visInfo.GetVisibleBoards()) {
                 visibleColor += signboard.Color;
             }
-            visibleColor /= visibilityInfo.GetVisibleBoards().Count;
+            visibleColor /= visInfo.GetVisibleBoards().Count;
             visibleColor.a = nonVisibleColor.a;
 
             texture.SetPixel(coords.x, coords.y, visibleColor);
@@ -263,5 +272,11 @@ public class VisibilityHandler : MonoBehaviour {
         float angleToPoint = Mathf.Rad2Deg * Mathf.Acos(Vector2.Dot(directionLooking, directionSignboard));
 
         return angleToPoint <= agentFOVDeg / 2;
+    }
+
+    public void ShowVisibilityPlane(int agentTypeID) {
+        Texture2D[] textures = GetTexturesFromAgentID(agentTypeID);
+        float agentEyeLevel = agentTypes[agentTypeID].Value;
+        VisibilityPlaneHelper.ApplyTextureVisibilityPlane(agentEyeLevel, textures);
     }
 }
