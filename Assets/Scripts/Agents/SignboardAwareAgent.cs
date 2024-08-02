@@ -16,10 +16,9 @@ public class SignboardAwareAgent : MonoBehaviour {
 
     private void Awake() {
         visibilityHandler = FindObjectOfType<VisibilityHandler>();
-        if(visibilityHandler == null) {
+        if(!visibilityHandler) {
             throw new MissingReferenceException("No Visibility Handler found!");
         }
-
         agent = GetComponent<Agent>();
     }
 

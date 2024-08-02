@@ -11,7 +11,8 @@ namespace Agents.Wanderer.States {
             OverWalked //TODO
         }
 
-        public List<IFCSignBoard> VisibleBoards = new ();
+        public readonly List<IFCSignBoard> VisibleBoards = new ();
+        private Vector3 lastDestination;
         
         // Follow the path between markers
         // Reach a marker -> Decision Node State
@@ -19,6 +20,24 @@ namespace Agents.Wanderer.States {
         // The agent has walked more than two times the inter-sign distance (parameter) -> Disorientation State 
         public Reason ExitReason { get; private set; } = Reason.None;
 
+        protected override void EnterState() {
+            ExitReason = Reason.None;
+
+            if (!agentWanderer.HasDestination()) {
+                if (lastDestination != Vector3.negativeInfinity) {
+                    agentWanderer.SetDestination(lastDestination);
+                }
+                else {
+                    IRouteMarker closestMarker = markersAwareAgent.GetClosestMarker();
+                    if (closestMarker != null) {
+                        agentWanderer.SetDestination(closestMarker.Position);
+                    }
+                }
+
+                lastDestination = Vector3.negativeInfinity;
+            }
+        }
+        
         protected override void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
             if (agentTypeID != agentWanderer.agentTypeID) {
                 return;
@@ -26,6 +45,7 @@ namespace Agents.Wanderer.States {
             
             VisibleBoards.Clear();
             VisibleBoards.AddRange(visibleBoards);
+            lastDestination = agentWanderer.CurrentDestination;
             this.IsDone = true;
             ExitReason = Reason.EnteredVCA;
             
@@ -40,8 +60,5 @@ namespace Agents.Wanderer.States {
             ExitReason = Reason.ReachedMarker;
         }
 
-        protected override void EnterState() {
-            ExitReason = Reason.None;
-        }
     }
 }

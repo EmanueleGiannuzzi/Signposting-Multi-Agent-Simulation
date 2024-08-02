@@ -41,4 +41,9 @@ public class MarkersAwareAgent : MonoBehaviour {
         
         return markersAroundAgent;
     }
+
+    [CanBeNull]
+    public IRouteMarker GetClosestMarker() {
+        return markerGenerator.GetClosestMarkerToPoint(this.transform.position);
+    }
 }

@@ -154,10 +154,6 @@ namespace Agents.Wanderer.States {
                 case FailSafeState _:
                     break;
                 default:
-                    IRouteMarker closestMarker = markerGen.GetClosestMarkerToPoint(this.transform.position);
-                    if (closestMarker != null) {
-                        agentWanderer.SetDestination(closestMarker.Position);
-                    }
                     SetState(ExploreState, true);
                     break;
             }

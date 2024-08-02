@@ -20,6 +20,8 @@ namespace Agents.Wanderer.States {
         public Reason ExitReason { get; private set; } = Reason.None;
         
         protected override void EnterState() {
+            ExitReason = Reason.None;
+            
             List<IFCSignBoard> visibleBoards = signboardAwareAgent.visibleSigns;
             if (visibleBoards.Count <= 0) {
                 onNoSignFound();

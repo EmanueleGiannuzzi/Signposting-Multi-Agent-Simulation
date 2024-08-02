@@ -58,5 +58,9 @@ namespace Agents.Wanderer.States {
                 ExitReason = Reason.InformationFound;
             }
         }
+        
+        protected override void EnterState() {
+            ExitReason = Reason.None;
+        }
     }
 }

@@ -16,8 +16,9 @@ public class AgentWanderer : MarkersAwareAgent {
     private bool checkDestinationDistance = false;
     private float stopDistanceSqr = 0f;
 
-    [SerializeField] private IRouteMarker GoalMarker; //TODO: Set in prefab
-    public Vector3 Goal => GoalMarker.Position;
+    private Transform goalTransform;
+    public Vector3 Goal => goalTransform.TransformPoint(goalTransform.position);
+    public Vector3 CurrentDestination => agent.navMeshAgent.destination;
     
     public delegate void OnWithinDestinationRange();
     private OnWithinDestinationRange _withinDestinationRangeDelegate;
@@ -33,7 +34,7 @@ public class AgentWanderer : MarkersAwareAgent {
     private void Start() {
         agentTypeID = Random.Range(0, visibilityHandler.agentTypes.Length);
         float agentHeight = visibilityHandler.agentTypes[agentTypeID].Value;
-        agent.SetModelHeight(agentHeight);
+        // agent.SetModelHeight(agentHeight); //TODO: Fix
     }
 
     private void FixedUpdate() {
@@ -42,6 +43,10 @@ public class AgentWanderer : MarkersAwareAgent {
                 onWithinDestinationRange();
             }
         }
+    }
+
+    public void SetGoalMarker(Transform goal) {
+        goalTransform = goal;
     }
 
     public void SetDebugText(string text) {
@@ -79,4 +84,18 @@ public class AgentWanderer : MarkersAwareAgent {
     public float GetEyeHeight() {
         return visibilityHandler.agentTypes[agentTypeID].Value;
     }
+
+    public bool HasDestination() {
+        return agent.navMeshAgent.hasPath;
+    }
+
+    private void OnDrawGizmos() {
+        if (Application.isPlaying) {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(this.transform.position, agent.navMeshAgent.destination);
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(this.transform.position, Goal);
+        }
+    }
+
 }
