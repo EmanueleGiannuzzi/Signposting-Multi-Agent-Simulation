@@ -15,7 +15,6 @@ namespace Agents.Wanderer.States {
         
 
         protected bool isDestinationVisible(float lookaheadDistance) {
-            
             Vector3 agentEyePos = agentWanderer.transform.position;
             agentEyePos.y += agentWanderer.GetEyeHeight() / 2f; // Agent center is in the middle
 

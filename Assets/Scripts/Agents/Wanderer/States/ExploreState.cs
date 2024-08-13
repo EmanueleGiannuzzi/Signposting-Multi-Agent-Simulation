@@ -12,7 +12,7 @@ namespace Agents.Wanderer.States {
         }
 
         public readonly List<IFCSignBoard> VisibleBoards = new ();
-        private Vector3 lastDestination;
+        private Vector3 lastDestination = Vector3.negativeInfinity;
         
         // Follow the path between markers
         // Reach a marker -> Decision Node State
@@ -33,9 +33,8 @@ namespace Agents.Wanderer.States {
                         agentWanderer.SetDestination(closestMarker.Position);
                     }
                 }
-
-                lastDestination = Vector3.negativeInfinity;
             }
+            lastDestination = Vector3.negativeInfinity;
         }
         
         protected override void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
