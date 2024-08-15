@@ -51,8 +51,8 @@ public class AgentWanderer : MarkersAwareAgent {
     }
 
     public void SetDestination(Vector3 destination) {
-        Debug.Log(destination);
-        Debug.DrawLine(this.transform.position + new Vector3(0f, 0.5f, 0f), destination + new Vector3(0f, 0.5f, 0f), Color.red, 2f);
+        // Debug.Log(destination);
+        // Debug.DrawLine(this.transform.position + new Vector3(0f, 0.5f, 0f), destination + new Vector3(0f, 0.5f, 0f), Color.red, 2f);
         agent.SetDestination(destination);
         checkDestinationDistance = false;
     }

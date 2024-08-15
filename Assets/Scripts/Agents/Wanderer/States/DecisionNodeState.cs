@@ -10,7 +10,6 @@ namespace Agents.Wanderer.States {
         private const float MIN_MARKER_DISTANCE = 5f;
         private const float MAX_MARKER_DISTANCE = 50f;
         private const float DONE_DELAY = 0.5f;
-        private float doneTimer = -1f;
 
         public Vector3 NextDestination { private set; get; }
 
@@ -34,21 +33,7 @@ namespace Agents.Wanderer.States {
             int nextDestinationIndex = Utility.GetRandomWeightedIndex(weights);
             NextDestination = markersAroundAgent[nextDestinationIndex].Position;
             Debug.Log("Next dest: " + markersAroundAgent[nextDestinationIndex].Name + " " + (agentWanderer.transform.position - markersAroundAgent[nextDestinationIndex].Position).magnitude);
-            setDoneDelayed(DONE_DELAY);
-        }
-
-        private void setDoneDelayed(float delay) {
-            doneTimer = delay;
-        }
-
-        protected override void FixedDoState() {
-            if (doneTimer > 0f) {
-                doneTimer -= Time.fixedDeltaTime;
-                if (doneTimer <= 0f) {
-                    IsDone = true;
-                    doneTimer = -1f;
-                }
-            }
+            SetDoneDelayed(DONE_DELAY);
         }
     }
 }

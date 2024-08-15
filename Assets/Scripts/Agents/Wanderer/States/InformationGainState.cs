@@ -37,7 +37,7 @@ namespace Agents.Wanderer.States {
         }
 
         private void onSignReached() {
-            this.IsDone = true;
+            SetDone();
             this.ExitReason = Reason.NoInformationFound;
         }
 
@@ -54,7 +54,7 @@ namespace Agents.Wanderer.States {
                     return;
                 }
                 agentWanderer.SetDestination(nextGoal);
-                this.IsDone = true;
+                SetDone();
                 ExitReason = Reason.InformationFound;
             }
         }

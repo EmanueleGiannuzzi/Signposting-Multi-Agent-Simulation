@@ -46,12 +46,12 @@ namespace Agents.Wanderer.States {
 
         private void onSignFound() {
             ExitReason = Reason.SignFound;
-            this.IsDone = true;
+            SetDoneDelayed(0.5f);
         }
 
         private void onNoSignFound() {
             ExitReason = Reason.NoSignFound;
-            this.IsDone = true;
+            SetDoneDelayed(0.5f);
         }
     }
 }

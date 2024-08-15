@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Agents.Wanderer.States {
     public abstract class AbstractWandererState {
-        public bool IsDone { get; protected set; }
+        public bool IsDone { get; private set; }
         private bool isActive = false;
 
         private float startTime;
@@ -13,6 +13,10 @@ namespace Agents.Wanderer.States {
         protected MarkersAwareAgent markersAwareAgent;
         protected AgentWanderer agentWanderer;
         
+        private float doneTimer = -1f;
+        protected void SetDoneDelayed(float delay) {
+            doneTimer = delay;
+        }
 
         protected bool isDestinationVisible(float lookaheadDistance) {
             Vector3 agentEyePos = agentWanderer.transform.position;
@@ -55,6 +59,10 @@ namespace Agents.Wanderer.States {
             IsDone = false;
         }
 
+        protected void SetDone() {
+            this.IsDone = true;
+        }
+
         public void Enter() {
             isActive = true;
             startTime = Time.time;
@@ -67,6 +75,13 @@ namespace Agents.Wanderer.States {
         }
 
         public void FixedDo() {
+            if (doneTimer > 0f) {
+                doneTimer -= Time.fixedDeltaTime;
+                if (doneTimer <= 0f) {
+                    SetDone();
+                    doneTimer = -1f;
+                }
+            }
             FixedDoState();
         }
 

@@ -12,7 +12,8 @@ namespace Agents.Wanderer.States {
         }
 
         public readonly List<IFCSignBoard> VisibleBoards = new ();
-        private Vector3 lastDestination = Vector3.negativeInfinity;
+        private Vector3 lastDestination;
+        private bool hasLastDestination = false;
         
         // Follow the path between markers
         // Reach a marker -> Decision Node State
@@ -24,7 +25,7 @@ namespace Agents.Wanderer.States {
             ExitReason = Reason.None;
 
             if (!agentWanderer.HasDestination()) {
-                if (lastDestination != Vector3.negativeInfinity) {
+                if (hasLastDestination) {
                     agentWanderer.SetDestination(lastDestination);
                 }
                 else {
@@ -34,7 +35,14 @@ namespace Agents.Wanderer.States {
                     }
                 }
             }
-            lastDestination = Vector3.negativeInfinity;
+            
+            hasLastDestination = false;
+        }
+
+        private void setLastDestination(Vector3 lastDestination) {
+            this.lastDestination = lastDestination;
+            hasLastDestination = false;
+            Debug.DrawLine(agentWanderer.transform.position, lastDestination, Color.cyan, 1f);
         }
         
         protected override void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
@@ -44,18 +52,18 @@ namespace Agents.Wanderer.States {
             
             VisibleBoards.Clear();
             VisibleBoards.AddRange(visibleBoards);
-            lastDestination = agentWanderer.CurrentDestination;
-            this.IsDone = true;
+            setLastDestination(agentWanderer.CurrentDestination);
+            SetDone();
             ExitReason = Reason.EnteredVCA;
             
-            Debug.Log($"Found {visibleBoards.Count} boards");
-            foreach (IFCSignBoard board in visibleBoards) {
-                Debug.Log(board.name);
-            }
+            // Debug.Log($"Found {visibleBoards.Count} boards");
+            // foreach (IFCSignBoard board in visibleBoards) {
+            //     Debug.Log(board.name);
+            // }
         }
 
         protected override void OnMarkerReached(IRouteMarker marker) {
-            this.IsDone = true;
+            SetDone();
             ExitReason = Reason.ReachedMarker;
         }
 
