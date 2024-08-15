@@ -4,7 +4,7 @@ using UnityEngine.Assertions;
 public class WandererSpawnArea : SpawnAreaBase {
     private static MarkerGenerator markerGen;
 
-    public Transform[] Goals;
+    public Renderer[] Goals;
     
     private void Awake() {
         markerGen ??= FindObjectOfType<MarkerGenerator>();
@@ -17,10 +17,12 @@ public class WandererSpawnArea : SpawnAreaBase {
 
     protected override Agent SpawnAgentEvent(GameObject agentPrefab) {
         Agent agent = SpawnAgent(agentPrefab);
-        if (agent != null) {
-            AgentWanderer agentWanderer = agent.GetComponent<AgentWanderer>();
-            agentWanderer.SetGoalMarker(Goals[Random.Range(0, Goals.Length)]);
-        }
+        if (agent == null) return agent;
+        
+        AgentWanderer agentWanderer = agent.GetComponent<AgentWanderer>();
+        Vector3 goalPosition = Goals[Random.Range(0, Goals.Length)].bounds.center;
+        agentWanderer.SetGoalMarker(goalPosition);
+        Debug.Log($"Set Goal position {goalPosition}");
         return agent;
     }
     

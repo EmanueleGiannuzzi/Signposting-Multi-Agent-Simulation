@@ -1,5 +1,4 @@
-﻿using System;
-using Agents.Wanderer.States;
+﻿using Agents.Wanderer.States;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
@@ -16,8 +15,7 @@ public class AgentWanderer : MarkersAwareAgent {
     private bool checkDestinationDistance = false;
     private float stopDistanceSqr = 0f;
 
-    private Transform goalTransform;
-    public Vector3 Goal => goalTransform.TransformPoint(goalTransform.position);
+    public Vector3 Goal { get; private set; }
     public Vector3 CurrentDestination => agent.navMeshAgent.destination;
     
     public delegate void OnWithinDestinationRange();
@@ -45,10 +43,9 @@ public class AgentWanderer : MarkersAwareAgent {
         }
     }
 
-    public void SetGoalMarker(Transform goal) {
-        goalTransform = goal;
+    public void SetGoalMarker(Vector3 goal) {
+        this.Goal = goal;
     }
-
     public void SetDebugText(string text) {
         agent.SetDebugNameplateText(text);
     }
@@ -91,12 +88,15 @@ public class AgentWanderer : MarkersAwareAgent {
     }
 
     private void OnDrawGizmos() {
-        if (Application.isPlaying) {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(this.transform.position, agent.navMeshAgent.destination);
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(this.transform.position, Goal);
+        if (!Application.isPlaying) {
+            return;
         }
+        
+        Gizmos.color = Color.blue;
+        Vector3 agentPosition = transform.position;
+        Gizmos.DrawLine(agentPosition, agent.navMeshAgent.destination);
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(agentPosition, Goal);
     }
 
 }
