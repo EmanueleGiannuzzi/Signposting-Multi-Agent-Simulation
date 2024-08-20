@@ -12,8 +12,8 @@ namespace Agents.Wanderer.States {
         }
 
         public readonly List<IFCSignBoard> VisibleBoards = new ();
-        private Vector3 lastDestination;
-        private bool hasLastDestination = false;
+        // private Vector3 lastDestination;
+        // private bool hasLastDestination = false;
         
         // Follow the path between markers
         // Reach a marker -> Decision Node State
@@ -24,26 +24,30 @@ namespace Agents.Wanderer.States {
         protected override void EnterState() {
             ExitReason = Reason.None;
 
-            if (!agentWanderer.HasDestination()) {
-                if (hasLastDestination) {
-                    agentWanderer.SetDestination(lastDestination);
-                }
-                else {
-                    IRouteMarker closestMarker = markersAwareAgent.GetClosestMarker();
-                    if (closestMarker != null) {
-                        agentWanderer.SetDestination(closestMarker.Position);
-                    }
-                }
+            // if (hasLastDestination) {
+            //         agentWanderer.SetDestination(lastDestination);
+            //         Debug.Log("Going to last destination");
+            //     }
+            //     else {
+            IRouteMarker closestMarker = markersAwareAgent.GetClosestMarker();
+            if (closestMarker != null) {
+                agentWanderer.SetDestination(closestMarker.Position);
             }
-            
-            hasLastDestination = false;
+            Debug.Log("Going to closest marker");
+            //     }
+            //
+            // hasLastDestination = false;
         }
 
-        private void setLastDestination(Vector3 lastDestination) {
-            this.lastDestination = lastDestination;
-            hasLastDestination = false;
-            Debug.DrawLine(agentWanderer.transform.position, lastDestination, Color.cyan, 1f);
-        }
+        // private void setLastDestination(Vector3 lastDestination) {
+        //     hasLastDestination = false;
+        //     if (lastDestination == this.lastDestination) {
+        //         return;
+        //     }
+        //     
+        //     this.lastDestination = lastDestination;
+        //     Debug.DrawLine(agentWanderer.transform.position, lastDestination, Color.cyan, 1f);
+        // }
         
         protected override void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
             if (agentTypeID != agentWanderer.agentTypeID) {
@@ -52,7 +56,7 @@ namespace Agents.Wanderer.States {
             
             VisibleBoards.Clear();
             VisibleBoards.AddRange(visibleBoards);
-            setLastDestination(agentWanderer.CurrentDestination);
+            // setLastDestination(agentWanderer.CurrentDestination);
             SetDone();
             ExitReason = Reason.EnteredVCA;
             

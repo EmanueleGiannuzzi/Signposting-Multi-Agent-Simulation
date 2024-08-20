@@ -76,13 +76,13 @@ namespace Agents.Wanderer.States {
             currentState?.FixedDo();
         }
 
-        public void SetState(AbstractWandererState newState, bool forceReset = false) {
-            if (currentState != newState || forceReset) {
-                currentState?.Exit();
-                currentState = newState;
-                currentState.Initialize();
-                currentState.Enter();
-            }
+        private void setState(AbstractWandererState newState, bool forceReset = false) {
+            if (currentState == newState && !forceReset) 
+                return;
+            currentState?.Exit();
+            currentState = newState;
+            currentState.Initialize();
+            currentState.Enter();
         }
 
         private void SelectState() {
@@ -94,14 +94,14 @@ namespace Agents.Wanderer.States {
                     switch (exploreState.ExitReason) {
                         case ExploreState.Reason.EnteredVCA:
                             if (InformationGainState.IsThereAnyUnvisitedSignboard(exploreState.VisibleBoards)) {
-                                SetState(SignageDiscoveryState);
+                                setState(SignageDiscoveryState);
                             }
                             break;
                         case ExploreState.Reason.ReachedMarker:
-                            SetState(DecisionNodeState);
+                            setState(DecisionNodeState);
                             break;
                         case ExploreState.Reason.OverWalked:
-                            SetState(DisorientationState);
+                            setState(DisorientationState);
                             break;
                         case ExploreState.Reason.None:
                         default:
@@ -110,7 +110,7 @@ namespace Agents.Wanderer.States {
                     break;
                 case DecisionNodeState decisionNodeState:
                     agentWanderer.SetDestination(decisionNodeState.NextDestination);
-                    SetState(ExploreState);
+                    setState(ExploreState);
                     break;
                 case SignageDiscoveryState signageDiscoveryState:
                     // No Correct sign found -> ExploreState
@@ -119,10 +119,10 @@ namespace Agents.Wanderer.States {
                         case SignageDiscoveryState.Reason.None:
                             break;
                         case SignageDiscoveryState.Reason.SignFound:
-                            SetState(InformationGainState);
+                            setState(InformationGainState);
                             break;
                         case SignageDiscoveryState.Reason.NoSignFound:
-                            SetState(ExploreState);
+                            setState(DecisionNodeState);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -134,10 +134,10 @@ namespace Agents.Wanderer.States {
                         case InformationGainState.Reason.None:
                             break;
                         case InformationGainState.Reason.InformationFound:
-                            SetState(ExecuteSignageState);
+                            setState(ExecuteSignageState);
                             break;
                         case InformationGainState.Reason.NoInformationFound:
-                            SetState(ExploreState);
+                            setState(ExploreState);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -154,7 +154,7 @@ namespace Agents.Wanderer.States {
                 case FailSafeState _:
                     break;
                 default:
-                    SetState(ExploreState, true);
+                    setState(ExploreState, true);
                     break;
             }
             

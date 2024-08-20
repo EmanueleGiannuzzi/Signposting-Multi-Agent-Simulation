@@ -1818,6 +1818,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AgentFOVDegrees: 120
   debugNameplate: {fileID: 7655274677694530816}
+  navMeshAgent: {fileID: 0}
 --- !u!114 &-7417022163179836048
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Agents.Wanderer.States {
@@ -9,8 +10,9 @@ namespace Agents.Wanderer.States {
         
         private const float MIN_MARKER_DISTANCE = 5f;
         private const float MAX_MARKER_DISTANCE = 50f;
-        private const float DONE_DELAY = 0.5f;
+        private const float DONE_DELAY = 1.5f;
 
+        private readonly List<IRouteMarker> visitedMarkers = new();
         public Vector3 NextDestination { private set; get; }
 
         protected override void EnterState() {
@@ -19,6 +21,8 @@ namespace Agents.Wanderer.States {
             Debug.Log($"Found  {markersAroundAgent.Count} markers");
             Vector3 agentPos = agentWanderer.transform.position;
             Vector3 agentForwardDirection = agentWanderer.transform.forward;
+
+            
             
             float[] weights = new float[markersAroundAgent.Count];
             int i = 0;
@@ -26,13 +30,26 @@ namespace Agents.Wanderer.States {
                 Vector3 markerPos = marker.Position;
                 Vector3 directionToPos = (markerPos - agentPos).normalized;
                 float angle = Vector3.Angle(agentForwardDirection, directionToPos);
-                float weight = 1f / (angle + 1f); //TODO: Include distance too, maybe y distance counter more, because on different floor. Maybe go exponential?
+                float weight = 1f / (angle + 1f); //TODO: Include distance too, maybe y distance weighs more, because on different floor. Maybe go exponential?
+
+                if (visitedMarkers.Contains(marker)) {
+                    weight *= 0.2f;
+                }
                 weights[i++] = weight;
             }
 
             int nextDestinationIndex = Utility.GetRandomWeightedIndex(weights);
-            NextDestination = markersAroundAgent[nextDestinationIndex].Position;
+            IRouteMarker markerChosen = markersAroundAgent[nextDestinationIndex];
+            visitedMarkers.Add(markerChosen);
+            NextDestination = markerChosen.Position;
             Debug.Log("Next dest: " + markersAroundAgent[nextDestinationIndex].Name + " " + (agentWanderer.transform.position - markersAroundAgent[nextDestinationIndex].Position).magnitude);
+    
+            for (i = 0; i < markersAroundAgent.Count; i++) {
+                var marker = markersAroundAgent[i];
+                Debug.DrawLine(agentWanderer.transform.position, marker.Position,
+                    new Color(243, 59, 238, 255 * weights[i]), DONE_DELAY*1.5f);
+            }
+            
             SetDoneDelayed(DONE_DELAY);
         }
     }

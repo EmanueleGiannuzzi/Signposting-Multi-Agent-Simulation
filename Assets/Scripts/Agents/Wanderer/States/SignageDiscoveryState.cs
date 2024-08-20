@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 // Add all visible signs to a list
 // Walk towards the nearest sign
@@ -38,8 +39,11 @@ namespace Agents.Wanderer.States {
                 }
             }
 
-            if (closestSign) {
-                agentWanderer.SetDestination(closestSign.WorldCenterPoint);
+            if (closestSign &&
+                MarkerGenerator.TraversableCenterProjectionOnNavMesh(closestSign.WorldCenterPoint, 
+                    out Vector3 signboardNavmehshProjection)) {
+                
+                agentWanderer.SetDestination(signboardNavmehshProjection);
                 onSignFound();
             }
         }

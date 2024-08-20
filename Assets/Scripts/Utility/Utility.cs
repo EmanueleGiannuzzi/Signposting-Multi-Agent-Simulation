@@ -214,6 +214,14 @@ public static class Utility {
         }
         return index;
     }
+    
+    public static IEnumerable<T> Subtract<T>(this IEnumerable<T> orgList, IEnumerable<T> toRemove) {
+        var list = orgList.ToList();
+        foreach(var x in toRemove) {
+            list.Remove(x);
+        }
+        return list;
+    }
 #endregion
 
 #region OS

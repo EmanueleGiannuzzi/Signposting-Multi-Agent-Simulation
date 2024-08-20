@@ -22,7 +22,7 @@ namespace Agents.Wanderer.States {
 
         private List<IFCSignBoard> visitedSigns = new ();
 
-        public bool IsThereAnyUnvisitedSignboard(List<IFCSignBoard> signboards) {
+        public bool IsThereAnyUnvisitedSignboard(IEnumerable<IFCSignBoard> signboards) {
             return signboards.Any(signboard => !visitedSigns.Contains(signboard));
         }
         

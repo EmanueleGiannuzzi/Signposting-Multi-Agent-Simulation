@@ -25,6 +25,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     [Range(0.0f, 100.0f)]
     public float SpawnRate;
     public bool IsSpawnRandom = true;
+    [Tooltip("0 = No Limit")] public int AgentsToSpawn;
     
     private static readonly List<Agent> agentsSpawned = new();
     private const float SPAWNED_AGENTS_INITIAL_MIN_DISTANCE = 5f;
@@ -137,6 +138,10 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     protected abstract Agent SpawnAgentEvent(GameObject agentPrefab);
 
     protected virtual bool ShouldSpawnAgents() {
-        return Enabled;
+        return Enabled && canSpawnMoreAgents();
+    }
+
+    private bool canSpawnMoreAgents() {
+        return AgentsToSpawn <= 0 || agentsSpawned.Count < AgentsToSpawn;
     }
 }

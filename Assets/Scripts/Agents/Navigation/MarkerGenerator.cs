@@ -57,7 +57,7 @@ public class MarkerGenerator : MonoBehaviour {
             Vector3 traversableCenter = traversableRendererBounds.center;
 
             const float MIN_SIZE = 0.5f;
-            if(traversableCenterProjectionOnNavMesh(traversableCenter, out Vector3 projectionOnNavmesh)
+            if(TraversableCenterProjectionOnNavMesh(traversableCenter, out Vector3 projectionOnNavmesh)
                && traversableCenter.y > projectionOnNavmesh.y) {
                 float widthX = traversableRendererBounds.extents.x*2;
                 float widthZ = traversableRendererBounds.extents.z*2;
@@ -80,7 +80,7 @@ public class MarkerGenerator : MonoBehaviour {
         OnMarkersGeneration?.Invoke(markers);
     }
 
-    private static bool traversableCenterProjectionOnNavMesh(Vector3 traversableCenter, out Vector3 result) {
+    public static bool TraversableCenterProjectionOnNavMesh(Vector3 traversableCenter, out Vector3 result) {
         if (NavMesh.SamplePosition(traversableCenter, out NavMeshHit hit, 2.5f, NavMesh.AllAreas)) {
             result = hit.position;
             return true;
@@ -135,17 +135,18 @@ public class MarkerGenerator : MonoBehaviour {
     }
 
     [CanBeNull]
-    public IRouteMarker GetClosestMarkerToPoint(Vector3 point) {
+    public IRouteMarker GetClosestMarkerToPoint(Vector3 point, float minDistance = 1f) {
         if (!Ready) {
             return null;
         }
-        
+
+        float minDistanceSqr = minDistance * minDistance;
         IRouteMarker closestMarker = null;
         float closestDistanceSqr = Mathf.Infinity;
         foreach (IRouteMarker marker in markers) {
             Vector3 directionToTarget = marker.Position - point;
             float distanceSqr = directionToTarget.sqrMagnitude;
-            if(distanceSqr < closestDistanceSqr) {
+            if(distanceSqr >= minDistanceSqr && distanceSqr < closestDistanceSqr) {
                 closestDistanceSqr = distanceSqr;
                 closestMarker = marker;
             }
