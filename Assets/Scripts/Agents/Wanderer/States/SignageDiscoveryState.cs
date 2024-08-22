@@ -23,15 +23,16 @@ namespace Agents.Wanderer.States {
         protected override void EnterState() {
             ExitReason = Reason.None;
             
-            List<IFCSignBoard> visibleBoards = signboardAwareAgent.visibleSigns;
-            if (visibleBoards.Count <= 0) {
+            IEnumerable<IFCSignBoard> visibleBoards = signboardAwareAgent.visibleSigns.Subtract(agentWanderer.VisitedSigns);
+            var visibleBoardsArray = visibleBoards as IFCSignBoard[] ?? visibleBoards.ToArray();
+            if (!visibleBoardsArray.Any()) {
                 onNoSignFound();
                 return;
             }
 
             float minDistanceSqr = float.PositiveInfinity;
             IFCSignBoard closestSign = null;
-            foreach (IFCSignBoard signboard in visibleBoards) {
+            foreach (IFCSignBoard signboard in visibleBoardsArray) {
                 float distanceSqr = (signboard.WorldCenterPoint - signboardAwareAgent.transform.position).sqrMagnitude;
                 if (distanceSqr < minDistanceSqr) {
                     minDistanceSqr = distanceSqr;
@@ -41,13 +42,13 @@ namespace Agents.Wanderer.States {
 
             if (closestSign &&
                 MarkerGenerator.TraversableCenterProjectionOnNavMesh(closestSign.WorldCenterPoint, 
-                    out Vector3 signboardNavmehshProjection)) {
+                    out Vector3 signboardNavmeshProjection)) {
                 
-                agentWanderer.SetDestination(signboardNavmehshProjection);
-                onSignFound();
+                agentWanderer.SetDestination(signboardNavmeshProjection, 0.5f, onSignFound);
+                agentWanderer.VisitedSigns.Add(closestSign);
             }
         }
-
+        
         private void onSignFound() {
             ExitReason = Reason.SignFound;
             SetDoneDelayed(0.5f);

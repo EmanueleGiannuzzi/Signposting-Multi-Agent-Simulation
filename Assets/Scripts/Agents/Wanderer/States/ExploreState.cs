@@ -12,8 +12,8 @@ namespace Agents.Wanderer.States {
         }
 
         public readonly List<IFCSignBoard> VisibleBoards = new ();
-        // private Vector3 lastDestination;
-        // private bool hasLastDestination = false;
+        private IRouteMarker lastDestination;
+        private bool hasLastDestination = false;
         
         // Follow the path between markers
         // Reach a marker -> Decision Node State
@@ -24,30 +24,35 @@ namespace Agents.Wanderer.States {
         protected override void EnterState() {
             ExitReason = Reason.None;
 
-            // if (hasLastDestination) {
-            //         agentWanderer.SetDestination(lastDestination);
-            //         Debug.Log("Going to last destination");
-            //     }
-            //     else {
-            IRouteMarker closestMarker = markersAwareAgent.GetClosestMarker();
-            if (closestMarker != null) {
-                agentWanderer.SetDestination(closestMarker.Position);
+            if (!agentWanderer.HasPath()) {
+                if (hasLastDestination) {
+                    SetDestinationMarker(lastDestination);
+                    Debug.Log("Going to last destination");
+                }
+                else {
+                    goToClosestMarker();
+                }
             }
-            Debug.Log("Going to closest marker");
-            //     }
-            //
-            // hasLastDestination = false;
+            hasLastDestination = false;
         }
 
-        // private void setLastDestination(Vector3 lastDestination) {
-        //     hasLastDestination = false;
-        //     if (lastDestination == this.lastDestination) {
-        //         return;
-        //     }
-        //     
-        //     this.lastDestination = lastDestination;
-        //     Debug.DrawLine(agentWanderer.transform.position, lastDestination, Color.cyan, 1f);
-        // }
+        private void goToClosestMarker() {
+            IRouteMarker closestMarker = markersAwareAgent.GetClosestMarker();
+            if (closestMarker != null) {
+                SetDestinationMarker(closestMarker);
+            }
+            Debug.Log("Going to closest marker");
+        }
+
+        private void setLastDestination(IRouteMarker lastDestination) {
+            hasLastDestination = true;
+            // if (lastDestination == this.lastDestination) {
+            //     return;
+            // }
+            
+            this.lastDestination = lastDestination;
+            Debug.DrawLine(agentWanderer.transform.position, lastDestination.Position, Color.cyan, 0.5f);
+        }
         
         protected override void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
             if (agentTypeID != agentWanderer.agentTypeID) {
@@ -56,7 +61,7 @@ namespace Agents.Wanderer.States {
             
             VisibleBoards.Clear();
             VisibleBoards.AddRange(visibleBoards);
-            // setLastDestination(agentWanderer.CurrentDestination);
+            setLastDestination(destinationMarker);
             SetDone();
             ExitReason = Reason.EnteredVCA;
             
@@ -66,7 +71,7 @@ namespace Agents.Wanderer.States {
             // }
         }
 
-        protected override void OnMarkerReached(IRouteMarker marker) {
+        protected override void OnReachedDestinationMarker(IRouteMarker marker) {
             SetDone();
             ExitReason = Reason.ReachedMarker;
         }

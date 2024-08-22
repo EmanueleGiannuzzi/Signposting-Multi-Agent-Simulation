@@ -1,4 +1,5 @@
-﻿using Agents.Wanderer.States;
+﻿using System.Collections.Generic;
+using Agents.Wanderer.States;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
@@ -17,6 +18,7 @@ public class AgentWanderer : MarkersAwareAgent {
 
     public Vector3 Goal { get; private set; }
     public Vector3 CurrentDestination => agent.navMeshAgent.destination;
+    public readonly List<IFCSignBoard> VisitedSigns = new ();
     
     public delegate void OnWithinDestinationRange();
     private OnWithinDestinationRange _withinDestinationRangeDelegate;
@@ -58,6 +60,7 @@ public class AgentWanderer : MarkersAwareAgent {
     }
 
     private void onWithinDestinationRange() {
+        agent.navMeshAgent.ResetPath();
         _withinDestinationRangeDelegate?.Invoke();
         _withinDestinationRangeDelegate = null;
         checkDestinationDistance = false;
@@ -83,7 +86,7 @@ public class AgentWanderer : MarkersAwareAgent {
         return visibilityHandler.agentTypes[agentTypeID].Value;
     }
 
-    public bool HasDestination() {
+    public bool HasPath() {
         return agent.navMeshAgent.hasPath;
     }
 
@@ -95,8 +98,8 @@ public class AgentWanderer : MarkersAwareAgent {
         Gizmos.color = Color.blue;
         Vector3 agentPosition = transform.position;
         Gizmos.DrawLine(agentPosition, agent.navMeshAgent.destination);
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(agentPosition, Goal);
+        // Gizmos.color = Color.green;
+        // Gizmos.DrawLine(agentPosition, Goal);
     }
 
 }

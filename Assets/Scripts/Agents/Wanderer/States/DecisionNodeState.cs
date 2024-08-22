@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Agents.Wanderer.States {
@@ -13,7 +12,7 @@ namespace Agents.Wanderer.States {
         private const float DONE_DELAY = 1.5f;
 
         private readonly List<IRouteMarker> visitedMarkers = new();
-        public Vector3 NextDestination { private set; get; }
+        // public Vector3 NextDestination { private set; get; }
 
         protected override void EnterState() {
             //TODO: Chose at random between closest markers, preferring the ones in the looking direction
@@ -41,14 +40,17 @@ namespace Agents.Wanderer.States {
             int nextDestinationIndex = Utility.GetRandomWeightedIndex(weights);
             IRouteMarker markerChosen = markersAroundAgent[nextDestinationIndex];
             visitedMarkers.Add(markerChosen);
-            NextDestination = markerChosen.Position;
+            SetDestinationMarker(markerChosen);
             Debug.Log("Next dest: " + markersAroundAgent[nextDestinationIndex].Name + " " + (agentWanderer.transform.position - markersAroundAgent[nextDestinationIndex].Position).magnitude);
     
             for (i = 0; i < markersAroundAgent.Count; i++) {
                 var marker = markersAroundAgent[i];
+                if (marker == markerChosen) continue;
                 Debug.DrawLine(agentWanderer.transform.position, marker.Position,
-                    new Color(243, 59, 238, 255 * weights[i]), DONE_DELAY*1.5f);
+                    new Color(0.95f, 0.23f, 0.93f, 1f), DONE_DELAY);
             }
+            Debug.DrawLine(agentWanderer.transform.position, markerChosen.Position,
+                Color.green, DONE_DELAY);
             
             SetDoneDelayed(DONE_DELAY);
         }

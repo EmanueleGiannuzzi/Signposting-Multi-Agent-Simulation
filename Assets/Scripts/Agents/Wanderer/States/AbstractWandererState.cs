@@ -12,6 +12,8 @@ namespace Agents.Wanderer.States {
         protected SignboardAwareAgent signboardAwareAgent;
         protected MarkersAwareAgent markersAwareAgent;
         protected AgentWanderer agentWanderer;
+
+        protected IRouteMarker destinationMarker;
         
         private float doneTimer = -1f;
         protected void SetDoneDelayed(float delay) {
@@ -48,10 +50,20 @@ namespace Agents.Wanderer.States {
         private void onMarkerReached(IRouteMarker marker) {
             if (isActive) {
                 OnMarkerReached(marker);
+                if (marker == destinationMarker) {
+                    OnReachedDestinationMarker(marker);
+                }
             }
         }
 
         protected virtual void OnMarkerReached(IRouteMarker marker) {}
+
+        protected void SetDestinationMarker(IRouteMarker marker) {
+            destinationMarker = marker;
+            agentWanderer.SetDestination(marker.Position);
+        }
+        
+        protected virtual void OnReachedDestinationMarker(IRouteMarker marker) {}
 
         protected virtual void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {}
 
@@ -60,6 +72,7 @@ namespace Agents.Wanderer.States {
         }
 
         protected void SetDone() {
+            if(!isActive) return;
             this.IsDone = true;
         }
 

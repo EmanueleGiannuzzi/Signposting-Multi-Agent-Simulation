@@ -20,10 +20,8 @@ namespace Agents.Wanderer.States {
         }
         public Reason ExitReason { get; private set; } = Reason.None;
 
-        private List<IFCSignBoard> visitedSigns = new ();
-
         public bool IsThereAnyUnvisitedSignboard(IEnumerable<IFCSignBoard> signboards) {
-            return signboards.Any(signboard => !visitedSigns.Contains(signboard));
+            return signboards.Any(signboard => !agentWanderer.VisitedSigns.Contains(signboard));
         }
         
         protected override void FixedDoState() {
@@ -40,12 +38,14 @@ namespace Agents.Wanderer.States {
             SetDone();
             this.ExitReason = Reason.NoInformationFound;
         }
+        
+        
 
         private void checkSignboard(IFCSignBoard signboard) {
-            if (visitedSigns.Contains(signboard)) {
+            if (agentWanderer.VisitedSigns.Contains(signboard)) {
                 return;
             }
-            visitedSigns.Add(signboard);
+            agentWanderer.VisitedSigns.Add(signboard);
 
             SignboardDirections signDirection = signboard.GetComponent<SignboardDirections>();
             if (signDirection) {
@@ -53,8 +53,7 @@ namespace Agents.Wanderer.States {
                 if (nextGoal == SignboardDirections.NO_DIRECTION) {
                     return;
                 }
-                agentWanderer.SetDestination(nextGoal);
-                SetDone();
+                agentWanderer.SetDestination(nextGoal, 0.5f, SetDone);
                 ExitReason = Reason.InformationFound;
             }
         }

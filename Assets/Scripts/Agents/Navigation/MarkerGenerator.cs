@@ -80,7 +80,7 @@ public class MarkerGenerator : MonoBehaviour {
         OnMarkersGeneration?.Invoke(markers);
     }
 
-    public static bool TraversableCenterProjectionOnNavMesh(Vector3 traversableCenter, out Vector3 result) {
+    public static bool TraversableCenterProjectionOnNavMesh(Vector3 traversableCenter, out Vector3 result) { //TODO: Move to Utility
         if (NavMesh.SamplePosition(traversableCenter, out NavMeshHit hit, 2.5f, NavMesh.AllAreas)) {
             result = hit.position;
             return true;
