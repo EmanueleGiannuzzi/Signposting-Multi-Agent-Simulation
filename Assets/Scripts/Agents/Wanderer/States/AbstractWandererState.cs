@@ -13,7 +13,7 @@ namespace Agents.Wanderer.States {
         protected MarkersAwareAgent markersAwareAgent;
         protected AgentWanderer agentWanderer;
 
-        protected IRouteMarker destinationMarker;
+        private IRouteMarker destinationMarker;
         
         private float doneTimer = -1f;
         protected void SetDoneDelayed(float delay) {

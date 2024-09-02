@@ -108,7 +108,8 @@ namespace Agents.Wanderer.States {
                             throw new ArgumentOutOfRangeException();
                     }
                     break;
-                case DecisionNodeState _:
+                case DecisionNodeState decisionNodeState:
+                    ExploreState.NextMarker = decisionNodeState.NextMarker;
                     setState(ExploreState);
                     break;
                 case SignageDiscoveryState signageDiscoveryState:
@@ -136,7 +137,7 @@ namespace Agents.Wanderer.States {
                             setState(ExecuteSignageState);
                             break;
                         case InformationGainState.Reason.NoInformationFound:
-                            setState(ExploreState);
+                            setState(DecisionNodeState);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

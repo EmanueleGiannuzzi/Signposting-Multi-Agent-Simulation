@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace Agents.Wanderer.States {
     public class ExploreState : AbstractWandererState {
+        private const float OVERWALKING_TIME = 60f;
+        
         public enum Reason {
             None,
             EnteredVCA,
@@ -12,8 +14,8 @@ namespace Agents.Wanderer.States {
         }
 
         public readonly List<IFCSignBoard> VisibleBoards = new ();
-        private IRouteMarker lastDestination;
-        private bool hasLastDestination = false;
+        
+        public IRouteMarker NextMarker { get; set; }
         
         // Follow the path between markers
         // Reach a marker -> Decision Node State
@@ -23,17 +25,13 @@ namespace Agents.Wanderer.States {
 
         protected override void EnterState() {
             ExitReason = Reason.None;
-
-            if (!agentWanderer.HasPath()) {
-                if (hasLastDestination) {
-                    SetDestinationMarker(lastDestination);
-                    Debug.Log("Going to last destination");
-                }
-                else {
-                    goToClosestMarker();
-                }
+            if (NextMarker != null) {
+                SetDestinationMarker(NextMarker);
+                NextMarker = null;
             }
-            hasLastDestination = false;
+            else if (!agentWanderer.HasPath()) {
+                goToClosestMarker();
+            }
         }
 
         private void goToClosestMarker() {
@@ -43,16 +41,6 @@ namespace Agents.Wanderer.States {
             }
             Debug.Log("Going to closest marker");
         }
-
-        private void setLastDestination(IRouteMarker lastDestination) {
-            hasLastDestination = true;
-            // if (lastDestination == this.lastDestination) {
-            //     return;
-            // }
-            
-            this.lastDestination = lastDestination;
-            Debug.DrawLine(agentWanderer.transform.position, lastDestination.Position, Color.cyan, 0.5f);
-        }
         
         protected override void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
             if (agentTypeID != agentWanderer.agentTypeID) {
@@ -61,14 +49,8 @@ namespace Agents.Wanderer.States {
             
             VisibleBoards.Clear();
             VisibleBoards.AddRange(visibleBoards);
-            setLastDestination(destinationMarker);
-            SetDone();
             ExitReason = Reason.EnteredVCA;
-            
-            // Debug.Log($"Found {visibleBoards.Count} boards");
-            // foreach (IFCSignBoard board in visibleBoards) {
-            //     Debug.Log(board.name);
-            // }
+            SetDone();
         }
 
         protected override void OnReachedDestinationMarker(IRouteMarker marker) {
@@ -76,5 +58,15 @@ namespace Agents.Wanderer.States {
             ExitReason = Reason.ReachedMarker;
         }
 
+        protected override void FixedDoState() {
+            if (this.runningTime >= OVERWALKING_TIME) {
+                onOverwalked();
+            }
+        }
+
+        private void onOverwalked() {
+            ExitReason = Reason.OverWalked;
+            SetDone();
+        }
     }
 }

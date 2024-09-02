@@ -105,18 +105,22 @@ public class MarkerGenerator : MonoBehaviour {
         
         GameObject markerGO = GameObject.CreatePrimitive(PrimitiveType.Quad);
         markerGO.transform.parent = markerParent.transform;
-        pos += new Vector3(0f, 0.01f, 0f);
+        // pos += new Vector3(0f, 0.01f, 0f);
         markerGO.transform.position = pos;
         markerGO.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         markerGO.transform.localScale = new Vector3(widthX, widthZ, 1.6f);
         markerGO.GetComponent<Renderer>().sharedMaterial = markerMaterial;
         markerGO.layer = Constants.MARKERS_LAYER;
         markerGO.name = name;
-        IntermediateMarker marker = markerGO.AddComponent<IntermediateMarker>();
-        MeshCollider markerCollider = markerGO.GetComponent<MeshCollider>();
-        markerCollider.convex = true;
+        // MeshCollider markerCollider = markerGO.GetComponent<MeshCollider>();
+        Utility.DestroyObject(markerGO.GetComponent<MeshCollider>());
+        
+        BoxCollider markerCollider = markerGO.AddComponent<BoxCollider>();
+        // markerCollider.convex = true;
         markerCollider.isTrigger = true;
+        markerCollider.size = new Vector3(1f, 1f, 0.1f);
 
+        IntermediateMarker marker = markerGO.AddComponent<IntermediateMarker>();
         return marker;
     }
 

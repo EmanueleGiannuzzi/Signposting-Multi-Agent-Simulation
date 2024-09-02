@@ -157,6 +157,32 @@ public static class Utility {
         }
         return normalizedMatrix;
     }
+
+    public static float[] Normalize(float[] array, bool shouldInvert = false) {
+        float min = array.Min();
+        float max = array.Max();
+        float range = max - min;
+
+        if (range == 0) {
+            return array.Select(_ => shouldInvert ? 1f : 0f).ToArray();
+        }
+        
+        float[] normalizedArray = array.Select(value => (value - min) / range).ToArray();
+        return shouldInvert ? normalizedArray.Select(value => 1f - value).ToArray() : normalizedArray;
+    }
+    
+    public static float[] Normalize(int[] array, bool shouldInvert = false) {
+        int min = array.Min();
+        int max = array.Max();
+        int range = max - min;
+
+        if (range == 0) {
+            return array.Select(_ => shouldInvert ? 1f : 0f).ToArray();
+        }
+        
+        float[] normalizedArray = array.Select(value => (value - min) / (float)range).ToArray();
+        return shouldInvert ? normalizedArray.Select(value => 1f - value).ToArray() : normalizedArray;
+    }
 #endregion
 
 #region Collections
