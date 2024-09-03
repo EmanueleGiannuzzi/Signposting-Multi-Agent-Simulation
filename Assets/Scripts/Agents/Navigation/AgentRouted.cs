@@ -5,12 +5,12 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent), typeof(Agent))]
 public class AgentRouted : MarkersAwareAgent {
-    private const bool DEBUG = true;
+    private readonly bool DEBUG = true;
     public float DestinationPositionError { get; set; } = 0f;
     
     private Queue<IRouteMarker> route;
 
-    private void Awake() {
+    protected override void Awake() {
         MarkerReachedEvent += OnMarkerReachedEvent;
     }
 

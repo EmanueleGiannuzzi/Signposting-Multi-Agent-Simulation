@@ -1,27 +1,35 @@
 using System.Collections.Generic;
+using System.Linq;
+using Agents.Wanderer;
 using UnityEngine;
 using UnityEngine.AI;
+using Vertx.Debugging;
 
 [RequireComponent(typeof(IFCSignBoard))]
 public class SignboardDirections : MonoBehaviour {
-    [SerializeField] private List<Vector3> destinations = new();
+    [SerializeField] private List<WandererGoal> destinations = new();
 
-    public static readonly Vector3 NO_DIRECTION = Vector3.negativeInfinity;
-
-    private Vector3 getDirectionFromDestination(Vector3 destination) {
+    private bool getDirectionFromDestination(WandererGoal destination, out Vector3 direction) {
         NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(this.transform.position, destination, NavMesh.AllAreas, path);
+        NavMesh.CalculatePath(this.transform.position, destination.Position, NavMesh.AllAreas, path);
         bool pathExists = path.status == NavMeshPathStatus.PathComplete;
         if (pathExists) {
             IRouteMarker marker = getFirstMarkerOnPath(path);
             //TODO: Debug line
-            return marker?.Position ?? destination;
+            direction = marker?.Position ?? destination.Position;
+            return true;
         }
-        return NO_DIRECTION;
+
+        direction = Vector3.zero;
+        return false;
     }
 
-    public Vector3 GetDirection(Vector3 destination) {
-        return destinations.Contains(destination) ? getDirectionFromDestination(destination) : NO_DIRECTION;
+    public bool TryGetDirection(WandererGoal destination, out Vector3 direction) {
+        if (destinations.Contains(destination)) {
+            return getDirectionFromDestination(destination, out direction);
+        }
+        direction = Vector3.zero;
+        return false;
     }
     
     private static IRouteMarker getFirstMarkerOnPath(NavMeshPath path) {
@@ -39,5 +47,25 @@ public class SignboardDirections : MonoBehaviour {
             }
         }
         return null;
+    }
+
+    private void OnDrawGizmos() {
+        if (!destinations.Any()) {
+            return;
+        }
+        
+        Vector3 signPosition = this.transform.position;
+        foreach (WandererGoal destination in destinations) {
+            if(destination == null) continue;
+
+            if (getDirectionFromDestination(destination, out Vector3 directionPointed)) {
+                Quaternion destinationDirection = Quaternion.LookRotation(directionPointed - signPosition);
+                D.raw(new Shape.Arrow(signPosition, destinationDirection, 0.5f), Color.green);
+            }
+            else {
+                Quaternion destinationDirection = Quaternion.LookRotation(destination.Position - signPosition);
+                D.raw(new Shape.Arrow(signPosition, destinationDirection, 0.5f), Color.red);
+            }
+        }
     }
 }

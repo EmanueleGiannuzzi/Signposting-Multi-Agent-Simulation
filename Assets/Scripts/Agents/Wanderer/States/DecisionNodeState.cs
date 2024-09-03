@@ -51,13 +51,10 @@ namespace Agents.Wanderer.States {
             distancesZSqr = Utility.Normalize(distancesZSqr, true);
             float[] numberOfVisitsNormalized = Utility.Normalize(numberOfVisits, true);
 
-            string debugLine = "Weights: ";
             for (int i = 0; i < markersAroundAgent.Count; i++) {
                 weights[i] = ANGLE_WEIGHT * angles[i] + DISTANCE_XY_WEIGHT * distancesXYSqr[i] +
                              DISTANCE_Z_WEIGHT * distancesZSqr[i] + VISITS_WEIGHT * numberOfVisitsNormalized[i];
-                debugLine += weights[i] + " ";
             }
-            Debug.Log(debugLine);
 
             int nextDestinationIndex = Utility.GetRandomWeightedIndex(weights);
             NextMarker = markersAroundAgent[nextDestinationIndex];

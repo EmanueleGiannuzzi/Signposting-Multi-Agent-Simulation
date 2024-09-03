@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 public class VisibilityPlaneData : MonoBehaviour {
-    private const bool DEBUG = false;
+    private readonly bool DEBUG = false;
     
     [ReadOnly]
     [SerializeField]

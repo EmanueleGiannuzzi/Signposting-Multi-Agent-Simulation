@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 public class TestSpawnArea : SpawnArea {
     private Camera PlayerCamera;
-    public GameObject AgentPrefab;
+    public new GameObject AgentPrefab;
 
 
     public MouseButton mouseButton;

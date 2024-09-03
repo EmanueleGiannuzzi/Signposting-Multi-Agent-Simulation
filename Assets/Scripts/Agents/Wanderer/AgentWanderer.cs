@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Agents.Wanderer;
 using Agents.Wanderer.States;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -16,7 +17,7 @@ public class AgentWanderer : MarkersAwareAgent {
     private bool checkDestinationDistance = false;
     private float stopDistanceSqr = 0f;
 
-    public Vector3 Goal { get; private set; }
+    public WandererGoal Goal { get; private set; }
     public Vector3 CurrentDestination => agent.navMeshAgent.destination;
     public readonly List<IFCSignBoard> VisitedSigns = new ();
     
@@ -45,7 +46,7 @@ public class AgentWanderer : MarkersAwareAgent {
         }
     }
 
-    public void SetGoalMarker(Vector3 goal) {
+    public void SetGoalMarker(WandererGoal goal) {
         this.Goal = goal;
     }
     public void SetDebugText(string text) {

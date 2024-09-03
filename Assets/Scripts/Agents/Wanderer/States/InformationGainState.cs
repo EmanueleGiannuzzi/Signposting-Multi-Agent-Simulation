@@ -49,12 +49,10 @@ namespace Agents.Wanderer.States {
 
             SignboardDirections signDirection = signboard.GetComponent<SignboardDirections>();
             if (signDirection) {
-                Vector3 nextGoal = signDirection.GetDirection(agentWanderer.Goal);
-                if (nextGoal == SignboardDirections.NO_DIRECTION) {
-                    return;
+                if (signDirection.TryGetDirection(agentWanderer.Goal, out Vector3 nextGoal)) {
+                    agentWanderer.SetDestination(nextGoal, 0.5f, SetDone);
+                    ExitReason = Reason.InformationFound;
                 }
-                agentWanderer.SetDestination(nextGoal, 0.5f, SetDone);
-                ExitReason = Reason.InformationFound;
             }
         }
         

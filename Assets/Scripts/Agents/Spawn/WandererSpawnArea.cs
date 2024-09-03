@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using Agents.Wanderer;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 public class WandererSpawnArea : SpawnAreaBase {
     private static MarkerGenerator markerGen;
 
-    public Collider[] Goals;
+    public WandererGoal[] Goals;
     
     private void Awake() {
         markerGen ??= FindObjectOfType<MarkerGenerator>();
@@ -21,8 +22,8 @@ public class WandererSpawnArea : SpawnAreaBase {
             return agent;
         
         AgentWanderer agentWanderer = agent.GetComponent<AgentWanderer>();
-        Vector3 goalPosition = Goals[Random.Range(0, Goals.Length)].bounds.center;
-        agentWanderer.SetGoalMarker(goalPosition);
+        WandererGoal chosenGoal = Goals[Random.Range(0, Goals.Length)];
+        agentWanderer.SetGoalMarker(chosenGoal);
         return agent;
     }
     
