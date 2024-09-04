@@ -144,8 +144,8 @@ public class CPTGraph {
 
     private bool improvements() {
         CPTGraph residual = new CPTGraph(nVertices);
-        foreach (var i in unbalancedVerticesNeg) {
-            foreach (var j in umbalancedVerticesPos) {
+        foreach (int i in unbalancedVerticesNeg) {
+            foreach (int j in umbalancedVerticesPos) {
                 residual.addArc(null, i, j, arcCosts[i, j]);
                 if (repeatedArcs[i, j] != 0) {
                     residual.addArc(null, j, i, -arcCosts[i, j]);

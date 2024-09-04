@@ -7,28 +7,40 @@ using Vertx.Debugging;
 
 [RequireComponent(typeof(IFCSignBoard))]
 public class SignboardDirections : MonoBehaviour {
+    private readonly bool DEBUG = true;
+    
     [SerializeField] private List<WandererGoal> destinations = new();
 
-    private bool getDirectionFromDestination(WandererGoal destination, out Vector3 direction) {
+    private bool getDirectionFromDestination(WandererGoal destination, out IRouteMarker direction) {
         NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(this.transform.position, destination.Position, NavMesh.AllAreas, path);
+        MarkerGenerator.TraversableCenterProjectionOnNavMesh(this.transform.position, out Vector3 startPos);
+        MarkerGenerator.TraversableCenterProjectionOnNavMesh(destination.GetPosition(), out Vector3 destinationPos);
+        NavMesh.CalculatePath(startPos, destinationPos, NavMesh.AllAreas, path);
+        
         bool pathExists = path.status == NavMeshPathStatus.PathComplete;
         if (pathExists) {
+            // if (DEBUG) {//TODO: Remove
+            //     Vector3 prevCorner = this.transform.position;
+            //     foreach (Vector3 corner in path.corners) {
+            //         Debug.DrawLine(prevCorner, corner, Color.blue);
+            //         prevCorner = corner;
+            //     }
+            // }
+            
             IRouteMarker marker = getFirstMarkerOnPath(path);
-            //TODO: Debug line
-            direction = marker?.Position ?? destination.Position;
+            direction = marker ?? destination;
             return true;
         }
 
-        direction = Vector3.zero;
+        direction = null;
         return false;
     }
 
-    public bool TryGetDirection(WandererGoal destination, out Vector3 direction) {
+    public bool TryGetDirection(WandererGoal destination, out IRouteMarker direction) {
         if (destinations.Contains(destination)) {
             return getDirectionFromDestination(destination, out direction);
         }
-        direction = Vector3.zero;
+        direction = null;
         return false;
     }
     
@@ -50,7 +62,7 @@ public class SignboardDirections : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        if (!destinations.Any()) {
+        if (!DEBUG || !destinations.Any()) {
             return;
         }
         
@@ -58,12 +70,12 @@ public class SignboardDirections : MonoBehaviour {
         foreach (WandererGoal destination in destinations) {
             if(destination == null) continue;
 
-            if (getDirectionFromDestination(destination, out Vector3 directionPointed)) {
-                Quaternion destinationDirection = Quaternion.LookRotation(directionPointed - signPosition);
+            if (getDirectionFromDestination(destination, out IRouteMarker directionPointed)) {
+                Quaternion destinationDirection = Quaternion.LookRotation(directionPointed.Position - signPosition);
                 D.raw(new Shape.Arrow(signPosition, destinationDirection, 0.5f), Color.green);
             }
             else {
-                Quaternion destinationDirection = Quaternion.LookRotation(destination.Position - signPosition);
+                Quaternion destinationDirection = Quaternion.LookRotation(destination.GetPosition() - signPosition);
                 D.raw(new Shape.Arrow(signPosition, destinationDirection, 0.5f), Color.red);
             }
         }

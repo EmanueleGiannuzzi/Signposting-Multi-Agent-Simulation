@@ -12,11 +12,11 @@ public static class Utility {
     
     //TODO: Move
     public static bool PolyContainsPoint(Vector3[] polyPoints, Vector3 p) {
-        var j = polyPoints.Length - 1;
-        var inside = false;
+        int j = polyPoints.Length - 1;
+        bool inside = false;
         for(int i = 0; i < polyPoints.Length; j = i++) {
-            var pi = polyPoints[i];
-            var pj = polyPoints[j];
+            Vector3 pi = polyPoints[i];
+            Vector3 pj = polyPoints[j];
             if(((pi.z <= p.z && p.z < pj.z) || (pj.z <= p.z && p.z < pi.z)) &&
                 (p.x < (pj.x - pi.x) * (p.z - pi.z) / (pj.z - pi.z) + pi.x))
                 inside = !inside;
@@ -242,8 +242,8 @@ public static class Utility {
     }
     
     public static IEnumerable<T> Subtract<T>(this IEnumerable<T> orgList, IEnumerable<T> toRemove) {
-        var list = orgList.ToList();
-        foreach(var x in toRemove) {
+        List<T> list = orgList.ToList();
+        foreach(T x in toRemove) {
             list.Remove(x);
         }
         return list;

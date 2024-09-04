@@ -6,9 +6,12 @@ using UnityEngine;
 using Random = Unity.Mathematics.Random;
 
 public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
-    Vector3 IRouteMarker.Position => transform.position;
-    string IRouteMarker.getName() {
+    string IRouteMarker.GetName() {
         return this.name;
+    }
+
+    public Vector3 GetPosition() {
+        return this.transform.position;
     }
 
     private RoutingGraphCPTSolver routingGraph;
@@ -105,7 +108,7 @@ public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
         if (routingGraph == null) {
             return;
         }
-        foreach (var arc in routingGraph.GetArcs()) {
+        foreach (Tuple<IRouteMarker, IRouteMarker> arc in routingGraph.GetArcs()) {
             DrawLineBetweenMarkers(arc.Item1, arc.Item2);
         }
     }

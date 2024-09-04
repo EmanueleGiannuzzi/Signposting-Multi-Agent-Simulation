@@ -23,7 +23,6 @@ namespace Agents.Wanderer.States {
             //TODO: Chose at random between closest markers, preferring the ones in the looking direction
             List<IRouteMarker> markersAroundAgent = markersAwareAgent.GetMarkersAround(MAX_MARKER_DISTANCE, MIN_MARKER_DISTANCE); //TODO: What if no marker found
             
-            Debug.Log($"Found  {markersAroundAgent.Count} markers");
             Vector3 agentPos = agentWanderer.transform.position;
             Vector3 agentForwardDirection = agentWanderer.transform.forward;
 
@@ -62,8 +61,8 @@ namespace Agents.Wanderer.States {
                 visitedMarkers[NextMarker]++;
             }
 
-            Debug.Log("Next dest: " + markersAroundAgent[nextDestinationIndex].Name + " Distance:" + 
-                      (agentWanderer.transform.position - markersAroundAgent[nextDestinationIndex].Position).magnitude);
+            // Debug.Log("Next dest: " + markersAroundAgent[nextDestinationIndex].Name + " Distance:" + 
+            //           (agentWanderer.transform.position - markersAroundAgent[nextDestinationIndex].Position).magnitude);
     
             drawDebugLines(markersAroundAgent, weights);
             
@@ -72,10 +71,10 @@ namespace Agents.Wanderer.States {
 
         private void drawDebugLines(List<IRouteMarker> markersAroundAgent, float[] weights) {
             Gradient gradient = new Gradient();
-            var colors = new GradientColorKey[2];
+            GradientColorKey[] colors = new GradientColorKey[2];
             colors[0] = new GradientColorKey(Color.red, 0f);
             colors[1] = new GradientColorKey(Color.blue, 1f);
-            var alphas = new GradientAlphaKey[2];
+            GradientAlphaKey[] alphas = new GradientAlphaKey[2];
             alphas[0] = new GradientAlphaKey(1f, 0f);
             alphas[1] = new GradientAlphaKey(1f, 1f);
             gradient.SetKeys(colors, alphas);

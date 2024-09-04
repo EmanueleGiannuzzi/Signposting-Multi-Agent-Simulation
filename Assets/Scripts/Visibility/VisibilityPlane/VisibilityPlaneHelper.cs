@@ -17,7 +17,7 @@ public static class VisibilityPlaneHelper {
         for(int visPlaneId = 0; visPlaneId < visibilityPlanes.Length; visPlaneId++) {
             VisibilityPlaneData visibilityPlane = visibilityPlanes[visPlaneId];
 
-            var visibilityPlaneTransform = visibilityPlane.transform;
+            Transform visibilityPlaneTransform = visibilityPlane.transform;
             Vector3 position = visibilityPlaneTransform.position;
             float originalFloorHeight = visibilityPlane.OriginalFloorHeight;
             position[1] = originalFloorHeight + agentEyeLevel;

@@ -24,13 +24,13 @@ namespace Agents.Wanderer.States {
             Vector3 agentEyePos = agentWanderer.transform.position;
             agentEyePos.y += agentWanderer.GetEyeHeight() / 2f; // Agent center is in the middle
 
-            Vector3 goalDirection = agentWanderer.Goal.Position - agentEyePos;
+            Vector3 goalDirection = agentWanderer.Goal.GetPosition() - agentEyePos;
                 
             if (goalDirection.sqrMagnitude > lookaheadDistance * lookaheadDistance) {
                 return false;
             }
             Physics.Raycast(agentEyePos, goalDirection, out RaycastHit hit, lookaheadDistance, Constants.ALL_BUT_AGENTS_LAYER_MASK);
-            return (hit.point - agentWanderer.Goal.Position).sqrMagnitude < 0.1f;
+            return (hit.point - agentWanderer.Goal.GetPosition()).sqrMagnitude < 0.1f;
         }
 
         public void Setup(AgentWanderer agentWanderer, SignboardAwareAgent signboardAwareAgent, MarkersAwareAgent markersAwareAgent) {

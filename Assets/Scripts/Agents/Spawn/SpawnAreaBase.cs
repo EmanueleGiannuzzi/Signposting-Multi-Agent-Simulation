@@ -104,7 +104,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
         float agentsMinDistance = SPAWNED_AGENTS_INITIAL_MIN_DISTANCE;
         bool spawnPointFound;
         do {
-            var tentatives = 0;
+            int tentatives = 0;
             do {
                 float randXOffset = 0f;
                 float randZOffset = 0f;

@@ -49,8 +49,8 @@ public class Agent : MonoBehaviour {
     }
     
     private Bounds getModelBounds() {
-        var total = new Bounds(transform.position, Vector3.zero);
-        foreach (var child in GetComponentsInChildren<Collider>()) {
+        Bounds total = new Bounds(transform.position, Vector3.zero);
+        foreach (Collider child in GetComponentsInChildren<Collider>()) {
             total.Encapsulate(child.bounds);
         }
         return total;

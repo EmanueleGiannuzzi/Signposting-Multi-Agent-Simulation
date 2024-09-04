@@ -1,9 +1,9 @@
 using UnityEngine;
 
 public interface IRouteMarker {
-    public Vector3 Position { get; }
-    public string Name => getName();
+    public Vector3 Position => GetPosition();
+    public string Name => GetName();
     
-
-    protected string getName();
+    public string GetName();
+    public Vector3 GetPosition();
 }

@@ -42,7 +42,7 @@ namespace Dummiesman
                     //raw packet
                     for (int i = 0; i < RLEPixelCount; i++)
                     {
-                        var color = (bitDepth == 32) ? r.ReadColor32RGBA().FlipRB() : r.ReadColor32RGB().FlipRB();
+                        Color32 color = (bitDepth == 32) ? r.ReadColor32RGBA().FlipRB() : r.ReadColor32RGB().FlipRB();
                         pulledColors[i + pulledColorCount] = color;
                     }
 
@@ -50,7 +50,7 @@ namespace Dummiesman
                 else
                 {
                     //rle packet
-                    var color = (bitDepth == 32) ? r.ReadColor32RGBA().FlipRB() : r.ReadColor32RGB().FlipRB();
+                    Color32 color = (bitDepth == 32) ? r.ReadColor32RGBA().FlipRB() : r.ReadColor32RGB().FlipRB();
 
                     for (int i = 0; i < RLEPixelCount; i++)
                     {
@@ -66,7 +66,7 @@ namespace Dummiesman
 
         public static Texture2D Load(string fileName)
         {
-            using (var imageFile = File.OpenRead(fileName))
+            using (FileStream imageFile = File.OpenRead(fileName))
             {
                 return Load(imageFile);
             }
@@ -74,7 +74,7 @@ namespace Dummiesman
 
         public static Texture2D Load(byte[] bytes)
         {
-            using (var ms = new MemoryStream(bytes))
+            using (MemoryStream ms = new MemoryStream(bytes))
             {
                 return Load(ms);
             }

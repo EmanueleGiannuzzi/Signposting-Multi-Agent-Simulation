@@ -107,7 +107,7 @@ namespace B83.Image.BMP
         public Color32[] imageData;
         public Texture2D ToTexture2D()
         {
-            var tex = new Texture2D(info.absWidth, info.absHeight);
+            Texture2D tex = new Texture2D(info.absWidth, info.absHeight);
             tex.SetPixels32(imageData);
             tex.Apply();
             return tex;
@@ -123,18 +123,18 @@ namespace B83.Image.BMP
 
         public BMPImage LoadBMP(string aFileName)
         {
-            using (var file = File.OpenRead(aFileName))
+            using (FileStream file = File.OpenRead(aFileName))
                 return LoadBMP(file);
         }
         public BMPImage LoadBMP(byte[] aData)
         {
-            using (var stream = new MemoryStream(aData))
+            using (MemoryStream stream = new MemoryStream(aData))
                 return LoadBMP(stream);
         }
 
         public BMPImage LoadBMP(Stream aData)
         {
-            using (var reader = new BinaryReader(aData))
+            using (BinaryReader reader = new BinaryReader(aData))
                 return LoadBMP(reader);
 
         }
@@ -505,7 +505,7 @@ namespace B83.Image.BMP
             uint count = aBmp.info.nPaletteColors;
             if (count == 0u)
                 count = 1u << aBmp.info.nBitsPerPixel;
-            var palette = new List<Color32>((int)count);
+            List<Color32> palette = new List<Color32>((int)count);
             for (int i = 0; i < count; i++)
             {
                 byte b = aReader.ReadByte();

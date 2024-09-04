@@ -12,6 +12,9 @@ using UnityEngine;
 
 namespace Agents.Wanderer.States {
     public class SignageDiscoveryState : AbstractWandererState {
+        
+        private const float SIGN_STOPPING_DISTANCE = 2f;
+        private const float DONE_DELAY = 0.5f;
 
         public enum Reason {
             None,
@@ -24,7 +27,7 @@ namespace Agents.Wanderer.States {
             ExitReason = Reason.None;
             
             IEnumerable<IFCSignBoard> visibleBoards = signboardAwareAgent.visibleSigns.Subtract(agentWanderer.VisitedSigns);
-            var visibleBoardsArray = visibleBoards as IFCSignBoard[] ?? visibleBoards.ToArray();
+            IFCSignBoard[] visibleBoardsArray = visibleBoards as IFCSignBoard[] ?? visibleBoards.ToArray();
             if (!visibleBoardsArray.Any()) {
                 onNoSignFound();
                 return;
@@ -44,19 +47,19 @@ namespace Agents.Wanderer.States {
                 MarkerGenerator.TraversableCenterProjectionOnNavMesh(closestSign.WorldCenterPoint, 
                     out Vector3 signboardNavmeshProjection)) {
                 
-                agentWanderer.SetDestination(signboardNavmeshProjection, 0.5f, onSignFound);
+                agentWanderer.SetDestination(signboardNavmeshProjection, SIGN_STOPPING_DISTANCE, onSignFound);
                 agentWanderer.VisitedSigns.Add(closestSign);
             }
         }
         
         private void onSignFound() {
             ExitReason = Reason.SignFound;
-            SetDoneDelayed(0.5f);
+            SetDoneDelayed(DONE_DELAY);
         }
 
         private void onNoSignFound() {
             ExitReason = Reason.NoSignFound;
-            SetDoneDelayed(0.5f);
+            SetDoneDelayed(DONE_DELAY);
         }
     }
 }

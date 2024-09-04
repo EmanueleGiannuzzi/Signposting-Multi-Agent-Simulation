@@ -238,9 +238,9 @@ public class IfcOpenShellParser : MonoBehaviour {
 
                         // run through property values
                         foreach(XmlNode property in propertySet.ChildNodes) {
-                            var propValue = "";
+                            string propValue = "";
                             IFCProperty myProp = new IFCProperty();
-                            var propName = property.Attributes.GetNamedItem("Name").Value;
+                            string propName = property.Attributes.GetNamedItem("Name").Value;
 
                             propValue = property.Name switch {
                                 "IfcPropertySingleValue" => property.Attributes.GetNamedItem("NominalValue").Value,

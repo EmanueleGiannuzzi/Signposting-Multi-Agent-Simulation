@@ -144,7 +144,7 @@ public class VisibilityHandler : MonoBehaviour {
             for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
                 StringFloatTuple tuple = agentTypes[agentTypeID];
 
-                var visPlaneTransform = visibilityPlane.transform;
+                Transform visPlaneTransform = visibilityPlane.transform;
                 Vector3 position = visPlaneTransform.position;
                 position[1] = originalFloorHeight + tuple.Value; // the Y value
                 visPlaneTransform.position = position;
@@ -229,7 +229,7 @@ public class VisibilityHandler : MonoBehaviour {
             signboardVisibility.CoveragePerAgentType = new float[agentTypes.Length];
             for(int agentTypeID = 0; agentTypeID < agentTypes.Length; agentTypeID++) {
                 Tuple<IFCSignBoard, int> key = Tuple.Create(ifcSignboard, agentTypeID);
-                if (!signboardCoverage.TryGetValue(key, out var coverage)) {
+                if (!signboardCoverage.TryGetValue(key, out int coverage)) {
                     continue;
                 }
                 float coverageNormalized = (float)coverage / visibilityGroupMaxSize;

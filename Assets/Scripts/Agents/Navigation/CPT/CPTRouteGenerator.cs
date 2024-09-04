@@ -9,7 +9,7 @@ public class RoutingGraphCPTSolver : OpenCPTSolver {
     
     public RoutingGraphCPTSolver(IRouteMarker[] vertexLabels) : base(vertexLabels.Length) {
         VertLabels = (IRouteMarker[])vertexLabels.Clone();
-        foreach (var vertex in vertexLabels) {
+        foreach (IRouteMarker vertex in vertexLabels) {
             generateEdgesFrom(vertex);
         }
     }

@@ -159,6 +159,7 @@ namespace Agents.Wanderer.States {
             }
             
             setDebugText(currentState.GetType().Name);
+            Debug.Log($"New State {currentState.GetType().Name}");
         }
     
         private void setDebugText(string text) {

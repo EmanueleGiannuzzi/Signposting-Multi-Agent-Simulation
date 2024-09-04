@@ -31,7 +31,7 @@ public class MTLLoader {
     public virtual Texture2D TextureLoadFunction(string path, bool isNormalMap)
     {
         //find it
-        foreach (var searchPath in SearchPaths)
+        foreach (string searchPath in SearchPaths)
         {
             //replace varaibles and combine path
             string processedPath = (_objFileInfo != null) ? searchPath.Replace("%FileName%", Path.GetFileNameWithoutExtension(_objFileInfo.Name)) 
@@ -41,7 +41,7 @@ public class MTLLoader {
             //return if eists
             if (File.Exists(filePath))
             {
-                var tex = ImageLoader.LoadTexture(filePath);
+                Texture2D tex = ImageLoader.LoadTexture(filePath);
 
                 if(isNormalMap)
                     tex = ImageUtils.ConvertToNormalMap(tex);
@@ -88,7 +88,7 @@ public class MTLLoader {
     {
         for(int i=1; i < components.Length; i++)
         {
-            var cmpSkip = GetArgValueCount(components[i]);
+            int cmpSkip = GetArgValueCount(components[i]);
             if(cmpSkip < 0)
             {
                 return i;
@@ -103,7 +103,7 @@ public class MTLLoader {
         string argLower = arg.ToLower();
         for(int i=1; i < components.Length - 1; i++)
         {
-            var cmp = components[i].ToLower();
+            string cmp = components[i].ToLower();
             if(argLower == cmp)
             {
                 return OBJLoaderHelper.FastFloatParse(components[i+1]);
@@ -134,8 +134,8 @@ public class MTLLoader {
     /// <returns>Dictionary containing loaded materials</returns>
     public Dictionary<string, Material> Load(Stream input)
     {
-        var inputReader = new StreamReader(input);
-        var reader = new StringReader(inputReader.ReadToEnd());
+        StreamReader inputReader = new StreamReader(input);
+        StringReader reader = new StringReader(inputReader.ReadToEnd());
 
         Dictionary<string, Material> mtlDict = new Dictionary<string, Material>();
         Material currentMaterial = null;
@@ -157,7 +157,7 @@ public class MTLLoader {
             {
                 string materialName = processedLine.Substring(7);
 
-                var newMtl = new Material(Shader.Find("Standard (Specular setup)")) { name = materialName };
+                Material newMtl = new Material(Shader.Find("Standard (Specular setup)")) { name = materialName };
                 mtlDict[materialName] = newMtl;
                 currentMaterial = newMtl;
 
@@ -171,8 +171,8 @@ public class MTLLoader {
             //diffuse color
             if (splitLine[0] == "Kd" || splitLine[0] == "kd")
             {
-                var currentColor = currentMaterial.GetColor("_Color");
-                var kdColor = OBJLoaderHelper.ColorFromStrArray(splitLine);
+                Color currentColor = currentMaterial.GetColor("_Color");
+                Color kdColor = OBJLoaderHelper.ColorFromStrArray(splitLine);
 
                 currentMaterial.SetColor("_Color", new Color(kdColor.r, kdColor.g, kdColor.b, currentColor.a));
                 continue;
@@ -187,7 +187,7 @@ public class MTLLoader {
                     continue; //invalid args or sth
                 }
 
-                var KdTexture = TryLoadTexture(texturePath);
+                Texture2D KdTexture = TryLoadTexture(texturePath);
                 currentMaterial.SetTexture("_MainTex", KdTexture);
 
                 //set transparent mode if the texture has transparency
@@ -214,7 +214,7 @@ public class MTLLoader {
                     continue; //invalid args or sth
                 }
 
-                var bumpTexture = TryLoadTexture(texturePath, true);
+                Texture2D bumpTexture = TryLoadTexture(texturePath, true);
                 float bumpScale = GetArgValue(splitLine, "-bm", 1.0f);
 
                 if (bumpTexture != null) {
@@ -265,7 +265,7 @@ public class MTLLoader {
 
                 if(visibility < (1f - Mathf.Epsilon))
                 {
-                    var currentColor = currentMaterial.GetColor("_Color");
+                    Color currentColor = currentMaterial.GetColor("_Color");
 
                     currentColor.a = visibility;
                     currentMaterial.SetColor("_Color", currentColor);
@@ -298,7 +298,7 @@ public class MTLLoader {
         _objFileInfo = new FileInfo(path); //get file info
         SearchPaths.Add(_objFileInfo.Directory.FullName); //add root path to search dir
 
-        using (var fs = new FileStream(path, FileMode.Open))
+        using (FileStream fs = new FileStream(path, FileMode.Open))
         {
             return Load(fs); //actually load
         }
