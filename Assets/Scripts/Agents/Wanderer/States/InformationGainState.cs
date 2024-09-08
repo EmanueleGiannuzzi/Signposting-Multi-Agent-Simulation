@@ -25,50 +25,62 @@ namespace Agents.Wanderer.States {
         protected override void EnterState() {
             ExitReason = Reason.None;
             informationFound = false;
+            checkSignboards();
         }
         
         protected override void FixedDoState() {
-            foreach (IFCSignBoard signboard in signboardAwareAgent.visibleSigns) {
-                checkSignboard(signboard);
-            }
-
+            if (informationFound) return;
+            
+            checkSignboards();
             if (!informationFound && agentWanderer.IsAgentNearDestination(SIGN_STOPPING_DISTANCE)) {
                 onSignReached();
             }
         }
 
-        private void onSignReached() {
-            SetDoneDelayed(0.5f);
-            this.ExitReason = Reason.NoInformationFound;
+        private void checkSignboards() {
+            foreach (IFCSignBoard signboard in signboardAwareAgent.visibleSigns) {
+                if (checkSignboard(signboard)) {
+                    informationFound = true;
+                    return;
+                }
+            }
         }
-        
-        private void checkSignboard(IFCSignBoard signboard) {
-            // if (agentWanderer.VisitedSigns.Contains(signboard)) {
-            //     return;
-            // }
-            
 
+        private bool checkSignboard(IFCSignBoard signboard) {
             agentWanderer.VisitedSigns.Add(signboard);
             
             if (signboard.TryGetComponent(out SignboardDirections signDirection)) {
-                Debug.Log("DIRECTION FOUND");
                 if (signDirection.TryGetDirection(agentWanderer.Goal, out IRouteMarker nextGoal)) {
+                    Vector2 nextGoalDirection = (nextGoal.Position - agentWanderer.transform.position).normalized;
+                    agentWanderer.PreferredDirection = nextGoalDirection;
                     SetDestinationMarker(nextGoal);
-                    informationFound = true;
+                    return true;
                 }
             }
             else {
                 Debug.Log($"{signboard.name} doesn't contain a SignboardDirections");
             }
+            return false;
         }
         
         public bool IsThereAnyUnvisitedSignboard(IEnumerable<IFCSignBoard> signboards) {
             return signboards.Any(signboard => !agentWanderer.VisitedSigns.Contains(signboard));
         }
 
-        protected override void OnReachedDestinationMarker(IRouteMarker marker) {
+        private void onSignReached() {
+            Debug.Log("NO INFO FOUND");
+            SetDone();
+            this.ExitReason = Reason.NoInformationFound;
+        }
+
+        private void onNextDestinationReached() {
+            Debug.Log("INFO FOUND");
             ExitReason = Reason.InformationFound;
             SetDone();
+        }
+
+        protected override void OnReachedDestinationMarker(IRouteMarker marker) {
+            onNextDestinationReached();
         }
     }
 }

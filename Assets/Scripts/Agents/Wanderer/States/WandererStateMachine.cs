@@ -100,6 +100,9 @@ namespace Agents.Wanderer.States {
                         case ExploreState.Reason.ReachedMarker:
                             setState(DecisionNodeState);
                             break;
+                        case ExploreState.Reason.GoalVisible:
+                            Utility.DestroyObject(agentWanderer.gameObject);
+                            return;
                         case ExploreState.Reason.OverWalked:
                             setState(DisorientationState);
                             break;
@@ -134,7 +137,7 @@ namespace Agents.Wanderer.States {
                         case InformationGainState.Reason.None:
                             break;
                         case InformationGainState.Reason.InformationFound:
-                            setState(ExecuteSignageState);
+                            setState(DecisionNodeState);
                             break;
                         case InformationGainState.Reason.NoInformationFound:
                             setState(DecisionNodeState);
@@ -159,7 +162,7 @@ namespace Agents.Wanderer.States {
             }
             
             setDebugText(currentState.GetType().Name);
-            Debug.Log($"New State {currentState.GetType().Name}");
+            // Debug.Log($"New State {currentState.GetType().Name}");
         }
     
         private void setDebugText(string text) {

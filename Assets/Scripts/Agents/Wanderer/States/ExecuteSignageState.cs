@@ -8,9 +8,6 @@
         private const float LOOKAHEAD_DISTANCE = 5f;
 
         protected override void FixedDoState() {
-            if (isDestinationVisible(LOOKAHEAD_DISTANCE)) {
-                
-            }
         }
     }
 }

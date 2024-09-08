@@ -2,6 +2,7 @@
 using Agents.Wanderer;
 using Agents.Wanderer.States;
 using JetBrains.Annotations;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -16,6 +17,8 @@ public class AgentWanderer : MarkersAwareAgent {
 
     private bool checkDestinationDistance = false;
     private float stopDistanceSqr = 0f;
+
+    public Vector2 PreferredDirection { get; set; }
 
     public WandererGoal Goal { get; private set; }
     public Vector3 CurrentDestination => agent.navMeshAgent.destination;
@@ -77,8 +80,12 @@ public class AgentWanderer : MarkersAwareAgent {
         agent.DestroyAgent();
     }
 
+    public bool HasReachedDestination() {
+        return this.agent.navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete;
+    }
+
     public bool IsAgentNearDestination(float maxDistance) {
-        return this.agent.navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete ||
+        return HasReachedDestination() ||
                this.agent.navMeshAgent.remainingDistance < maxDistance;
     }
 
@@ -90,6 +97,50 @@ public class AgentWanderer : MarkersAwareAgent {
         return agent.navMeshAgent.hasPath;
     }
 
+    public bool HasPreferredDirection() {
+        return PreferredDirection != Vector2.zero;
+    }
+    
+    public bool IsGoalVisible() {
+        return IsMarkerVisible(this.Goal);
+    }
+
+    public bool IsMarkerVisible(IRouteMarker marker) {
+        if (marker is MonoBehaviour behaviour) {
+            MeshRenderer renderer = behaviour.GetComponent<MeshRenderer>();
+            if (renderer) {
+                Bounds bounds = renderer.bounds;
+                Vector3[] vertices = new Vector3[8];
+                vertices[0] = bounds.min;
+                vertices[1] = new Vector3(bounds.max.x, bounds.min.y, bounds.min.z);
+                vertices[2] = new Vector3(bounds.min.x, bounds.max.y, bounds.min.z);
+                vertices[3] = new Vector3(bounds.min.x, bounds.min.y, bounds.max.z);
+                vertices[4] = new Vector3(bounds.min.x, bounds.max.y, bounds.max.z);
+                vertices[5] = new Vector3(bounds.max.x, bounds.min.y, bounds.max.z);
+                vertices[6] = new Vector3(bounds.max.x, bounds.max.y, bounds.min.z);
+                vertices[7] = bounds.max;
+
+                foreach (Vector3 vertex in vertices) {
+                    if (isPointVisible(vertex)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private bool isPointVisible(Vector3 point, float precision = 0.1f) {
+        Vector3 agentEyePos = this.transform.position;
+        agentEyePos.y += this.GetEyeHeight(); // Agent center is in the middle
+        Vector3 displacementVector = point - agentEyePos;
+        float distance = displacementVector.magnitude;
+        
+        bool rayHit = Physics.Raycast(agentEyePos, displacementVector, out RaycastHit hit, distance + precision, Constants.INVISIBLE_TO_AGENTS_LAYER_MASK);
+        return !rayHit || (hit.point - point).sqrMagnitude < precision * precision;
+    }
+
     private void OnDrawGizmos() {
         if (!Application.isPlaying) {
             return;
@@ -98,8 +149,15 @@ public class AgentWanderer : MarkersAwareAgent {
         Gizmos.color = Color.blue;
         Vector3 agentPosition = transform.position;
         Gizmos.DrawLine(agentPosition, agent.navMeshAgent.destination);
+        
         // Gizmos.color = Color.green;
         // Gizmos.DrawLine(agentPosition, Goal);
+
+        if (PreferredDirection != Vector2.zero) {
+            Handles.color = Color.green;
+            Handles.ArrowHandleCap(0, this.transform.position + new Vector3(0f, 1f, 0f), 
+                Quaternion.LookRotation(PreferredDirection), 0.3f, EventType.Repaint);
+        }
     }
 
 }

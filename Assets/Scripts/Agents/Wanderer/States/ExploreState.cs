@@ -10,6 +10,7 @@ namespace Agents.Wanderer.States {
             None,
             EnteredVCA,
             ReachedMarker,
+            GoalVisible,
             OverWalked //TODO
         }
 
@@ -61,6 +62,17 @@ namespace Agents.Wanderer.States {
         protected override void FixedDoState() {
             if (this.runningTime >= OVERWALKING_TIME) {
                 onOverwalked();
+            }
+            else {
+                checkGoal();
+            }
+        }
+
+        private void checkGoal() {
+            if (agentWanderer.IsGoalVisible()) {
+                Debug.Log("DESTINATION FOUND");
+                ExitReason = Reason.GoalVisible;
+                SetDone();
             }
         }
 

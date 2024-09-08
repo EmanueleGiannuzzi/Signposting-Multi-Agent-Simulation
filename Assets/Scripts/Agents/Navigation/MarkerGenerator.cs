@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -12,6 +13,10 @@ public class MarkerGenerator : MonoBehaviour {
     private GameObject markerParent;
 
     public string[] IfcTraversableTags = { "IfcDoor" };
+    public string[] IfcStairsTags = { "IfcStair", "IfcStairFlight" };
+    public string[] flooringIfcTags = { "IfcSlab" };
+    
+    public float StairSlopeThreshold = 10.0f;
     
     public delegate void OnMarkersGenerated(List<IRouteMarker> markers);
     public event OnMarkersGenerated OnMarkersGeneration;
@@ -21,25 +26,42 @@ public class MarkerGenerator : MonoBehaviour {
     public List<IRouteMarker> Markers => Ready ? markers : null;
 
     private void Start() {
-        AddMarkersToTraversables();
+        GenerateMarkers();
     }
 
-    private bool isTraversableTag(string ifcTag) {
-        return IfcTraversableTags.Contains(ifcTag);
-    }
-
-    private IEnumerable<IFCData> ifcTraversables() {
-        return ifcGameObject.GetComponentsInChildren<IFCData>().Where(ifcData => isTraversableTag(ifcData.IFCClass));
-    }
-
-    public void AddMarkersToTraversables() {
+    public void GenerateMarkers() {
         resetMarkers();
 
         if (!ifcGameObject) {
             Debug.LogError("[MarkerGenerator]: No IFC Object found");
             return;
         }
+        
+        addMarkersToTraversables();
+        addMarkersToStairs();
+    }
 
+    private bool isTraversableTag(string ifcTag) {
+        return IfcTraversableTags.Contains(ifcTag);
+    }
+    
+    private bool isStairsTag(string ifcTag) {
+        return IfcStairsTags.Contains(ifcTag);
+    }
+
+    private IEnumerable<IFCData> ifcTraversables() {
+        return ifcGameObject.GetComponentsInChildren<IFCData>().Where(ifcData => isTraversableTag(ifcData.IFCClass));
+    }
+    
+    private IEnumerable<IFCData> ifcStairs() {
+        return ifcGameObject.GetComponentsInChildren<IFCData>().Where(ifcData => isStairsTag(ifcData.IFCClass));
+    }
+    
+    private IEnumerable<IFCData> ifcFlooring() {
+        return ifcGameObject.GetComponentsInChildren<IFCData>().Where(ifcData => flooringIfcTags.Contains(ifcData.IFCClass));
+    }
+
+    private void addMarkersToTraversables() {
         float progress = 0f;
         IEnumerable<IFCData> traversables = ifcTraversables();
         float progressBarStep = 1f / traversables.Count();
@@ -79,6 +101,110 @@ public class MarkerGenerator : MonoBehaviour {
         Ready = true;
         OnMarkersGeneration?.Invoke(markers);
     }
+    
+    private void addMarkersToStairs() {
+        IEnumerable<IFCData> stairObjects = ifcStairs();
+        IEnumerable<IFCData> flooringObjectsList = ifcFlooring();
+        
+        NavMeshTriangulation triangulation = NavMesh.CalculateTriangulation();
+        List<Tuple<Vector3, Vector3>> stairTransitionEdges = new (); // Store only the first point of each stair
+        foreach (IFCData stair in stairObjects) {
+            Bounds stairBounds = stair.GetComponent<Collider>().bounds;
+            stairTransitionEdges.AddRange(DetectStairPointsInBounds(triangulation, stairBounds));
+        }
+        
+        const float DISTANCE_FROM_FLOOR_THRESHOLD = 0.1f;
+        stairTransitionEdges.RemoveAll(edge => {
+            foreach (IFCData floor in flooringObjectsList) {
+                float floorY = floor.GetComponent<Collider>().bounds.max.y;
+                float edgeY = ((edge.Item1 + edge.Item2) / 2).y;
+                if (Math.Abs(floorY - edgeY) <= DISTANCE_FROM_FLOOR_THRESHOLD) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        Debug.Log($"Detected {stairTransitionEdges.Count} stair transition point{(stairTransitionEdges.Count > 1 ? "s" : "")}.");
+
+        int spawnedMarkers = 0;
+        foreach (Tuple<Vector3, Vector3> edge in stairTransitionEdges) {
+            IRouteMarker marker = spawnStairMarker(edge, $"StairMarker-{spawnedMarkers}");
+            Markers.Add(marker);
+            spawnedMarkers++;
+        }
+    }
+
+    private IRouteMarker spawnStairMarker(Tuple<Vector3, Vector3> edge, string name) {
+        Vector3 center = (edge.Item1 + edge.Item2) / 2;
+        Vector3 direction = (edge.Item2 - edge.Item1).normalized;
+        Quaternion rotation = Quaternion.LookRotation(Vector3.down, direction);
+        float distance = Vector3.Distance(edge.Item1, edge.Item2);
+            
+        GameObject markerGO = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        markerGO.transform.parent = markerParent.transform;
+        center += new Vector3(0f, 0.01f, 0f);
+        markerGO.transform.position = center;
+        
+        markerGO.transform.rotation = rotation;
+        markerGO.transform.localScale = new Vector3(0.3f, distance, 1f);
+        markerGO.GetComponent<Renderer>().sharedMaterial = markerMaterial;
+        markerGO.layer = Constants.MARKERS_LAYER;
+        markerGO.name = name;
+        Utility.DestroyObject(markerGO.GetComponent<MeshCollider>());
+        
+        BoxCollider markerCollider = markerGO.AddComponent<BoxCollider>();
+        markerCollider.isTrigger = true;
+        markerCollider.size = new Vector3(1f, 1f, 0.1f);
+
+        IntermediateMarker marker = markerGO.AddComponent<IntermediateMarker>();
+        return marker;
+    }
+
+    private List<Tuple<Vector3, Vector3>> DetectStairPointsInBounds(NavMeshTriangulation triangulation, Bounds bounds) {
+        List<Tuple<Vector3, Vector3>> stairTransitionPoints = new ();
+        HashSet<Tuple<Vector3, Vector3>> processedEdges = new ();
+
+        for (int i = 0; i < triangulation.indices.Length; i += 3) {
+            Vector3 v1 = triangulation.vertices[triangulation.indices[i]];
+            Vector3 v2 = triangulation.vertices[triangulation.indices[i + 1]];
+            Vector3 v3 = triangulation.vertices[triangulation.indices[i + 2]];
+
+            if (!(bounds.Contains(v1) || bounds.Contains(v2) || bounds.Contains(v3))) {
+                continue;
+            }
+
+            Vector3 normal = Vector3.Cross(v2 - v1, v3 - v1).normalized;
+            float slopeAngle = Vector3.Angle(normal, Vector3.up);
+
+            if (slopeAngle > StairSlopeThreshold) {
+                for (int j = 0; j < triangulation.indices.Length; j += 3) {
+                    if (j == i) continue;
+
+                    Vector3 adjV1 = triangulation.vertices[triangulation.indices[j]];
+                    Vector3 adjV2 = triangulation.vertices[triangulation.indices[j + 1]];
+                    Vector3 adjV3 = triangulation.vertices[triangulation.indices[j + 2]];
+
+                    List<Vector3> sharedEdge = getSharedEdge(v1, v2, v3, adjV1, adjV2, adjV3);
+                    if (sharedEdge.Count == 2) {
+                        Vector3 adjNormal = Vector3.Cross(adjV2 - adjV1, adjV3 - adjV1).normalized;
+                        float adjSlopeAngle = Vector3.Angle(adjNormal, Vector3.up);
+                        bool isStartOfSlope = adjSlopeAngle < StairSlopeThreshold && slopeAngle > StairSlopeThreshold;
+                        bool isEndOfSlope = adjSlopeAngle > StairSlopeThreshold && slopeAngle < StairSlopeThreshold;
+
+                        if (isStartOfSlope || isEndOfSlope) {
+                            Tuple<Vector3, Vector3> stairEdge = new Tuple<Vector3, Vector3>(sharedEdge[0], sharedEdge[1]);
+                            if (!processedEdges.Contains(stairEdge)) {
+                                stairTransitionPoints.Add(stairEdge);
+                                processedEdges.Add(stairEdge);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return stairTransitionPoints;
+    }
 
     public static bool TraversableCenterProjectionOnNavMesh(Vector3 traversableCenter, out Vector3 result) { //TODO: Move to Utility
         if (NavMesh.SamplePosition(traversableCenter, out NavMeshHit hit, 2.5f, NavMesh.AllAreas)) {
@@ -98,25 +224,19 @@ public class MarkerGenerator : MonoBehaviour {
         };
     }
 
-    private IntermediateMarker spawnMarker(Vector3 pos, float widthX, float widthZ, string name) {
-        // const float MIN_SIZE = 1.5f;
-        // widthX = Mathf.Max(MIN_SIZE, widthX);
-        // widthZ = Mathf.Max(MIN_SIZE, widthZ);
-        
+    private IntermediateMarker spawnMarker(Vector3 pos, float widthX, float widthZ, string objName) {
         GameObject markerGO = GameObject.CreatePrimitive(PrimitiveType.Quad);
         markerGO.transform.parent = markerParent.transform;
-        // pos += new Vector3(0f, 0.01f, 0f);
+        pos += new Vector3(0f, 0.01f, 0f);
         markerGO.transform.position = pos;
         markerGO.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         markerGO.transform.localScale = new Vector3(widthX, widthZ, 1.6f);
         markerGO.GetComponent<Renderer>().sharedMaterial = markerMaterial;
         markerGO.layer = Constants.MARKERS_LAYER;
-        markerGO.name = name;
-        // MeshCollider markerCollider = markerGO.GetComponent<MeshCollider>();
+        markerGO.name = objName;
         Utility.DestroyObject(markerGO.GetComponent<MeshCollider>());
         
         BoxCollider markerCollider = markerGO.AddComponent<BoxCollider>();
-        // markerCollider.convex = true;
         markerCollider.isTrigger = true;
         markerCollider.size = new Vector3(1f, 1f, 0.1f);
 
@@ -157,4 +277,19 @@ public class MarkerGenerator : MonoBehaviour {
         }
         return closestMarker;
     }
+    
+    private static List<Vector3> getSharedEdge(Vector3 v1, Vector3 v2, Vector3 v3, Vector3 adjV1, Vector3 adjV2, Vector3 adjV3) {
+        List<Vector3> sharedEdge = new List<Vector3>();
+
+        if (isVertexShared(v1, adjV1, adjV2, adjV3)) sharedEdge.Add(v1);
+        if (isVertexShared(v2, adjV1, adjV2, adjV3)) sharedEdge.Add(v2);
+        if (isVertexShared(v3, adjV1, adjV2, adjV3)) sharedEdge.Add(v3);
+
+        return sharedEdge;
+    }
+
+    private static bool isVertexShared(Vector3 v, Vector3 adjV1, Vector3 adjV2, Vector3 adjV3) {
+        return v == adjV1 || v == adjV2 || v == adjV3;
+    }
+    
 }

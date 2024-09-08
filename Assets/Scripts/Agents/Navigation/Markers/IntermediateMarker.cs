@@ -5,7 +5,7 @@ using UnityEngine;
 public class IntermediateMarker : MonoBehaviour, IRouteMarker {
     private new Collider collider;
     
-    private void Start() {
+    protected void Start() {
         collider = GetComponent<Collider>();
         if (!collider.isTrigger) {
             throw new ArgumentException($"IntermediateMarker: {gameObject.name} has no trigger collider");
