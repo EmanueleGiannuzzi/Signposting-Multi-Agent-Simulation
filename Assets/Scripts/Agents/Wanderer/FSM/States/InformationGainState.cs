@@ -83,7 +83,7 @@ namespace Agents.Wanderer.States {
             SetDoneDelayed(DONE_DELAY);
         }
 
-        protected override void OnReachedDestinationMarker(IRouteMarker marker) {
+        protected override void OnDestinationMarkerReached(IRouteMarker marker) {
             onInformationFound();
         }
     }

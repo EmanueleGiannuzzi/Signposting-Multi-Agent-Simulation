@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Agents.Navigation.Markers;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
@@ -127,14 +128,53 @@ public class MarkerGenerator : MonoBehaviour {
         Debug.Log($"Detected {stairTransitionEdges.Count} stair transition point{(stairTransitionEdges.Count > 1 ? "s" : "")}.");
 
         int spawnedMarkers = 0;
+
+        List<LinkedMarker> stairMarkers = new ();
         foreach (Tuple<Vector3, Vector3> edge in stairTransitionEdges) {
-            IRouteMarker marker = spawnStairMarker(edge, $"StairMarker-{spawnedMarkers}");
-            Markers.Add(marker);
+            LinkedMarker stairMarker = spawnStairMarker(edge, $"StairMarker-{spawnedMarkers}");
+            Markers.Add(stairMarker);
+            stairMarkers.Add(stairMarker);
             spawnedMarkers++;
+        }
+
+        foreach (LinkedMarker stairMarker1 in stairMarkers) {
+            foreach (LinkedMarker stairMarker2 in stairMarkers) {
+                if(stairMarker1 == stairMarker2) continue;
+                
+                if (areMarkersOnDifferentFloors(stairMarker1, stairMarker2) &&
+                    DoesDirectPathExistsBetweenPoints(stairMarker1, stairMarker2, out _)) {
+                    stairMarker1.SetLinkedMarker(stairMarker2);
+                }
+            }
         }
     }
 
-    private IRouteMarker spawnStairMarker(Tuple<Vector3, Vector3> edge, string name) {
+    private bool areMarkersOnDifferentFloors(IRouteMarker startMarker, IRouteMarker destinationMarker) {
+        const float DISTANCE_THRESHOLD = 0.2f;
+        
+        IEnumerable<IFCData> flooringObjectsList = ifcFlooring();
+
+        IFCData startMarkerFloor = null;
+        IFCData destinationMarkerFloor = null;
+        foreach (IFCData floor in flooringObjectsList) {
+            float floorY = floor.GetComponent<Collider>().bounds.max.y;
+            float startMarkerY = startMarker.Position.y;
+            float destinationMarkerY = destinationMarker.Position.y;
+            
+            if (Math.Abs(startMarkerY - floorY) <= DISTANCE_THRESHOLD) {
+                startMarkerFloor = floor;
+            }
+            if (Math.Abs(destinationMarkerY - floorY) <= DISTANCE_THRESHOLD) {
+                destinationMarkerFloor = floor;
+            }
+        }
+        
+        return startMarkerFloor != null 
+               && destinationMarkerFloor != null 
+               && startMarkerFloor != destinationMarkerFloor;
+    }
+
+    private LinkedMarker spawnStairMarker(Tuple<Vector3, Vector3> edge, string name) {
         Vector3 center = (edge.Item1 + edge.Item2) / 2;
         Vector3 direction = (edge.Item2 - edge.Item1).normalized;
         Quaternion rotation = Quaternion.LookRotation(Vector3.down, direction);
@@ -156,7 +196,7 @@ public class MarkerGenerator : MonoBehaviour {
         markerCollider.isTrigger = true;
         markerCollider.size = new Vector3(1f, 1f, 0.1f);
 
-        IntermediateMarker marker = markerGO.AddComponent<IntermediateMarker>();
+        LinkedMarker marker = markerGO.AddComponent<LinkedMarker>();
         return marker;
     }
 
@@ -290,6 +330,48 @@ public class MarkerGenerator : MonoBehaviour {
 
     private static bool isVertexShared(Vector3 v, Vector3 adjV1, Vector3 adjV2, Vector3 adjV3) {
         return v == adjV1 || v == adjV2 || v == adjV3;
+    }
+    
+    
+    public static bool DoesDirectPathExistsBetweenPoints(IRouteMarker startMarker, IRouteMarker destinationMarker, out float cost) {
+        Vector3 start = startMarker.Position;
+        Vector3 destination = destinationMarker.Position;
+        
+        NavMeshPath path = new ();
+        NavMesh.CalculatePath(start, destination, NavMesh.AllAreas, path);
+        cost = getPathLengthSquared(path);
+        bool pathExists = path.status == NavMeshPathStatus.PathComplete;
+        bool isDirect = !doesPathIntersectOtherMarkers(path, startMarker, destinationMarker);
+
+        return pathExists && isDirect;
+    }
+    
+    public static bool doesPathIntersectOtherMarkers(NavMeshPath path, IRouteMarker startMarker, IRouteMarker destinationMarker) {
+        const float SPHERE_RADIUS = 0.5f;
+
+        for (int i = 1; i < path.corners.Length; i++) {
+            Vector3 directionTowardsNextCorner = (path.corners[i - 1] - path.corners[i]).normalized;
+            float distanceToNextCorner = Vector3.Distance(path.corners[i - 1], path.corners[i]);
+            //DrawPhysicsSettings.SetDuration(60f);
+            if (Physics.SphereCast(path.corners[i], SPHERE_RADIUS, directionTowardsNextCorner, out RaycastHit hit, distanceToNextCorner + 0.3f, Constants.ONLY_MARKERS_LAYER_MASK)) {
+                IRouteMarker markerHit = hit.collider.GetComponent<IRouteMarker>();
+                if (markerHit != null && markerHit != startMarker && markerHit != destinationMarker) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private static float getPathLengthSquared(NavMeshPath path) {
+        Vector3[] corners = path.corners;
+
+        float length = 0f;
+        for (int i = 1; i < corners.Length; i++) {
+            length += (corners[i] -  corners[i - 1]).sqrMagnitude;
+        }
+
+        return length;
     }
     
 }

@@ -12,7 +12,7 @@ namespace Agents.Wanderer.States {
             // }
         }
 
-        protected override void OnReachedDestinationMarker(IRouteMarker marker) {
+        protected override void OnDestinationMarkerReached(IRouteMarker marker) {
             //TODO: Report of path length and time
             SetDoneDelayed(DONE_DELAY);
         }

@@ -63,7 +63,7 @@ namespace Agents.Wanderer.States {
             SetDone();
         }
 
-        protected override void OnReachedDestinationMarker(IRouteMarker marker) {
+        protected override void OnDestinationMarkerReached(IRouteMarker marker) {
             SetDone();
             ExitReason = Reason.ReachedMarker;
         }

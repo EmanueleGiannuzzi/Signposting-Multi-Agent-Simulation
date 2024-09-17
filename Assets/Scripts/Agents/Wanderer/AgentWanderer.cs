@@ -12,6 +12,7 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(WandererStateMachine))]
 public class AgentWanderer : MarkersAwareAgent {
     public int agentTypeID { get; private set; } = -1;
+    public float agentHeight => visibilityHandler.agentTypes[agentTypeID].Value;
 
     private static VisibilityHandler visibilityHandler;
     private float agentFOV => agent.AgentFOVDegrees;
@@ -38,7 +39,6 @@ public class AgentWanderer : MarkersAwareAgent {
 
     private void Start() {
         agentTypeID = Random.Range(0, visibilityHandler.agentTypes.Length);
-        float agentHeight = visibilityHandler.agentTypes[agentTypeID].Value;
         // agent.SetModelHeight(agentHeight); //TODO: Fix
     }
 
@@ -54,7 +54,7 @@ public class AgentWanderer : MarkersAwareAgent {
         this.Goal = goal;
     }
     public void SetDebugText(string text) {
-        agent.SetDebugNameplateText(text);
+        agent.SetDebugNameplateText($"[{agentHeight}] " + text);
     }
 
     public void SetDestination(Vector3 destination) {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Agents.Navigation.Markers;
 using UnityEngine;
 
 namespace Agents.Wanderer.States {
@@ -36,21 +37,25 @@ namespace Agents.Wanderer.States {
         
         private void onMarkerReached(IRouteMarker marker) {
             if (isActive) {
-                OnMarkerReached(marker);
+                OnAnyMarkerReached(marker);
                 if (marker == destinationMarker) {
-                    OnReachedDestinationMarker(marker);
+                    OnDestinationMarkerReached(marker);
                 }
             }
         }
 
-        protected virtual void OnMarkerReached(IRouteMarker marker) {}
+        protected virtual void OnAnyMarkerReached(IRouteMarker marker) {}
 
-        protected void SetDestinationMarker(IRouteMarker marker) {
+        protected void SetDestinationMarker(IRouteMarker marker) { //TODO: move to AgentWanderer
+            if (marker is LinkedMarker { HasLinkedMarker: true } linkedMarker) {
+                marker = linkedMarker.MarkerLinked;
+            }
+            
             destinationMarker = marker;
             agentWanderer.SetDestination(marker.Position);
         }
         
-        protected virtual void OnReachedDestinationMarker(IRouteMarker marker) {}
+        protected virtual void OnDestinationMarkerReached(IRouteMarker marker) {}
 
         protected virtual void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {}
 

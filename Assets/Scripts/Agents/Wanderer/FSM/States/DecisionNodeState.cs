@@ -64,19 +64,19 @@ namespace Agents.Wanderer.States {
             float[] numberOfVisitsNormalized = Utility.Normalize(numberOfVisits, true);
             float[] numberOfMarkersOnPathNormalized = Utility.Normalize(numberOfMarkersOnPath, true);
 
-            string debugLine = "";
+            // string debugLine = "";
             for (int i = 0; i < markersAroundAgent.Count; i++) {
                 weights[i] = ANGLE_WEIGHT * anglesNormalized[i] + DISTANCE_WEIGHT * distancesSqrNormalized[i] +
                              VISITS_WEIGHT * numberOfVisitsNormalized[i]
                              + MARKERS_ON_PATH_WEIGHT * numberOfMarkersOnPathNormalized[i];
                 // debugLine += $"{markersAroundAgent[i].Name}={weights[i]} ";
-                debugLine += $"[{weights[i]}] = ANGLE[{angles[i]}]{ANGLE_WEIGHT * anglesNormalized[i]} - " +
-                             $"DISTANCE_XY_WEIGHT[{distancesSqr[i]}] {DISTANCE_WEIGHT * distancesSqrNormalized[i]} - " +
-                             // $"DISTANCE_Z_WEIGHT[{distancesZSqr[i]}]={DISTANCE_Z_WEIGHT * distancesZSqrNormalized[i]} - " +
-                             $"VISITS_WEIGHT[{numberOfVisits[i]}]={VISITS_WEIGHT * numberOfVisitsNormalized[i]} - " +
-                             $"MARKERS_ON_PATH_WEIGHT[{numberOfMarkersOnPath[i]}]={MARKERS_ON_PATH_WEIGHT * numberOfMarkersOnPathNormalized[i]}\n";
+                // debugLine += $"[{weights[i]}] = ANGLE[{angles[i]}]{ANGLE_WEIGHT * anglesNormalized[i]} - " +
+                //              $"DISTANCE_XY_WEIGHT[{distancesSqr[i]}] {DISTANCE_WEIGHT * distancesSqrNormalized[i]} - " +
+                //              // $"DISTANCE_Z_WEIGHT[{distancesZSqr[i]}]={DISTANCE_Z_WEIGHT * distancesZSqrNormalized[i]} - " +
+                //              $"VISITS_WEIGHT[{numberOfVisits[i]}]={VISITS_WEIGHT * numberOfVisitsNormalized[i]} - " +
+                //              $"MARKERS_ON_PATH_WEIGHT[{numberOfMarkersOnPath[i]}]={MARKERS_ON_PATH_WEIGHT * numberOfMarkersOnPathNormalized[i]}\n";
             }
-            Debug.Log(debugLine);
+            // Debug.Log(debugLine);
 
             int nextDestinationIndex = Utility.GetRandomWeightedIndex(weights);
             Debug.Log($"Chosen marker with weight: {weights[nextDestinationIndex]}");
