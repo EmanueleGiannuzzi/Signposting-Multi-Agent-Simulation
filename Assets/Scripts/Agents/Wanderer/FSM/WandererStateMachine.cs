@@ -143,12 +143,12 @@ namespace Agents.Wanderer.States {
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-
                     break;
                 case DisorientationState _:
-                    // No sign found after a long search -> FailSafeState
-                    break;
+                    //Next goal
+                     break;
                 case FailSafeState _:
+                    Destroy(agentWanderer.gameObject);
                     break;
                 case SuccessState _:
                     Destroy(agentWanderer.gameObject);

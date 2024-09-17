@@ -4,6 +4,8 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class SocialForceAgent : MonoBehaviour {
+    private readonly bool DEBUG = false;
+
     private static readonly List<SocialForceAgent> agents = new ();
     
     private NavMeshAgent navMeshAgent;
@@ -22,6 +24,7 @@ public class SocialForceAgent : MonoBehaviour {
     private const float relaxationTime = 0.54f; 
     private const float speedStdDeviation = 0.19f; 
     private NormalDistribution desiredSpeed;
+    
     // Constant Values Based on (Moussaid et al., 2009)
     private static readonly NormalDistribution lambdaDistribution = new(2.0f, 0.2f);    // 2.0 +- 0.2 Weight reflecting relative importance of velocity vector against position vector
     private static readonly NormalDistribution gammaDistribution =  new(0.35f, 0.01f);    // 0.35 +- 0.01 Speed interaction
@@ -38,10 +41,9 @@ public class SocialForceAgent : MonoBehaviour {
     private Vector3 driving;
     private Vector3 agentInteract;
     private Vector3 wallInteract;
-    
+
     private void Awake() {
         navMeshAgent = this.GetComponent<NavMeshAgent>();
-        // agentsSpawnHandler = FindObjectOfType<AgentsSpawnHandler>();
 
         navMeshAgent.updatePosition = false;
         desiredSpeed = new NormalDistribution(maxSpeed, speedStdDeviation);
@@ -70,13 +72,15 @@ public class SocialForceAgent : MonoBehaviour {
         navMeshAgent.transform.position = this.transform.position + velocity * stepTime;
     }
 
-    // private void OnDrawGizmos() {
-    //     var agentPosition = this.transform.position;
-    //     // DebugExtension.DrawArrow(agentPosition + Vector3.up, driving, Color.green);
-    //     DebugExtension.DrawArrow(agentPosition + Vector3.up, agentInteract, Color.blue);
-    //     DebugExtension.DrawArrow(agentPosition + Vector3.up, wallInteract, Color.magenta);
-    //     DebugExtension.DrawArrow(agentPosition + Vector3.up, velocity, Color.red);
-    // }
+    private void OnDrawGizmos() {
+        if (!DEBUG) return;
+        
+        var agentPosition = this.transform.position;
+        // DebugExtension.DrawArrow(agentPosition + Vector3.up, driving, Color.green);
+        DebugExtension.DrawArrow(agentPosition + Vector3.up, agentInteract, Color.blue);
+        DebugExtension.DrawArrow(agentPosition + Vector3.up, wallInteract, Color.magenta);
+        DebugExtension.DrawArrow(agentPosition + Vector3.up, velocity, Color.red);
+    }
 
     private Vector3 calculateSocialForce() {
         driving = this.drivingForce();
@@ -103,7 +107,8 @@ public class SocialForceAgent : MonoBehaviour {
     private IEnumerable<Vector3> getCloseWallsPoints() {
         List<Vector3> obstaclesPoints = new List<Vector3>();
 
-        Vector3 agentPosition = this.transform.position + (Vector3.up * 0.10f);
+        Vector3 centerPoint = new Vector3(0, 1f, 0);
+        Vector3 agentPosition = this.transform.position + centerPoint;
         const int rays = 32;
         Vector3 direction = Vector3.forward;
         for (int i = 0; i < rays; i++) {
