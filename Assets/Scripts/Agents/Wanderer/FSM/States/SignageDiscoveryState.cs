@@ -22,6 +22,8 @@ namespace Agents.Wanderer.States {
             NoSignFound
         }
         public Reason ExitReason { get; private set; } = Reason.None;
+
+        public IFCSignBoard focusSignboard;
         
         protected override void EnterState() {
             ExitReason = Reason.None;
@@ -46,12 +48,21 @@ namespace Agents.Wanderer.States {
             if (closestSign &&
                 MarkerGenerator.TraversableCenterProjectionOnNavMesh(closestSign.WorldCenterPoint, 
                     out Vector3 signboardNavmeshProjection)) {
+                focusSignboard = closestSign;
                 
-                agentWanderer.SetDestination(signboardNavmeshProjection, SIGN_STOPPING_DISTANCE, onSignFound);
+                agentWanderer.SetDestination(signboardNavmeshProjection, SIGN_STOPPING_DISTANCE, onSignReached);
                 agentWanderer.VisitedSigns.Add(closestSign);
             }
         }
         
+        private void onSignReached() {
+            SignboardDirections directions = focusSignboard.GetComponent<SignboardDirections>();
+            if (directions) 
+                onSignFound();
+            else
+                onNoSignFound();
+        }
+
         private void onSignFound() {
             ExitReason = Reason.SignFound;
             SetDoneDelayed(DONE_DELAY);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Agents.Wanderer;
 using Agents.Wanderer.States;
 using JetBrains.Annotations;
@@ -22,7 +23,7 @@ public class AgentWanderer : MarkersAwareAgent {
 
     public WandererGoal Goal { get; private set; }
     public Vector3 CurrentDestination => agent.navMeshAgent.destination;
-    public readonly List<IFCSignBoard> VisitedSigns = new ();
+    public readonly HashSet<IFCSignBoard> VisitedSigns = new ();
     
     public delegate void OnWithinDestinationRange();
     private OnWithinDestinationRange _withinDestinationRangeDelegate;
@@ -100,16 +101,20 @@ public class AgentWanderer : MarkersAwareAgent {
     public bool HasPreferredDirection() {
         return PreferredDirection != Vector2.zero;
     }
+
+    public void ResetPreferredDirection() {
+        PreferredDirection = Vector2.zero;
+    }
     
     public bool IsGoalVisible() {
         return IsMarkerVisible(this.Goal);
     }
 
-    public bool IsMarkerVisible(IRouteMarker marker) {
+    public bool IsMarkerVisible(IRouteMarker marker) { 
         if (marker is MonoBehaviour behaviour) {
-            MeshRenderer renderer = behaviour.GetComponent<MeshRenderer>();
-            if (renderer) {
-                Bounds bounds = renderer.bounds;
+            MeshRenderer markerRenderer = behaviour.GetComponent<MeshRenderer>();
+            if (markerRenderer) {
+                Bounds bounds = markerRenderer.bounds;
                 Vector3[] vertices = new Vector3[8];
                 vertices[0] = bounds.min;
                 vertices[1] = new Vector3(bounds.max.x, bounds.min.y, bounds.min.z);
@@ -131,7 +136,7 @@ public class AgentWanderer : MarkersAwareAgent {
         return false;
     }
 
-    private bool isPointVisible(Vector3 point, float precision = 0.1f) {
+    private bool isPointVisible(Vector3 point, float precision = 0.1f) {//TODO: Account for FOV
         Vector3 agentEyePos = this.transform.position;
         agentEyePos.y += this.GetEyeHeight(); // Agent center is in the middle
         Vector3 displacementVector = point - agentEyePos;
@@ -139,6 +144,10 @@ public class AgentWanderer : MarkersAwareAgent {
         
         bool rayHit = Physics.Raycast(agentEyePos, displacementVector, out RaycastHit hit, distance + precision, Constants.INVISIBLE_TO_AGENTS_LAYER_MASK);
         return !rayHit || (hit.point - point).sqrMagnitude < precision * precision;
+    }
+    
+    public bool IsThereAnyUnvisitedSignboard(IEnumerable<IFCSignBoard> signboards) {
+        return signboards.Any(signboard => !VisitedSigns.Contains(signboard));
     }
 
     private void OnDrawGizmos() {

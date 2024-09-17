@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class VisibilityHandler : MonoBehaviour {
     private VisibilityPlaneGenerator VisibilityPlaneGenerator;

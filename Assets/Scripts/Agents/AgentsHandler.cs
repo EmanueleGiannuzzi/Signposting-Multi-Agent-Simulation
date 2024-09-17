@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 public class AgentsHandler : MonoBehaviour{
     private static readonly List<Agent> Agents = new();

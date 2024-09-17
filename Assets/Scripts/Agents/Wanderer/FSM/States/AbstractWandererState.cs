@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Vertx.Debugging;
 
 namespace Agents.Wanderer.States {
     public abstract class AbstractWandererState {

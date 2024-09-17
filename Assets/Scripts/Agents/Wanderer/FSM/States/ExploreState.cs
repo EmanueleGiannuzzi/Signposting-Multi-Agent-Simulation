@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Agents.Wanderer.States {
@@ -50,6 +51,14 @@ namespace Agents.Wanderer.States {
             
             VisibleBoards.Clear();
             VisibleBoards.AddRange(visibleBoards);
+            
+            IEnumerable<IFCSignBoard> relevantSignboards = visibleBoards.Subtract(agentWanderer.VisitedSigns);
+            if (relevantSignboards.Any()) {
+                onNewSignboardsFound();
+            }
+        }
+
+        private void onNewSignboardsFound() {
             ExitReason = Reason.EnteredVCA;
             SetDone();
         }

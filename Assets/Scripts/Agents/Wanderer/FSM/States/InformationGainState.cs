@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Agents.Wanderer.States {
     public class InformationGainState : AbstractWandererState {
@@ -11,9 +9,12 @@ namespace Agents.Wanderer.States {
         // Go to cell with lower entropy
         // If cell has entropy < TE -> Execute Sign State //TODO: Change to actual
 
-        private bool informationFound = false;
+        // private bool informationFound = false;
         
-        private const float SIGN_STOPPING_DISTANCE = 0.2f;
+        // private const float SIGN_STOPPING_DISTANCE = 0.2f;
+        private const float DONE_DELAY = 0.5f;
+        
+        public IFCSignBoard focusSignboard;
         
         public enum Reason {
             None,
@@ -24,35 +25,42 @@ namespace Agents.Wanderer.States {
         
         protected override void EnterState() {
             ExitReason = Reason.None;
-            informationFound = false;
-            checkSignboards();
+            // informationFound = false;
+            // checkSignboards();
+
+            if (!(focusSignboard && checkSignboard(focusSignboard))) {
+                onNoInformationFound();
+            }
         }
         
-        protected override void FixedDoState() {
-            if (informationFound) return;
-            
-            checkSignboards();
-            if (!informationFound && agentWanderer.IsAgentNearDestination(SIGN_STOPPING_DISTANCE)) {
-                onSignReached();
-            }
-        }
+        // protected override void FixedDoState() {
+        //     if (informationFound) return;
+        //     
+        //     checkSignboards();
+        //     
+        //     
+        //     
+        //     if (!informationFound && agentWanderer.IsAgentNearDestination(SIGN_STOPPING_DISTANCE)) {
+        //         onNoInformationFound();
+        //     }
+        // }
 
-        private void checkSignboards() {
-            foreach (IFCSignBoard signboard in signboardAwareAgent.visibleSigns) {
-                if (checkSignboard(signboard)) {
-                    informationFound = true;
-                    return;
-                }
-            }
-        }
+        // private void checkSignboards() {
+        //     foreach (IFCSignBoard signboard in signboardAwareAgent.visibleSigns) {
+        //         if (checkSignboard(signboard)) {
+        //             informationFound = true;
+        //             return;
+        //         }
+        //     }
+        // }
 
         private bool checkSignboard(IFCSignBoard signboard) {
-            agentWanderer.VisitedSigns.Add(signboard);
+            // agentWanderer.VisitedSigns.Add(signboard);
             
             if (signboard.TryGetComponent(out SignboardDirections signDirection)) {
                 if (signDirection.TryGetDirection(agentWanderer.Goal, out IRouteMarker nextGoal)) {
                     Vector2 nextGoalDirection = (nextGoal.Position - agentWanderer.transform.position).normalized;
-                    agentWanderer.PreferredDirection = nextGoalDirection;
+                    agentWanderer.PreferredDirection = nextGoalDirection; //TODO: if it's a stair marker reset it
                     SetDestinationMarker(nextGoal);
                     return true;
                 }
@@ -62,25 +70,21 @@ namespace Agents.Wanderer.States {
             }
             return false;
         }
-        
-        public bool IsThereAnyUnvisitedSignboard(IEnumerable<IFCSignBoard> signboards) {
-            return signboards.Any(signboard => !agentWanderer.VisitedSigns.Contains(signboard));
-        }
 
-        private void onSignReached() {
+        private void onNoInformationFound() {
             Debug.Log("NO INFO FOUND");
-            SetDone();
+            SetDoneDelayed(DONE_DELAY);
             this.ExitReason = Reason.NoInformationFound;
         }
 
-        private void onNextDestinationReached() {
+        private void onInformationFound() {
             Debug.Log("INFO FOUND");
             ExitReason = Reason.InformationFound;
-            SetDone();
+            SetDoneDelayed(DONE_DELAY);
         }
 
         protected override void OnReachedDestinationMarker(IRouteMarker marker) {
-            onNextDestinationReached();
+            onInformationFound();
         }
     }
 }

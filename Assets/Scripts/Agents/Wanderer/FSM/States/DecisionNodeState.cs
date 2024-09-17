@@ -21,7 +21,6 @@ namespace Agents.Wanderer.States {
         public IRouteMarker NextMarker { private set; get; }
 
         protected override void EnterState() {
-            //TODO: Chose at random between closest markers, preferring the ones in the looking direction
             List<IRouteMarker> markersAroundAgent = markersAwareAgent.GetMarkersAround(MAX_MARKER_DISTANCE, MIN_MARKER_DISTANCE);
             markersAroundAgent.RemoveAll(marker => !agentWanderer.IsMarkerVisible(marker));
             

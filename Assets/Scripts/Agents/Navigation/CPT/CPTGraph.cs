@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 
 public class CPTGraph {
     private int nVertices; // number of vertices
