@@ -25,8 +25,11 @@ public class MarkersAwareAgent : MonoBehaviour {
         if (reachedMarker == null) {
             return;
         }
+        onAnyMarkerReached(reachedMarker);
         MarkerReachedEvent?.Invoke(reachedMarker);
     }
+    
+    protected virtual void onAnyMarkerReached(IRouteMarker marker) {}
 
     public List<IRouteMarker> GetMarkersAround(float maxDistance, float minDistance = 0f) {
         float maxDistanceSqr = maxDistance * maxDistance;

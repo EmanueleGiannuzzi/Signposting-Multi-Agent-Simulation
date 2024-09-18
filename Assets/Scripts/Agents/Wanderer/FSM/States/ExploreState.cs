@@ -28,7 +28,7 @@ namespace Agents.Wanderer.States {
         protected override void EnterState() {
             ExitReason = Reason.None;
             if (NextMarker != null) {
-                SetDestinationMarker(NextMarker);
+                agentWanderer.SetDestinationMarker(NextMarker);
                 NextMarker = null;
             }
             else if (!agentWanderer.HasPath()) {
@@ -39,7 +39,7 @@ namespace Agents.Wanderer.States {
         private void goToClosestMarker() {
             IRouteMarker closestMarker = markersAwareAgent.GetClosestMarker();
             if (closestMarker != null) {
-                SetDestinationMarker(closestMarker);
+                agentWanderer.SetDestinationMarker(closestMarker);
             }
             Debug.Log("Going to closest marker");
         }
@@ -81,7 +81,7 @@ namespace Agents.Wanderer.States {
             if (agentWanderer.IsGoalVisible()) {
                 Debug.Log("DESTINATION FOUND");
                 ExitReason = Reason.GoalVisible;
-                SetDone();
+                SetDoneDelayed(2f);
             }
         }
 

@@ -11,7 +11,7 @@ public class WandererSpawnArea : SpawnAreaBase {
         markerGen ??= FindObjectOfType<MarkerGenerator>();
         
         if (AgentPrefab.GetComponent<AgentWanderer>() == null) {
-            throw new AssertionException($"Invalid Agent Prefab",
+            throw new AssertionException("Invalid Agent Prefab",
                 $"Trying to Spawn non {nameof(AgentWanderer)} from {nameof(WandererSpawnArea)}");
         }
     }
@@ -23,7 +23,8 @@ public class WandererSpawnArea : SpawnAreaBase {
         
         AgentWanderer agentWanderer = agent.GetComponent<AgentWanderer>();
         WandererGoal chosenGoal = Goals[Random.Range(0, Goals.Length)];
-        agentWanderer.SetGoalMarker(chosenGoal);
+        agentWanderer.AddGoal(chosenGoal);
+        agentWanderer.StartTasks();
         return agent;
     }
     

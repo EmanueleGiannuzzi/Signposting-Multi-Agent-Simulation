@@ -26,7 +26,10 @@ namespace Agents.Wanderer {
         }
 
         private void OnDrawGizmos() {
-            // TODO: Arrow pointing down on it
+            Bounds bounds = collider.bounds;
+            Vector3 topCenter = new Vector3(bounds.center.x, bounds.max.y, bounds.center.z);
+            
+            DebugExtension.DrawArrow(topCenter + Vector3.up*1f, Vector3.down*0.5f, Color.blue);
         }
     }
 }

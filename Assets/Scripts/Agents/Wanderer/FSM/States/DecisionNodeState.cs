@@ -6,8 +6,6 @@ namespace Agents.Wanderer.States {
     public class DecisionNodeState : AbstractWandererState {
         // Choose a random path to follow, but try to not backtrack -> Explore State
         
-        // Maybe weight paths so that the agent is more likely to keep walking in the same direction
-        
         private const float MIN_MARKER_DISTANCE = 0.7f;
         private const float MAX_MARKER_DISTANCE = 10f;
         private const float DONE_DELAY = 2.5f;
@@ -31,7 +29,7 @@ namespace Agents.Wanderer.States {
             
             Vector3 agentPos = agentWanderer.transform.position;
             Vector3 agentForwardDirection = agentWanderer.transform.forward;
-            Vector2 referenceAngle = agentWanderer.HasPreferredDirection() ? agentWanderer.PreferredDirection : agentForwardDirection;
+            Vector2 referenceAngle = agentWanderer.HasPreferredDirection ? agentWanderer.PreferredDirection : agentForwardDirection;
 
             float[] weights = new float[markersAroundAgent.Count];
             float[] angles = new float[markersAroundAgent.Count];

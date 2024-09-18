@@ -11,7 +11,7 @@ public class SignboardDirections : MonoBehaviour {
     
     [SerializeField] private List<WandererGoal> destinations = new();
 
-    private bool getDirectionFromDestination(WandererGoal destination, out IRouteMarker direction) {
+    private bool getDirectionFromDestination(IRouteMarker destination, out IRouteMarker direction) {
         NavMeshPath path = new NavMeshPath();
         MarkerGenerator.TraversableCenterProjectionOnNavMesh(this.transform.position, out Vector3 startPos);
         MarkerGenerator.TraversableCenterProjectionOnNavMesh(destination.GetPosition(), out Vector3 destinationPos);
@@ -36,7 +36,7 @@ public class SignboardDirections : MonoBehaviour {
         return false;
     }
 
-    public bool TryGetDirection(WandererGoal destination, out IRouteMarker direction) {
+    public bool TryGetDirection(IRouteMarker destination, out IRouteMarker direction) {
         if (destinations.Contains(destination)) {
             return getDirectionFromDestination(destination, out direction);
         }

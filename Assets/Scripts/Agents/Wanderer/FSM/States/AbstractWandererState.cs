@@ -13,8 +13,6 @@ namespace Agents.Wanderer.States {
         protected SignboardAwareAgent signboardAwareAgent;
         protected MarkersAwareAgent markersAwareAgent;
         protected AgentWanderer agentWanderer;
-
-        private IRouteMarker destinationMarker;
         
         private float doneTimer = -1f;
         protected void SetDoneDelayed(float delay) {
@@ -26,7 +24,8 @@ namespace Agents.Wanderer.States {
             this.markersAwareAgent = markersAwareAgent;
             this.agentWanderer = agentWanderer;
             signboardAwareAgent.OnAgentEnterVisibilityArea += onAgentEnterVisibilityArea;
-            markersAwareAgent.MarkerReachedEvent += onMarkerReached;
+            markersAwareAgent.MarkerReachedEvent += OnAnyMarkerReached;
+            agentWanderer.DestinationMarkerReachedEvent += OnDestinationMarkerReached;
         }
         
         private void onAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
@@ -34,26 +33,8 @@ namespace Agents.Wanderer.States {
                 OnAgentEnterVisibilityArea(visibleBoards, agentTypeID);
             }
         }
-        
-        private void onMarkerReached(IRouteMarker marker) {
-            if (isActive) {
-                OnAnyMarkerReached(marker);
-                if (marker == destinationMarker) {
-                    OnDestinationMarkerReached(marker);
-                }
-            }
-        }
-
+      
         protected virtual void OnAnyMarkerReached(IRouteMarker marker) {}
-
-        protected void SetDestinationMarker(IRouteMarker marker) { //TODO: move to AgentWanderer
-            if (marker is LinkedMarker { HasLinkedMarker: true } linkedMarker) {
-                marker = linkedMarker.MarkerLinked;
-            }
-            
-            destinationMarker = marker;
-            agentWanderer.SetDestination(marker.Position);
-        }
         
         protected virtual void OnDestinationMarkerReached(IRouteMarker marker) {}
 

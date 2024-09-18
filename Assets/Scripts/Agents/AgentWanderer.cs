@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Agents.Wanderer;
-using Agents.Wanderer.States;
+using Agents;
+using Agents.Navigation.Markers;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
@@ -9,8 +9,9 @@ using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 //Information gatherer class
-[RequireComponent(typeof(WandererStateMachine))]
-public class AgentWanderer : MarkersAwareAgent {
+public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
+    private readonly bool DEBUG = true;
+    
     public int agentTypeID { get; private set; } = -1;
     public float agentHeight => visibilityHandler.agentTypes[agentTypeID].Value;
 
@@ -21,13 +22,19 @@ public class AgentWanderer : MarkersAwareAgent {
     private float stopDistanceSqr = 0f;
 
     public Vector2 PreferredDirection { get; set; }
+    public bool HasPreferredDirection => PreferredDirection != Vector2.zero;
 
-    public WandererGoal Goal { get; private set; }
+    // public WandererGoal Goal { get; private set; }
+    private readonly Queue<IRouteMarker> goals = new ();
+    private IRouteMarker destinationMarker;
     public Vector3 CurrentDestination => agent.navMeshAgent.destination;
     public readonly HashSet<IFCSignBoard> VisitedSigns = new ();
     
     public delegate void OnWithinDestinationRange();
     private OnWithinDestinationRange _withinDestinationRangeDelegate;
+    
+    public delegate void OnDestinationMarkerReached([NotNull] IRouteMarker marker);
+    public event OnDestinationMarkerReached DestinationMarkerReachedEvent;
 
     protected override void Awake() {
         base.Awake();
@@ -50,17 +57,61 @@ public class AgentWanderer : MarkersAwareAgent {
         }
     }
 
-    public void SetGoalMarker(WandererGoal goal) {
-        this.Goal = goal;
+    public void AddGoal(IRouteMarker goal) {
+        goals.Enqueue(goal);
     }
+
+    public IRouteMarker CurrentGoal() {
+        return goals.Peek();
+    }
+
+    public int GoalCount() {
+        return goals.Count;
+    }
+
+    public void ClearGoals() {
+        goals.Clear();
+    }
+
+    public IRouteMarker RemoveGoal() {
+        return goals.Dequeue();
+    }
+
+    public virtual void StartTasks() {}
+
+    protected override void onAnyMarkerReached(IRouteMarker marker) {
+        base.onAnyMarkerReached(marker);
+        
+        if (marker == destinationMarker) {
+            onDestinationMarkerReached(marker);
+        }
+    }
+    
+    protected virtual void onDestinationMarkerReached(IRouteMarker marker) {
+        DestinationMarkerReachedEvent?.Invoke(marker);
+        destinationMarker = null;
+    }
+    
+    public void SetDestinationMarker(IRouteMarker marker) {
+        if (marker is LinkedMarker { HasLinkedMarker: true } linkedMarker) {
+            marker = linkedMarker.MarkerLinked;
+            ResetPreferredDirection();
+        }
+        destinationMarker = marker;
+        SetDestination(marker.Position);
+    }
+    
     public void SetDebugText(string text) {
         agent.SetDebugNameplateText($"[{agentHeight}] " + text);
     }
 
     public void SetDestination(Vector3 destination) {
-        Debug.DrawLine(this.transform.position + new Vector3(0f, 0.5f, 0f), destination + new Vector3(0f, 0.5f, 0f), Color.red, 2f);
         agent.SetDestination(destination);
         checkDestinationDistance = false;
+        
+        if (DEBUG) {
+            Debug.DrawLine(this.transform.position + new Vector3(0f, 0.5f, 0f), destination + new Vector3(0f, 0.5f, 0f), Color.red, 2f);
+        }
     }
 
     private void onWithinDestinationRange() {
@@ -98,16 +149,12 @@ public class AgentWanderer : MarkersAwareAgent {
         return agent.navMeshAgent.hasPath;
     }
 
-    public bool HasPreferredDirection() {
-        return PreferredDirection != Vector2.zero;
-    }
-
     public void ResetPreferredDirection() {
         PreferredDirection = Vector2.zero;
     }
     
     public bool IsGoalVisible() {
-        return IsMarkerVisible(this.Goal);
+        return IsMarkerVisible(this.CurrentGoal());
     }
 
     public bool IsMarkerVisible(IRouteMarker marker) { 
@@ -168,5 +215,4 @@ public class AgentWanderer : MarkersAwareAgent {
                 Quaternion.LookRotation(PreferredDirection), 0.3f, EventType.Repaint);
         }
     }
-
 }

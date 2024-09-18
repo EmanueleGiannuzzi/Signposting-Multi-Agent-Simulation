@@ -72,23 +72,12 @@ public class SocialForceAgent : MonoBehaviour {
         navMeshAgent.transform.position = this.transform.position + velocity * stepTime;
     }
 
-    private void OnDrawGizmos() {
-        if (!DEBUG) return;
-        
-        var agentPosition = this.transform.position;
-        // DebugExtension.DrawArrow(agentPosition + Vector3.up, driving, Color.green);
-        DebugExtension.DrawArrow(agentPosition + Vector3.up, agentInteract, Color.blue);
-        DebugExtension.DrawArrow(agentPosition + Vector3.up, wallInteract, Color.magenta);
-        DebugExtension.DrawArrow(agentPosition + Vector3.up, velocity, Color.red);
-    }
-
     private Vector3 calculateSocialForce() {
         driving = this.drivingForce();
         agentInteract = this.agentInteractForce();
         wallInteract = this.wallInteractForce();
 
         return driving + agentInteract + wallInteract;
-        // return agentInteract + wallInteract;
     }
 
     private Vector3 drivingForce() {
@@ -219,5 +208,13 @@ public class SocialForceAgent : MonoBehaviour {
          return interactionForce * minWallAgentVector;
      }
 
-
+     private void OnDrawGizmos() {
+         if (!DEBUG) return;
+        
+         var agentPosition = this.transform.position;
+         // DebugExtension.DrawArrow(agentPosition + Vector3.up, driving, Color.green);
+         DebugExtension.DrawArrow(agentPosition + Vector3.up, agentInteract, Color.blue);
+         DebugExtension.DrawArrow(agentPosition + Vector3.up, wallInteract, Color.magenta);
+         DebugExtension.DrawArrow(agentPosition + Vector3.up, velocity, Color.red);
+     }
 }
