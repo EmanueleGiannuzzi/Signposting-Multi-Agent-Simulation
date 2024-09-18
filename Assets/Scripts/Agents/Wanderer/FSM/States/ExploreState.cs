@@ -9,13 +9,13 @@ namespace Agents.Wanderer.States {
         
         public enum Reason {
             None,
-            EnteredVCA,
+            EnteredNewVCA,
             ReachedMarker,
             GoalVisible,
             OverWalked //TODO
         }
 
-        public readonly List<IFCSignBoard> VisibleBoards = new ();
+        // private readonly List<IFCSignBoard> VisibleBoards = new ();
         
         public IRouteMarker NextMarker { get; set; }
         
@@ -49,17 +49,17 @@ namespace Agents.Wanderer.States {
                 return;
             }
             
-            VisibleBoards.Clear();
-            VisibleBoards.AddRange(visibleBoards);
+            // VisibleBoards.Clear();
+            // VisibleBoards.AddRange(visibleBoards);
             
-            IEnumerable<IFCSignBoard> relevantSignboards = visibleBoards.Subtract(agentWanderer.VisitedSigns);
+            IEnumerable<IFCSignBoard> relevantSignboards = visibleBoards.Subtract(agentWanderer.VisitedSigns); //TODO: Do not subtract (or add back) when Information is found
             if (relevantSignboards.Any()) {
                 onNewSignboardsFound();
             }
         }
 
         private void onNewSignboardsFound() {
-            ExitReason = Reason.EnteredVCA;
+            ExitReason = Reason.EnteredNewVCA;
             SetDone();
         }
 
@@ -71,18 +71,19 @@ namespace Agents.Wanderer.States {
         protected override void FixedDoState() {
             if (this.runningTime >= OVERWALKING_TIME) {
                 onOverwalked();
+                return;
             }
-            else {
-                checkGoal();
+
+            if (agentWanderer.IsGoalVisible()) {
+                onGoalFound();
+                return;
             }
+            
         }
 
-        private void checkGoal() {
-            if (agentWanderer.IsGoalVisible()) {
-                Debug.Log("DESTINATION FOUND");
-                ExitReason = Reason.GoalVisible;
-                SetDoneDelayed(2f);
-            }
+        private void onGoalFound() {
+            ExitReason = Reason.GoalVisible;
+            SetDone();
         }
 
         private void onOverwalked() {

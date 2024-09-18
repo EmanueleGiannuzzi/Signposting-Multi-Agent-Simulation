@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -182,6 +183,11 @@ public static class Utility {
         
         float[] normalizedArray = array.Select(value => (value - min) / (float)range).ToArray();
         return shouldInvert ? normalizedArray.Select(value => 1f - value).ToArray() : normalizedArray;
+    }
+    
+    public static float[] Normalize(float[] array, Func<float, float> function, bool shouldInvert = false) {
+        float[] expArray = array.Select(function).ToArray();
+        return Normalize(array, shouldInvert);
     }
 #endregion
 

@@ -73,7 +73,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
         goals.Clear();
     }
 
-    public IRouteMarker RemoveGoal() {
+    public IRouteMarker RemoveCurrentGoal() {
         return goals.Dequeue();
     }
 
@@ -130,6 +130,10 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
 
     public void DestroyAgent() {
         agent.DestroyAgent();
+    }
+
+    public void Stop() {
+        agent.navMeshAgent.ResetPath();
     }
 
     public bool HasReachedDestination() {

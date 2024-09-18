@@ -6,7 +6,7 @@
 
         protected override void onDestinationMarkerReached(IRouteMarker marker) {
             base.onDestinationMarkerReached(marker);
-            RemoveGoal();
+            RemoveCurrentGoal();
             if (GoalCount() > 0) {
                 SetDestinationMarker(CurrentGoal());
             }

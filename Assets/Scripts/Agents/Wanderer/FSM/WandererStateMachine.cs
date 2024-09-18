@@ -18,7 +18,6 @@ namespace Agents.Wanderer.States {
             new DecisionNodeState(),
             new SignageDiscoveryState(),
             new InformationGainState(),
-            new DisorientationState(),
             new FailSafeState(),
             new SuccessState()
         };
@@ -26,9 +25,8 @@ namespace Agents.Wanderer.States {
         private DecisionNodeState DecisionNodeState => (DecisionNodeState)states[1];
         private SignageDiscoveryState SignageDiscoveryState => (SignageDiscoveryState)states[2];
         private InformationGainState InformationGainState => (InformationGainState)states[3];
-        private DisorientationState DisorientationState => (DisorientationState)states[4];
-        private FailSafeState FailSafeState => (FailSafeState)states[5];
-        private SuccessState SuccessState => (SuccessState)states[6];
+        private FailSafeState FailSafeState => (FailSafeState)states[4];
+        private SuccessState SuccessState => (SuccessState)states[5];
         
         private static MarkerGenerator markerGen;
         private RoutingGraphCPTSolver routingGraph; //TODO: Remove
@@ -92,7 +90,7 @@ namespace Agents.Wanderer.States {
                     // Intersection -> DecisionNodeState
                     // No sign found -> DisorientationState
                     switch (exploreState.ExitReason) {
-                        case ExploreState.Reason.EnteredVCA:
+                        case ExploreState.Reason.EnteredNewVCA:
                             setState(SignageDiscoveryState);
                             break;
                         case ExploreState.Reason.ReachedMarker:
@@ -100,9 +98,9 @@ namespace Agents.Wanderer.States {
                             break;
                         case ExploreState.Reason.GoalVisible:
                             setState(SuccessState);
-                            return;
+                            break;
                         case ExploreState.Reason.OverWalked:
-                            setState(DisorientationState);
+                            setState(FailSafeState);
                             break;
                         case ExploreState.Reason.None:
                         default:
@@ -144,14 +142,23 @@ namespace Agents.Wanderer.States {
                             throw new ArgumentOutOfRangeException();
                     }
                     break;
-                case DisorientationState _:
-                    //Next goal
-                     break;
                 case FailSafeState _:
-                    Destroy(agentWanderer.gameObject);
+                    onAllTasksCompleted();
                     break;
-                case SuccessState _:
-                    Destroy(agentWanderer.gameObject);
+                case SuccessState successState:
+                    switch (successState.ExitReason) {
+                        case SuccessState.Reason.None:
+                            break;
+                        case SuccessState.Reason.ReachedIntermediateGoal:
+                            onTaskCompleted();
+                            setState(ExploreState);
+                            break;
+                        case SuccessState.Reason.ReachedLastGoal:
+                            onAllTasksCompleted();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                     break;
                 default:
                     setState(ExploreState, true);
@@ -159,7 +166,15 @@ namespace Agents.Wanderer.States {
             }
             
             setDebugText(currentState.GetType().Name);
-            // Debug.Log($"New State {currentState.GetType().Name}");
+            Debug.Log($"New State {currentState.GetType().Name}");
+        }
+
+        private void onTaskCompleted() {
+            
+        }
+
+        private void onAllTasksCompleted() {
+            Destroy(agentWanderer.gameObject);
         }
     
         private void setDebugText(string text) {

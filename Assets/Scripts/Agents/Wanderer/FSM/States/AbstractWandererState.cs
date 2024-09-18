@@ -24,14 +24,24 @@ namespace Agents.Wanderer.States {
             this.markersAwareAgent = markersAwareAgent;
             this.agentWanderer = agentWanderer;
             signboardAwareAgent.OnAgentEnterVisibilityArea += onAgentEnterVisibilityArea;
-            markersAwareAgent.MarkerReachedEvent += OnAnyMarkerReached;
-            agentWanderer.DestinationMarkerReachedEvent += OnDestinationMarkerReached;
+            markersAwareAgent.MarkerReachedEvent += onAnyMarkerReached;
+            agentWanderer.DestinationMarkerReachedEvent += onDestinationMarkerReached;
         }
         
         private void onAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
             if (isActive) {
                 OnAgentEnterVisibilityArea(visibleBoards, agentTypeID);
             }
+        }
+
+        private void onAnyMarkerReached(IRouteMarker marker) {
+            if(!isActive) return;
+            OnAnyMarkerReached(marker);
+        }
+
+        private void onDestinationMarkerReached(IRouteMarker marker) {
+            if(!isActive) return;
+            OnDestinationMarkerReached(marker);
         }
       
         protected virtual void OnAnyMarkerReached(IRouteMarker marker) {}

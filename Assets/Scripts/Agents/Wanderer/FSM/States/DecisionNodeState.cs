@@ -10,16 +10,18 @@ namespace Agents.Wanderer.States {
         private const float MAX_MARKER_DISTANCE = 10f;
         private const float DONE_DELAY = 2.5f;
         
-        private const float ANGLE_WEIGHT = 0.4f;
-        private const float DISTANCE_WEIGHT = 0.1f;
+        private const float ANGLE_WEIGHT = 0.55f;
+        private const float DISTANCE_WEIGHT = 0.05f;
         private const float VISITS_WEIGHT = 0.3f;
-        private const float MARKERS_ON_PATH_WEIGHT = 0.2f;
+        private const float MARKERS_ON_PATH_WEIGHT = 0.1f;
 
         private readonly Dictionary<IRouteMarker, int> visitedMarkers = new();
         public IRouteMarker NextMarker { private set; get; }
 
         protected override void EnterState() {
             List<IRouteMarker> markersAroundAgent = markersAwareAgent.GetMarkersAround(MAX_MARKER_DISTANCE, MIN_MARKER_DISTANCE);
+            if (NextMarker != null) 
+                markersAroundAgent.Remove(NextMarker);
             markersAroundAgent.RemoveAll(marker => !agentWanderer.IsMarkerVisible(marker));
             
             if (markersAroundAgent.Count <= 0) {
@@ -56,7 +58,7 @@ namespace Agents.Wanderer.States {
                 numberOfMarkersOnPath[i] = markersOnPath(agentWanderer.transform.position, markerPos);
             }
             
-            float[] anglesNormalized = Utility.Normalize(angles, true);
+            float[] anglesNormalized = Utility.Normalize(angles, value => Mathf.Pow(value, 3), true);
             float[] distancesSqrNormalized = Utility.Normalize(distancesSqr, true);
             // float[] distancesZSqrNormalized = Utility.Normalize(distancesZSqr, true);
             float[] numberOfVisitsNormalized = Utility.Normalize(numberOfVisits, true);
@@ -75,10 +77,11 @@ namespace Agents.Wanderer.States {
                 //              $"MARKERS_ON_PATH_WEIGHT[{numberOfMarkersOnPath[i]}]={MARKERS_ON_PATH_WEIGHT * numberOfMarkersOnPathNormalized[i]}\n";
             }
             // Debug.Log(debugLine);
+            weights = Utility.Normalize(weights);
 
             int nextDestinationIndex = Utility.GetRandomWeightedIndex(weights);
-            Debug.Log($"Chosen marker with weight: {weights[nextDestinationIndex]}");
             NextMarker = markersAroundAgent[nextDestinationIndex];
+            Debug.Log($"Chosen marker {NextMarker.Name} with weight: {weights[nextDestinationIndex]}");
             if (!visitedMarkers.TryAdd(NextMarker, 1)) {
                 visitedMarkers[NextMarker]++;
             }
@@ -132,13 +135,21 @@ namespace Agents.Wanderer.States {
 
         private void drawDebugLines(List<IRouteMarker> markersAroundAgent, float[] weights) {
             Gradient gradient = new Gradient();
-            GradientColorKey[] colors = new GradientColorKey[2];
-            colors[0] = new GradientColorKey(Color.red, 0f);
-            colors[1] = new GradientColorKey(Color.blue, 1f);
-            GradientAlphaKey[] alphas = new GradientAlphaKey[2];
-            alphas[0] = new GradientAlphaKey(1f, 0f);
-            alphas[1] = new GradientAlphaKey(1f, 1f);
-            gradient.SetKeys(colors, alphas);
+            GradientColorKey[] colorKeys = new GradientColorKey[6];
+            colorKeys[0].color = Color.gray;
+            colorKeys[1].color = new Color(0.6f, 0.1f, 0.1f);
+            colorKeys[2].color = Color.yellow;
+            colorKeys[3].color = new Color(0.7f, 1f, 0f);
+            colorKeys[4].color = Color.green;
+            colorKeys[5].color = new Color(1f, 0.84f, 0f);
+
+            GradientAlphaKey[] alphaKeys = new GradientAlphaKey[6];
+            for (int i = 0; i < 6; i++) {
+                colorKeys[i].time = i / 5f;
+                alphaKeys[i] = new GradientAlphaKey(1.0f, i / 5f);
+            }
+
+            gradient.SetKeys(colorKeys, alphaKeys);
             
             for (int i = 0; i < markersAroundAgent.Count; i++) {
                 IRouteMarker marker = markersAroundAgent[i];
