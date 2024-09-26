@@ -27,7 +27,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     public bool IsSpawnRandom = true;
     [Tooltip("0 = No Limit")] public int AgentsToSpawn;
     
-    private static readonly List<Agent> agentsSpawned = new();
+    private readonly List<Agent> agentsSpawned = new();
     private const float SPAWNED_AGENTS_INITIAL_MIN_DISTANCE = 5f;
     private const float SPAWNED_AGENTS_MIN_DISTANCE = 1f;
 
@@ -45,14 +45,13 @@ public abstract class SpawnAreaBase : MonoBehaviour {
             Enabled = !Enabled;
         }
     }
-    // ReSharper disable Unity.PerformanceAnalysis
+    
     public void StartSpawn() {
         if(SpawnRate > 0) {
             InvokeRepeating(nameof(SpawnAgents), 0f, 1 / SpawnRate);
         }
     }
 
-    // ReSharper disable Unity.PerformanceAnalysis
     public void StopSpawn() {
         CancelInvoke(nameof(SpawnAgents));
     }
@@ -64,10 +63,6 @@ public abstract class SpawnAreaBase : MonoBehaviour {
                 agent.transform.parent = this.transform;
             }
         }
-    }
-    
-    private static IEnumerable<Agent> GetAgentsSpawnedByThis() {
-        return agentsSpawned;
     }
 
     private static bool isSpawnPointCloseToAgents(IEnumerable<Agent> agents, Vector3 point, float minDistance) {
@@ -89,10 +84,9 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     
     [CanBeNull]
     protected Agent SpawnAgent(GameObject agentPrefab) {
-        return SpawnAgent(GetAgentsSpawnedByThis(), agentPrefab);
+        return SpawnAgent(agentsSpawned, agentPrefab);
     }
 
-    // ReSharper disable Unity.PerformanceAnalysis
     [CanBeNull]
     private Agent SpawnAgent(IEnumerable<Agent> agents, GameObject agentPrefab) {
         Transform spawnAreaTransform = this.transform;

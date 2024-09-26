@@ -24,7 +24,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     public Vector2 PreferredDirection { get; set; }
     public bool HasPreferredDirection => PreferredDirection != Vector2.zero;
 
-    // public WandererGoal Goal { get; private set; }
+    // public AgentGoal Goal { get; private set; }
     private readonly Queue<IRouteMarker> goals = new ();
     private IRouteMarker destinationMarker;
     public Vector3 CurrentDestination => agent.navMeshAgent.destination;
@@ -218,5 +218,9 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
             Handles.ArrowHandleCap(0, this.transform.position + new Vector3(0f, 1f, 0f), 
                 Quaternion.LookRotation(PreferredDirection), 0.3f, EventType.Repaint);
         }
+    }
+
+    public void Die() {
+        Destroy(this.gameObject);
     }
 }

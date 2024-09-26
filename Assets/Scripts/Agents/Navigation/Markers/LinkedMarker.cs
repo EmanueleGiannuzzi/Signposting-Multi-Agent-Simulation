@@ -9,13 +9,6 @@ namespace Agents.Navigation.Markers {
         public bool HasLinkedMarker => MarkerLinked != null;
         private NavMeshPath path;
         
-        private new void Start() {
-            base.Start();
-            // if (!_markerLinked) {
-            //     Debug.LogError($"Error on GameObject(\"{gameObject.name}\"): {nameof(LinkedMarker)} must have a {nameof(LinkedMarker)} connected");
-            // }
-        }
-
         public void SetLinkedMarker(LinkedMarker linkedMarker) {
             _markerLinked = linkedMarker;
             updatePath();

@@ -22,7 +22,6 @@ public class Agent : MonoBehaviour {
         navMeshAgent.SetDestination(destination);
     }
     
-    // ReSharper disable Unity.PerformanceAnalysis
     public void MoveToDestroyer(Vector3 destination, Collider destroyer) {
         SetDestination(destination);
         DestroyOnCollision destroyOnCollision = this.gameObject.AddComponent<DestroyOnCollision>();

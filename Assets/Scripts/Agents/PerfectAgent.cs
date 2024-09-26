@@ -11,7 +11,7 @@
                 SetDestinationMarker(CurrentGoal());
             }
             else {
-                Utility.DestroyObject(this.gameObject);
+                Die();
             }
         }
     }

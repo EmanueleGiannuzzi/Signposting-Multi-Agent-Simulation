@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Agents.Wanderer.States {
@@ -29,7 +28,6 @@ namespace Agents.Wanderer.States {
         private SuccessState SuccessState => (SuccessState)states[5];
         
         private static MarkerGenerator markerGen;
-        private RoutingGraphCPTSolver routingGraph; //TODO: Remove
         
         private void Awake() {
             agentWanderer = GetComponent<AgentWanderer>();
@@ -43,24 +41,9 @@ namespace Agents.Wanderer.States {
         }
 
         private void Start() {
-            if (markerGen.Markers != null) 
-                initMarkers(markerGen.Markers);
-            else
-                markerGen.OnMarkersGeneration += OnMarkersGenerated;
-            
             foreach (AbstractWandererState state in states) {
                 state.Setup(agentWanderer, signboardAwareAgent, markersAwareAgent);
             }
-        }
-
-        private void initMarkers(IEnumerable<IRouteMarker> markers) {
-            List<IRouteMarker> markersConnected = MarkerGenerator.RemoveUnreachableMarkersFromPosition(markers, this.transform.position);
-            routingGraph = new RoutingGraphCPTSolver(markersConnected.ToArray());
-        }
-
-        private void OnMarkersGenerated(List<IRouteMarker> markers) {
-            markerGen.OnMarkersGeneration -= OnMarkersGenerated;
-            initMarkers(markers);
         }
 
         private void Update() {
@@ -86,9 +69,6 @@ namespace Agents.Wanderer.States {
         private void SelectState() {
             switch (currentState) {
                 case ExploreState exploreState:
-                    // One or more signs found -> SignageDiscoveryState
-                    // Intersection -> DecisionNodeState
-                    // No sign found -> DisorientationState
                     switch (exploreState.ExitReason) {
                         case ExploreState.Reason.EnteredNewVCA:
                             setState(SignageDiscoveryState);
@@ -112,8 +92,6 @@ namespace Agents.Wanderer.States {
                     setState(ExploreState);
                     break;
                 case SignageDiscoveryState signageDiscoveryState:
-                    // No Correct sign found -> ExploreState
-                    // Correct Sign found -> InformationGainState
                     switch (signageDiscoveryState.ExitReason) {
                         case SignageDiscoveryState.Reason.None:
                             break;
@@ -174,12 +152,11 @@ namespace Agents.Wanderer.States {
         }
 
         private void onAllTasksCompleted() {
-            Destroy(agentWanderer.gameObject);
+            agentWanderer.Die();
         }
     
         private void setDebugText(string text) {
             agentWanderer.SetDebugText(text);
         }
     }
-    
 }

@@ -60,21 +60,22 @@ public class VisibilityHandler : MonoBehaviour {
     }
 
     public void GenerateVisibilityData() {
-        int signboardsFound = getSignboardArray().Length;
-        if(signboardsFound <= 0) {
-            Debug.LogError("No Signboards found.");
-            return;
-        }
-        Debug.Log($"{signboardsFound} Signboards found.");
-        
         int visPlaneSize = getVisibilityPlanes().Length;
         visibilityInfo = new Dictionary<Vector2Int, VisibilityInfo>[visPlaneSize][];
+        
         for(int i = 0; i < visPlaneSize; i++) {
             visibilityInfo[i] = new Dictionary<Vector2Int, VisibilityInfo>[agentTypes.Length];
             for(int j = 0; j < agentTypes.Length; j++) {
                 visibilityInfo[i][j] = new Dictionary<Vector2Int, VisibilityInfo>();
             }
         }
+        
+        int signboardsFound = getSignboardArray().Length;
+        if(signboardsFound <= 0) {
+            Debug.LogWarning("No Signboards found.");
+            return;
+        }
+        Debug.Log($"{signboardsFound} Signboards found.");
 
         analyzeSignboards();
         generateTextures();
@@ -236,10 +237,10 @@ public class VisibilityHandler : MonoBehaviour {
         }
     }
     
-    public List<IFCSignBoard> GetSignboardsVisible(Vector3 agentPosition, int agentTypeID) {
+    public List<IFCSignBoard> GetSignboardsVisible(Vector3 worldPosition, int agentTypeID) {
         if(visibilityInfo == null) {
             Debug.LogError("Visibility Info Unavailable");
-            return null;
+            return new List<IFCSignBoard>();
         }
         
         float positionSensitivity = 1f / resolution;
@@ -250,8 +251,8 @@ public class VisibilityHandler : MonoBehaviour {
             Dictionary<Vector2Int, VisibilityInfo>[] visInfo = visibilityInfo[visPlaneId];
             Dictionary<Vector2Int, VisibilityInfo> visInfoDictionary = visInfo[agentTypeID];
             foreach(VisibilityInfo value in visInfoDictionary.Values) {
-                float headingX = value.CachedWorldPos.x - agentPosition.x;
-                float headingZ = value.CachedWorldPos.z - agentPosition.z;
+                float headingX = value.CachedWorldPos.x - worldPosition.x;
+                float headingZ = value.CachedWorldPos.z - worldPosition.z;
 
                 float distanceSquared = headingX * headingX + headingZ * headingZ;
                 if(distanceSquared < positionSensitivity * positionSensitivity) {
@@ -263,10 +264,10 @@ public class VisibilityHandler : MonoBehaviour {
     }
     
     public static bool IsSignboardInFOV(Transform agentTransform, IFCSignBoard signboard, float agentFOVDeg) {
-        Vector2 signboardPos = Utility.Vector3ToVerctor2NoY(signboard.transform.position);
-        Vector2 agentPos = Utility.Vector3ToVerctor2NoY(agentTransform.position);
+        Vector2 signboardPos = Utility.Vector3ToVector2NoY(signboard.transform.position);
+        Vector2 agentPos = Utility.Vector3ToVector2NoY(agentTransform.position);
 
-        Vector2 directionLooking = Utility.Vector3ToVerctor2NoY(agentTransform.forward);
+        Vector2 directionLooking = Utility.Vector3ToVector2NoY(agentTransform.forward);
         Vector2 directionSignboard = (signboardPos - agentPos).normalized;
 
         float angleToPoint = Mathf.Rad2Deg * Mathf.Acos(Vector2.Dot(directionLooking, directionSignboard));

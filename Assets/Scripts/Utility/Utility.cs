@@ -130,7 +130,7 @@ public static class Utility {
     }
     
 #region Math
-    public static Vector2 Vector3ToVerctor2NoY(Vector3 v3) {
+    public static Vector2 Vector3ToVector2NoY(Vector3 v3) {
         return new Vector2(v3.x, v3.z);
     }
         

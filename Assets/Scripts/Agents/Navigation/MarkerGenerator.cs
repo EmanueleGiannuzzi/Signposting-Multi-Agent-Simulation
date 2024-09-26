@@ -125,7 +125,7 @@ public class MarkerGenerator : MonoBehaviour {
             }
             return true;
         });
-        Debug.Log($"Detected {stairTransitionEdges.Count} stair transition point{(stairTransitionEdges.Count > 1 ? "s" : "")}.");
+        // Debug.Log($"Detected {stairTransitionEdges.Count} stair transition point{(stairTransitionEdges.Count > 1 ? "s" : "")}.");
 
         int spawnedMarkers = 0;
 

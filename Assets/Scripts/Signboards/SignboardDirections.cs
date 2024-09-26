@@ -9,7 +9,7 @@ using Vertx.Debugging;
 public class SignboardDirections : MonoBehaviour {
     private readonly bool DEBUG = true;
     
-    [SerializeField] private List<WandererGoal> destinations = new();
+    [SerializeField] private List<AgentGoal> destinations = new();
 
     private bool getDirectionFromDestination(IRouteMarker destination, out IRouteMarker direction) {
         NavMeshPath path = new NavMeshPath();
@@ -66,7 +66,7 @@ public class SignboardDirections : MonoBehaviour {
         }
         
         Vector3 signPosition = this.transform.position;
-        foreach (WandererGoal destination in destinations) {
+        foreach (AgentGoal destination in destinations) {
             if(destination == null) continue;
 
             if (getDirectionFromDestination(destination, out IRouteMarker directionPointed)) {

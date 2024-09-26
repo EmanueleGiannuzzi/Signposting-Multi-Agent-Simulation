@@ -8,7 +8,7 @@ namespace Agents.Wanderer.States {
         
         private const float MIN_MARKER_DISTANCE = 0.7f;
         private const float MAX_MARKER_DISTANCE = 10f;
-        private const float DONE_DELAY = 2.5f;
+        private const float DONE_DELAY = 0.5f;
         
         private const float ANGLE_WEIGHT = 0.55f;
         private const float DISTANCE_WEIGHT = 0.05f;

@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 public class GoalAgentSpawnArea : SpawnAreaBase {
     private static MarkerGenerator markerGen;
     
-    private IRouteMarker[] Goals;
+    [SerializeField] private AgentGoal[] Goals;
     [Tooltip("Set to 0 to add all of them")]
     [SerializeField] private int GoalsToAdd;
     [SerializeField] private bool GoalOrderRandom;
@@ -22,9 +22,9 @@ public class GoalAgentSpawnArea : SpawnAreaBase {
     }
     
     private IRouteMarker[] SelectGoals() {
-        GoalsToAdd = Mathf.Min(GoalsToAdd, Goals.Length);
+        GoalsToAdd = GoalsToAdd == 0 ? Goals.Length : Mathf.Min(GoalsToAdd, Goals.Length);
+        
         IRouteMarker[] goalsCopy = (IRouteMarker[])Goals.Clone();
-
         if (GoalOrderRandom) {
             goalsCopy.Shuffle();
         }
@@ -40,6 +40,7 @@ public class GoalAgentSpawnArea : SpawnAreaBase {
         foreach (IRouteMarker goalToAdd in SelectGoals()) {
             goalAgent.AddGoal(goalToAdd);
         }
+        goalAgent.StartTasks();
         return agent;
     }
     
