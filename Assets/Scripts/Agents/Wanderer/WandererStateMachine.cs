@@ -1,7 +1,8 @@
 ﻿using System;
+using Agents.Wanderer.States;
 using UnityEngine;
 
-namespace Agents.Wanderer.States {
+namespace Agents.Wanderer {
     [RequireComponent(typeof(AgentWanderer), typeof(SignboardAwareAgent))]
     public class WandererStateMachine : MonoBehaviour {
         private AgentWanderer agentWanderer;
@@ -121,18 +122,18 @@ namespace Agents.Wanderer.States {
                     }
                     break;
                 case FailSafeState _:
-                    onAllTasksCompleted();
+                    agentWanderer.OnAllTasksCompleted();
                     break;
                 case SuccessState successState:
                     switch (successState.ExitReason) {
                         case SuccessState.Reason.None:
                             break;
                         case SuccessState.Reason.ReachedIntermediateGoal:
-                            onTaskCompleted();
+                            agentWanderer.OnTaskCompleted();
                             setState(ExploreState);
                             break;
                         case SuccessState.Reason.ReachedLastGoal:
-                            onAllTasksCompleted();
+                            agentWanderer.OnAllTasksCompleted();
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -145,14 +146,6 @@ namespace Agents.Wanderer.States {
             
             setDebugText(currentState.GetType().Name);
             Debug.Log($"New State {currentState.GetType().Name}");
-        }
-
-        private void onTaskCompleted() {
-            
-        }
-
-        private void onAllTasksCompleted() {
-            agentWanderer.Die();
         }
     
         private void setDebugText(string text) {

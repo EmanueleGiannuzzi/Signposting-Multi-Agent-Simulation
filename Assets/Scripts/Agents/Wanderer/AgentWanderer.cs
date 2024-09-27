@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
-//Information gatherer class
 public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     private readonly bool DEBUG = true;
     
@@ -35,6 +34,9 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     
     public delegate void OnDestinationMarkerReached([NotNull] IRouteMarker marker);
     public event OnDestinationMarkerReached DestinationMarkerReachedEvent;
+    
+    public delegate void OnGoalReached(bool isLastGoal);
+    public event OnGoalReached GoalReachedEvent;
 
     protected override void Awake() {
         base.Awake();
@@ -161,7 +163,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
         return IsMarkerVisible(this.CurrentGoal());
     }
 
-    public bool IsMarkerVisible(IRouteMarker marker) { 
+    public bool IsMarkerVisible(IRouteMarker marker) {
         if (marker is MonoBehaviour behaviour) {
             MeshRenderer markerRenderer = behaviour.GetComponent<MeshRenderer>();
             if (markerRenderer) {
@@ -200,6 +202,19 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     public bool IsThereAnyUnvisitedSignboard(IEnumerable<IFCSignBoard> signboards) {
         return signboards.Any(signboard => !VisitedSigns.Contains(signboard));
     }
+    
+    public void OnTaskCompleted() {
+        GoalReachedEvent?.Invoke(false);
+    }
+
+    public void OnAllTasksCompleted() {
+        GoalReachedEvent?.Invoke(true);
+        Die();
+    }
+
+    public void Die() {
+        Destroy(this.gameObject);
+    }
 
     private void OnDrawGizmos() {
         if (!Application.isPlaying) {
@@ -218,9 +233,5 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
             Handles.ArrowHandleCap(0, this.transform.position + new Vector3(0f, 1f, 0f), 
                 Quaternion.LookRotation(PreferredDirection), 0.3f, EventType.Repaint);
         }
-    }
-
-    public void Die() {
-        Destroy(this.gameObject);
     }
 }

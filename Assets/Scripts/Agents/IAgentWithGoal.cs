@@ -6,5 +6,7 @@
         public IRouteMarker RemoveCurrentGoal();
         public void ClearGoals();
         public void StartTasks();
+        public void OnTaskCompleted();
+        public void OnAllTasksCompleted();
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Agents.Wanderer;
 using UnityEngine;
 using UnityEngine.AI;
 using Vertx.Debugging;

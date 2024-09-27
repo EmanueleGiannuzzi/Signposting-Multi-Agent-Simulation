@@ -9,9 +9,10 @@
             RemoveCurrentGoal();
             if (GoalCount() > 0) {
                 SetDestinationMarker(CurrentGoal());
+                OnTaskCompleted();
             }
             else {
-                Die();
+                OnAllTasksCompleted();
             }
         }
     }
