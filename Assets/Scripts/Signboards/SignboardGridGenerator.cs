@@ -2,7 +2,8 @@
 
 public class SignboardGridGenerator : MonoBehaviour {
     public IFCSignBoard SignboardTemplate;
-    public float resolution = 0.5f; // point/meter
+    [Tooltip("point/meter")]
+    public float resolution = 0.5f;
 
     public float signboardHeight = 2f;
     public float signboardOrientation = -90f;

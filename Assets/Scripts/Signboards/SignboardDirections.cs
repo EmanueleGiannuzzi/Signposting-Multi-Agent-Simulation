@@ -10,6 +10,10 @@ public class SignboardDirections : MonoBehaviour {
     
     [SerializeField] private List<AgentGoal> destinations = new();
 
+    public void AddDestination(AgentGoal goal) {
+        destinations.Add(goal);
+    }
+
     private bool getDirectionFromDestination(IRouteMarker destination, out IRouteMarker direction) {
         NavMeshPath path = new NavMeshPath();
         MarkerGenerator.TraversableCenterProjectionOnNavMesh(this.transform.position, out Vector3 startPos);

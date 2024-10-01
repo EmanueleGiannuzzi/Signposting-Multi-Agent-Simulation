@@ -6,7 +6,8 @@ public class AgentLogger : MonoBehaviour {
     private NavMeshAgent navmeshAgent;
     private AgentWanderer agentWanderer;
     private float timeWalking;
-    private float totalPathLength;
+    private float totalPathLengthSqr;
+    private float totalPathLengt => Mathf.Sqrt(totalPathLengthSqr);
     private Vector3 lastPosition;
 
     private void Awake() {
@@ -20,7 +21,7 @@ public class AgentLogger : MonoBehaviour {
     }
 
     private void ResetData() {
-        totalPathLength = 0f;
+        totalPathLengthSqr = 0f;
         timeWalking = 0f;
         lastPosition = transform.position;
     }
@@ -30,7 +31,7 @@ public class AgentLogger : MonoBehaviour {
 
         if (navmeshAgent.hasPath && navmeshAgent.velocity.sqrMagnitude > 0f) {
             float sqrDistanceThisFrame = (transform.position - lastPosition).sqrMagnitude;
-            totalPathLength += sqrDistanceThisFrame;
+            totalPathLengthSqr += sqrDistanceThisFrame;
             lastPosition = transform.position;
         }
     }

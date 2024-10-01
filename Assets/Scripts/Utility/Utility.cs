@@ -127,8 +127,29 @@ public static class Utility {
 #endif
         }
     }
+
+    public static void RemoveAllComponentsOfType<T>() where T : MonoBehaviour{
+        T[] objects = Object.FindObjectsOfType<T>();
+        foreach (T obj in objects) {
+            DestroyObject(obj);
+        }
+    }
+
+    #region Math
+    public static bool ProbabilityCheck(float chance) {
+        if (chance < 0f || chance > 1f) {
+            throw new ArgumentOutOfRangeException(nameof(chance), "Chance must be between 0f and 1f.");
+        }
+
+        if (Mathf.Approximately(chance, 1f)) 
+            return true;
+        if (Mathf.Approximately(chance, 0f))
+            return false;
+
+        float randomValue = (float)rng.NextDouble();
+        return randomValue <= chance;
+    }
     
-#region Math
     public static Vector2 Vector3ToVector2NoY(Vector3 v3) {
         return new Vector2(v3.x, v3.z);
     }
@@ -191,6 +212,15 @@ public static class Utility {
 #endregion
 
 #region Collections
+    public static T GetRandomItem<T>(this IList<T> list) {
+        if (list == null || list.Count == 0) {
+            throw new ArgumentException("The source list cannot be null or empty.");
+        }
+        
+        int randomIndex = rng.Next(list.Count);
+        return list[randomIndex];
+    }
+
     public static void Shuffle<T>(this IList<T> list) {  
         int n = list.Count;  
         while (n > 1) {  

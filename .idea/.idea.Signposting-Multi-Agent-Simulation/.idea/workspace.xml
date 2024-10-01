@@ -5,37 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa69fa30-2d10-43b0-9659-b7890d89d5eb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Logging.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Logging/AgentLogger.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Logging/AgentLogger.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Validation.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/GoalGenerator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/GoalGenerator.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/AgentWanderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/AgentWanderer.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/IAgentWithGoal.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/IAgentWithGoal.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/CPT/CPTRouteGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/CPT/CPTRouteGenerator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/PerfectAgent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/PerfectAgent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/PerfectAgent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/PerfectAgent.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/AbstractWandererState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/AbstractWandererState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/AbstractWandererState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/AbstractWandererState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/DecisionNodeState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/DecisionNodeState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/ExploreState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/ExploreState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/FailSafeState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/FailSafeState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/FailSafeState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/FailSafeState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/InformationGainState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/InformationGainState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/InformationGainState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/InformationGainState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/SignageDiscoveryState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/SignageDiscoveryState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/SignageDiscoveryState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/SignageDiscoveryState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/SuccessState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/SuccessState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/States/SuccessState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/SuccessState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/WandererStateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/WandererStateMachine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/FSM/WandererStateMachine.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/WandererStateMachine.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/RoutingSignboard.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Signboards/RoutingSignboard.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/RoutingSignboard.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Signboards/RoutingSignboard.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Logging/AgentLogger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Logging/AgentLogger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/SocialForceModel.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Signboards/SignboardDirections.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Signboards/SignboardDirections.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Signboards/SignboardGridGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Signboards/SignboardGridGenerator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/Utility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/Utility.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -299,7 +276,10 @@
       <workItem from="1727258397316" duration="5096000" />
       <workItem from="1727359832714" duration="5337000" />
       <workItem from="1727426485346" duration="805000" />
-      <workItem from="1727429610203" duration="7853000" />
+      <workItem from="1727429610203" duration="8159000" />
+      <workItem from="1727535826458" duration="3289000" />
+      <workItem from="1727687464742" duration="4861000" />
+      <workItem from="1727772548403" duration="7269000" />
     </task>
     <servers />
   </component>
