@@ -2,14 +2,16 @@
 using Agents;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Serialization;
 
 public class GoalAgentSpawnArea : SpawnAreaBase {
     private static MarkerGenerator markerGen;
     
-    [SerializeField] private AgentGoal[] Goals;
+    [SerializeField] private AgentGoal[] goals;
+    [FormerlySerializedAs("GoalsToAdd")]
     [Tooltip("Set to 0 to add all of them")]
-    [SerializeField] private int GoalsToAdd;
-    [SerializeField] private bool GoalOrderRandom;
+    [SerializeField] private int goalsToAdd;
+    [SerializeField] private bool isGoalOrderRandom;
     
     
     private void Awake() {
@@ -20,21 +22,26 @@ public class GoalAgentSpawnArea : SpawnAreaBase {
                 $"Trying to Spawn non {nameof(IAgentWithGoal)} from {nameof(GoalAgentSpawnArea)}");
         }
     }
+
+    public void SetParameters(AgentGoal[] _goals, int _goalsToAdd, bool _isGoalOrderRandom) {
+        this.goals = _goals;
+        this.goalsToAdd = _goalsToAdd;
+        this.isGoalOrderRandom = _isGoalOrderRandom;
+    }
     
     private IRouteMarker[] SelectGoals() {
-        GoalsToAdd = GoalsToAdd == 0 ? Goals.Length : Mathf.Min(GoalsToAdd, Goals.Length);
+        goalsToAdd = goalsToAdd == 0 ? goals.Length : Mathf.Min(goalsToAdd, goals.Length);
         
-        IRouteMarker[] goalsCopy = (IRouteMarker[])Goals.Clone();
-        if (GoalOrderRandom) {
+        IRouteMarker[] goalsCopy = (IRouteMarker[])goals.Clone();
+        if (isGoalOrderRandom) {
             goalsCopy.Shuffle();
         }
-        return goalsCopy.Take(GoalsToAdd).ToArray();
+        return goalsCopy.Take(goalsToAdd).ToArray();
     }
 
     protected override Agent SpawnAgentEvent(GameObject agentPrefab) {
         Agent agent = SpawnAgent(agentPrefab);
-        if (agent == null) 
-            return agent;
+        if (!agent) return agent;
         
         IAgentWithGoal goalAgent = agent.GetComponent<IAgentWithGoal>();
         foreach (IRouteMarker goalToAdd in SelectGoals()) {

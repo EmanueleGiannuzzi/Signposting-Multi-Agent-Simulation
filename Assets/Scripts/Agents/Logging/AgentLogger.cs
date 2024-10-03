@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -5,10 +7,14 @@ using UnityEngine.AI;
 public class AgentLogger : MonoBehaviour {
     private NavMeshAgent navmeshAgent;
     private AgentWanderer agentWanderer;
-    private float timeWalking;
+    private float lastTimeWalking;
+    private float totalTimeWalking;
     private float totalPathLengthSqr;
+    private float lastPathLengthSqr;
     private float totalPathLengt => Mathf.Sqrt(totalPathLengthSqr);
     private Vector3 lastPosition;
+
+    private List<Tuple<float, float>> resultsPerGoal = new List<Tuple<float, float>>();
 
     private void Awake() {
         navmeshAgent = GetComponent<NavMeshAgent>();
@@ -16,18 +22,18 @@ public class AgentLogger : MonoBehaviour {
     }
 
     private void Start() {
+        totalPathLengthSqr = 0f;
         ResetData();
         agentWanderer.GoalReachedEvent += onGoalReached;
     }
 
     private void ResetData() {
-        totalPathLengthSqr = 0f;
-        timeWalking = 0f;
+        totalTimeWalking = 0f;
         lastPosition = transform.position;
     }
 
     private void FixedUpdate() {
-        timeWalking += Time.fixedDeltaTime;
+        totalTimeWalking += Time.fixedDeltaTime;
 
         if (navmeshAgent.hasPath && navmeshAgent.velocity.sqrMagnitude > 0f) {
             float sqrDistanceThisFrame = (transform.position - lastPosition).sqrMagnitude;

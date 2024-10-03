@@ -10,10 +10,6 @@ public class SignboardGridGenerator : MonoBehaviour {
 
     private GameObject signboardGridGroup;// The children of this object are the signboards generated
 
-    public GameObject GetSignboardGridGroup() {
-        return signboardGridGroup;
-    }
-
     private static VisibilityPlaneData[] getVisibilityPlanes() {
         return VisibilityPlaneHelper.GetVisibilityPlanes();
     }
