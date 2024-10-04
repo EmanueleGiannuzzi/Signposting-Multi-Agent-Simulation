@@ -55,7 +55,7 @@ public class WandererValidation : MonoBehaviour {
     private void initSpawnAreas(AgentGoal[] goals) {
         GoalAgentSpawnArea[] spawnAreas = getSpawnAreas();
         foreach (GoalAgentSpawnArea spawnArea in spawnAreas) {
-            spawnArea.SetParameters(goals, numberOfGoalsToAdd, isGoalOrderRandom);
+            spawnArea.SetParameters(goals, numberOfGoalsToAdd, isGoalOrderRandom, spawnRate, maxAgentPerSpawnArea);
         }
     }
 

@@ -23,10 +23,12 @@ public class GoalAgentSpawnArea : SpawnAreaBase {
         }
     }
 
-    public void SetParameters(AgentGoal[] _goals, int _goalsToAdd, bool _isGoalOrderRandom) {
+    public void SetParameters(AgentGoal[] _goals, int _goalsToAdd, bool _isGoalOrderRandom, float spawnRate, int maxAgentsToSpawn) {
         this.goals = _goals;
         this.goalsToAdd = _goalsToAdd;
         this.isGoalOrderRandom = _isGoalOrderRandom;
+        this.SpawnRate = spawnRate;
+        this.AgentsToSpawn = maxAgentsToSpawn;
     }
     
     private IRouteMarker[] SelectGoals() {
