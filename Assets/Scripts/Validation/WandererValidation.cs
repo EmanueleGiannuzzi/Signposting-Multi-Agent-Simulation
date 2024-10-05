@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 public class WandererValidation : MonoBehaviour {
@@ -26,14 +27,6 @@ public class WandererValidation : MonoBehaviour {
         setAllSpawnAreaEnabled(false);
     }
 
-    private void Start() {
-        initGoalGenerator();
-    }
-    
-    private void OnValidate() {
-        initGoalGenerator();
-    }
-
     private void setAllSpawnAreaEnabled(bool enabled) {
         GoalAgentSpawnArea[] spawnAreas = getSpawnAreas();
         foreach (GoalAgentSpawnArea spawnArea in spawnAreas) {
@@ -41,7 +34,7 @@ public class WandererValidation : MonoBehaviour {
         }
     }
 
-    private void initGoalGenerator() {
+    public void InitGoalGenerator() {
         goalGenerator = new GoalGenerator(goalsIfcTags, numberOfGoalsToAdd, percentageOfUsefulSigns);
     }
 
@@ -56,6 +49,23 @@ public class WandererValidation : MonoBehaviour {
         GoalAgentSpawnArea[] spawnAreas = getSpawnAreas();
         foreach (GoalAgentSpawnArea spawnArea in spawnAreas) {
             spawnArea.SetParameters(goals, numberOfGoalsToAdd, isGoalOrderRandom, spawnRate, maxAgentPerSpawnArea);
+            spawnArea.OnAgentSpawnedEvent += onAgentSpawned;
+        }
+    }
+
+    private void onAgentJourneyFinished(List<AgentLogger.Result> resultsPerGoal, AgentLogger.Result totalResult) {
+        
+    }
+
+    private void onAgentSpawned(Agent agent) {
+        GameObject agentGO = agent.gameObject;
+        if (!agentGO.GetComponent<AgentWanderer>() ) {
+            throw new AssertionException($"{nameof(AgentWanderer)} component not found", $"Agent prefab not compatible with {nameof(AgentLogger)}");
+        }
+
+        if (!agentGO.GetComponent<AgentLogger>()) {
+            AgentLogger agentLogger = agentGO.AddComponent<AgentLogger>();
+            agentLogger.OnAllDataCollectedEvent += onAgentJourneyFinished;
         }
     }
 

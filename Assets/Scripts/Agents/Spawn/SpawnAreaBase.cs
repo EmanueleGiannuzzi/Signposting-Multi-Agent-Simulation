@@ -5,6 +5,8 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public abstract class SpawnAreaBase : MonoBehaviour {
+    protected static AgentsHandler agentsHandler;
+    
     public GameObject AgentPrefab;
 
     [Header("Agent Spawn Settings")] [SerializeField]
@@ -31,7 +33,9 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     private const float SPAWNED_AGENTS_INITIAL_MIN_DISTANCE = 5f;
     private const float SPAWNED_AGENTS_MIN_DISTANCE = 1f;
 
-    protected static AgentsHandler agentsHandler;
+    public delegate void OnAgentSpawned(Agent agent);
+    public event OnAgentSpawned OnAgentSpawnedEvent;
+    
     
     private void Start() {
         agentsHandler ??= FindObjectOfType<AgentsHandler>();
@@ -61,6 +65,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
             Agent agent = SpawnAgentEvent(AgentPrefab);
             if (agent != null) {
                 agent.transform.parent = this.transform;
+                OnAgentSpawnedEvent?.Invoke(agent);
             }
         }
     }

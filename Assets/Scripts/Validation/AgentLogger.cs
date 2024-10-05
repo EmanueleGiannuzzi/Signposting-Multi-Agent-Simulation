@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(AgentWanderer), typeof(NavMeshAgent))]
+[RequireComponent(typeof(AgentWanderer))]
 public class AgentLogger : MonoBehaviour {
     private NavMeshAgent navmeshAgent;
     private AgentWanderer agentWanderer;
@@ -16,7 +16,10 @@ public class AgentLogger : MonoBehaviour {
     private List<Result> resultsPerGoal;
     private Result totalResult;
 
-    private struct Result {
+    public delegate void OnAllDataCollected(List<Result> resultsPerGoal, Result totalResult);
+    public event OnAllDataCollected OnAllDataCollectedEvent;
+
+    public struct Result {
         public float timeWalking;
         public float pathLength;
 
@@ -64,7 +67,7 @@ public class AgentLogger : MonoBehaviour {
                 totalResult.pathLength += result.pathLength;
                 totalResult.timeWalking += result.timeWalking;
             }
-            //TODO: Send to WandererValiation
+            OnAllDataCollectedEvent?.Invoke(resultsPerGoal, totalResult);
         }
     }
 }
