@@ -122,18 +122,18 @@ namespace Agents.Wanderer {
                     }
                     break;
                 case FailSafeState _:
-                    agentWanderer.OnAllTasksCompleted();
+                    agentWanderer.OnAllTasksCompleted(false);
                     break;
                 case SuccessState successState:
                     switch (successState.ExitReason) {
                         case SuccessState.Reason.None:
                             break;
                         case SuccessState.Reason.ReachedIntermediateGoal:
-                            agentWanderer.OnTaskCompleted();
+                            agentWanderer.OnTaskCompleted(true);
                             setState(ExploreState);
                             break;
                         case SuccessState.Reason.ReachedLastGoal:
-                            agentWanderer.OnAllTasksCompleted();
+                            agentWanderer.OnAllTasksCompleted(true);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

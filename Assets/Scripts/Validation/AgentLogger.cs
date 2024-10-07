@@ -14,18 +14,19 @@ public class AgentLogger : MonoBehaviour {
     
     
     private List<Result> resultsPerGoal;
-    private Result totalResult;
 
-    public delegate void OnAllDataCollected(List<Result> resultsPerGoal, Result totalResult);
+    public delegate void OnAllDataCollected(List<Result> resultsPerGoal);
     public event OnAllDataCollected OnAllDataCollectedEvent;
 
     public struct Result {
         public float timeWalking;
         public float pathLength;
+        public bool wasSuccess;
 
-        public Result(float timeWalking, float pathLength) {
+        public Result(float timeWalking, float pathLength, bool wasSuccess) {
             this.timeWalking = timeWalking;
             this.pathLength = pathLength;
+            this.wasSuccess = wasSuccess;
         }
     }
 
@@ -58,16 +59,12 @@ public class AgentLogger : MonoBehaviour {
         }
     }
     
-    private void onGoalReached(bool isLastGoal) {
-        Result resultThisGoal = new Result(lastGoalTimeWalking, lastGoalPathLength);
+    private void onGoalReached(bool isLastGoal, bool success) {
+        Result resultThisGoal = new Result(lastGoalTimeWalking, lastGoalPathLength, success);
         resultsPerGoal.Add(resultThisGoal);
         ResetData(false);
         if (isLastGoal) {
-            foreach (Result result in resultsPerGoal) {
-                totalResult.pathLength += result.pathLength;
-                totalResult.timeWalking += result.timeWalking;
-            }
-            OnAllDataCollectedEvent?.Invoke(resultsPerGoal, totalResult);
+            OnAllDataCollectedEvent?.Invoke(resultsPerGoal);
         }
     }
 }

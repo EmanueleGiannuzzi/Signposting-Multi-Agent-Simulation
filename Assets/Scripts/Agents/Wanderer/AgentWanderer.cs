@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Agents;
 using Agents.Navigation.Markers;
 using JetBrains.Annotations;
@@ -35,7 +34,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     public delegate void OnDestinationMarkerReached([NotNull] IRouteMarker marker);
     public event OnDestinationMarkerReached DestinationMarkerReachedEvent;
     
-    public delegate void OnGoalReached(bool isLastGoal);
+    public delegate void OnGoalReached(bool isLastGoal, bool success);
     public event OnGoalReached GoalReachedEvent;
 
     protected override void Awake() {
@@ -199,16 +198,12 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
         return !rayHit || (hit.point - point).sqrMagnitude < precision * precision;
     }
     
-    public bool IsThereAnyUnvisitedSignboard(IEnumerable<IFCSignBoard> signboards) {
-        return signboards.Any(signboard => !VisitedSigns.Contains(signboard));
-    }
-    
-    public void OnTaskCompleted() {
-        GoalReachedEvent?.Invoke(false);
+    public void OnTaskCompleted(bool goalReached) {
+        GoalReachedEvent?.Invoke(false, goalReached);
     }
 
-    public void OnAllTasksCompleted() {
-        GoalReachedEvent?.Invoke(true);
+    public void OnAllTasksCompleted(bool finalGoalReached) {
+        GoalReachedEvent?.Invoke(true, finalGoalReached);
         Die();
     }
 
@@ -217,7 +212,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     }
 
     private void OnDrawGizmos() {
-        if (!Application.isPlaying) {
+        if (!DEBUG || !Application.isPlaying) {
             return;
         }
         

@@ -1,4 +1,8 @@
 using System.Collections.Generic;
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Assertions;
 public class WandererValidation : MonoBehaviour {
@@ -16,8 +20,16 @@ public class WandererValidation : MonoBehaviour {
     
     [Header("Signs")]
     [SerializeField] private float percentageOfUsefulSigns = 0f;
+    
+    [Header("Output")]
+    [SerializeField] private string testName = "";
+    [SerializeField] private string outputFilePath = "";
+    
 
     private GoalGenerator goalGenerator;
+    private List<AgentLogger.Result> resultsPerAgent;
+    private int agentsSpawned = 0;
+    private int agentsDone = 0;
 
     private void Awake() {
         signboardGridGenerator = FindObjectOfType<SignboardGridGenerator>();
@@ -25,6 +37,10 @@ public class WandererValidation : MonoBehaviour {
             throw new AssertionException("Class not found", $"Unable to find {nameof(SignboardGridGenerator)}");
         }
         setAllSpawnAreaEnabled(false);
+    }
+
+    private void Start() {
+        resultsPerAgent = new List<AgentLogger.Result>();
     }
 
     private void setAllSpawnAreaEnabled(bool enabled) {
@@ -42,7 +58,6 @@ public class WandererValidation : MonoBehaviour {
         AgentGoal[] goalsGenerated = goalGenerator.GenerateGoals();
         initSpawnAreas(goalsGenerated);
         setAllSpawnAreaEnabled(true);
-        //TODO
     }
 
     private void initSpawnAreas(AgentGoal[] goals) {
@@ -53,8 +68,43 @@ public class WandererValidation : MonoBehaviour {
         }
     }
 
-    private void onAgentJourneyFinished(List<AgentLogger.Result> resultsPerGoal, AgentLogger.Result totalResult) {
-        
+    private void onAgentJourneyFinished(List<AgentLogger.Result> resultsPerGoal) {
+        AgentLogger.Result agentTotalResult = new();
+        bool containsFailure = false;
+        foreach (AgentLogger.Result result in resultsPerGoal) {
+            if (!result.wasSuccess) {
+                containsFailure = true;
+                break;
+            }
+            agentTotalResult.pathLength += result.pathLength;
+            agentTotalResult.timeWalking += result.timeWalking;
+        }
+
+        if (!containsFailure) {
+            resultsPerAgent.Add(agentTotalResult);
+        }
+        agentsDone++;
+        if (agentsDone >= agentsSpawned) {
+            exportCSV();
+        }
+    }
+
+    private void exportCSV() {
+        string filePath = Path.Combine(outputFilePath, Path.GetFileName(testName + ".csv"));
+        using StreamWriter writer = new StreamWriter(filePath, false);
+        CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture) {
+            HasHeaderRecord = true
+        };
+        using CsvWriter csv = new CsvWriter(writer, config);
+        csv.Context.RegisterClassMap(new AgentLoggerResultDataMap());
+        string delimiter = csv.Configuration.Delimiter;
+
+        csv.WriteField("sep=" + csv.Configuration.Delimiter, false);
+        csv.NextRecord();
+        string header = $"Walking Time{delimiter}Path Length";
+        csv.WriteField(header, false);
+        csv.NextRecord();
+        csv.WriteRecords(resultsPerAgent);
     }
 
     private void onAgentSpawned(Agent agent) {
@@ -66,10 +116,18 @@ public class WandererValidation : MonoBehaviour {
         if (!agentGO.GetComponent<AgentLogger>()) {
             AgentLogger agentLogger = agentGO.AddComponent<AgentLogger>();
             agentLogger.OnAllDataCollectedEvent += onAgentJourneyFinished;
+            agentsSpawned++;
         }
     }
 
     private GoalAgentSpawnArea[] getSpawnAreas() {
         return this.transform.GetComponentsInChildren<GoalAgentSpawnArea>();
+    }
+    
+    private sealed class AgentLoggerResultDataMap : ClassMap<AgentLogger.Result> {
+        public AgentLoggerResultDataMap() {
+            Map(m => m.pathLength).Name("PathLength");
+            Map(m => m.timeWalking).Name("WalkingTime");
+        }
     }
 }
