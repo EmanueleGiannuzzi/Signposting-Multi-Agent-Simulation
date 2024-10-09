@@ -35,10 +35,12 @@ public abstract class SpawnAreaBase : MonoBehaviour {
 
     public delegate void OnAgentSpawned(Agent agent);
     public event OnAgentSpawned OnAgentSpawnedEvent;
-    
-    
-    private void Start() {
+
+    protected void Awake() {
         agentsHandler ??= FindObjectOfType<AgentsHandler>();
+    }
+
+    protected void Start() {
         if(ShouldSpawnAgents()) {
             StartSpawn();
         }
@@ -124,7 +126,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
         }
 
         Agent agent = null;
-        if (agentsHandler != null) {
+        if (agentsHandler) {
             agent = agentsHandler.SpawnAgent(agentPrefab, spawnPoint, Quaternion.identity);
         }
         else {
@@ -142,5 +144,14 @@ public abstract class SpawnAreaBase : MonoBehaviour {
 
     private bool canSpawnMoreAgents() {
         return AgentsToSpawn <= 0 || agentsSpawned.Count < AgentsToSpawn;
+    }
+
+    public void ClearAgents() {
+        foreach (Agent agent in agentsSpawned) {
+            if (!agent) continue;
+            if (agent.gameObject is { } agentGO) {
+                Destroy(agentGO);
+            }
+        }
     }
 }

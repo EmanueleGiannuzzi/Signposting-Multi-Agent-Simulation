@@ -14,6 +14,10 @@ public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
         return this.transform.position;
     }
 
+    public GameObject GetGameObject() {
+        return this.gameObject;
+    }
+
     private RoutingGraphCPTSolver routingGraph;
     private Queue<IRouteMarker> route;
     

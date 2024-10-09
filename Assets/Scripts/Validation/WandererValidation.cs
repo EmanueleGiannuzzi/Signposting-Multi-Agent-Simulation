@@ -6,11 +6,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Assertions;
 public class WandererValidation : MonoBehaviour {
-    
-    private SignboardGridGenerator signboardGridGenerator;
-    
     [Header("Goals")]
-    [SerializeField] private string[] goalsIfcTags = {"IfcFurnishingElement"};
     [SerializeField] private int numberOfGoalsToAdd = 0;
     [SerializeField] private bool isGoalOrderRandom;
     
@@ -19,7 +15,9 @@ public class WandererValidation : MonoBehaviour {
     [SerializeField] private float spawnRate = 0f;
     
     [Header("Signs")]
-    [SerializeField] private float percentageOfUsefulSigns = 0f;
+    [SerializeField] private float percentageOfUsefulSignsMin = 0f;
+    [SerializeField] private float percentageOfUsefulSignsMax = 1f;
+    [SerializeField] private float percentageOfUsefulSignsIncrement = 0.05f;
     
     [Header("Output")]
     [SerializeField] private string testName = "";
@@ -30,12 +28,11 @@ public class WandererValidation : MonoBehaviour {
     private List<AgentLogger.Result> resultsPerAgent;
     private int agentsSpawned = 0;
     private int agentsDone = 0;
+    private float currentPercentageOfUsefulSigns;
+    private SpawnAreaBase currentSpawnArea;
+    private int spawnAreaTracker = 0;
 
     private void Awake() {
-        signboardGridGenerator = FindObjectOfType<SignboardGridGenerator>();
-        if (!signboardGridGenerator) {
-            throw new AssertionException("Class not found", $"Unable to find {nameof(SignboardGridGenerator)}");
-        }
         setAllSpawnAreaEnabled(false);
     }
 
@@ -49,15 +46,41 @@ public class WandererValidation : MonoBehaviour {
             spawnArea.enabled = enabled;
         }
     }
-
-    public void InitGoalGenerator() {
-        goalGenerator = new GoalGenerator(goalsIfcTags, numberOfGoalsToAdd, percentageOfUsefulSigns);
+    
+    private void enableCurrentSpawnArea() {
+        setAllSpawnAreaEnabled(false);
+        currentSpawnArea.Enabled = true;
     }
 
-    public void StartTest() {
+    private void nextSpawnArea() {
+        if (spawnAreaTracker >= getSpawnAreas().Length) {
+            Debug.Log("All Tests Done");
+            return;
+        }
+        
+        currentSpawnArea = getSpawnAreas()[spawnAreaTracker];
+        spawnAreaTracker++;
+        
+        clearAgents();
+        resetSignPercentTest();
+        nextSignPercentTest();
+        enableCurrentSpawnArea();
+    }
+
+    private void initGoalGenerator() {
+        goalGenerator = new GoalGenerator(numberOfGoalsToAdd);
+    }
+
+    public void StartTests() {
+        initGoalGenerator();
         AgentGoal[] goalsGenerated = goalGenerator.GenerateGoals();
         initSpawnAreas(goalsGenerated);
-        setAllSpawnAreaEnabled(true);
+        
+        nextSpawnArea();
+    }
+
+    private void startTest(float percentageOfUsefulSigns) {
+        goalGenerator.AddGoalsToSigns(percentageOfUsefulSigns);
     }
 
     private void initSpawnAreas(AgentGoal[] goals) {
@@ -85,26 +108,51 @@ public class WandererValidation : MonoBehaviour {
         }
         agentsDone++;
         if (agentsDone >= agentsSpawned) {
+            setAllSpawnAreaEnabled(false);
+            clearAgents();
             exportCSV();
+            nextSignPercentTest();
+        }
+    }
+
+    private void clearAgents() {
+        GoalAgentSpawnArea[] spawnAreas = getSpawnAreas();
+        foreach (GoalAgentSpawnArea spawnArea in spawnAreas) {
+            spawnArea.ClearAgents();
+        }
+    }
+
+    private void resetSignPercentTest() {
+        currentPercentageOfUsefulSigns = percentageOfUsefulSignsMin;
+    }
+
+    private void nextSignPercentTest() {
+        if (currentPercentageOfUsefulSigns <= percentageOfUsefulSignsMax) {
+            Debug.Log($"Starting new test {testName} with {currentPercentageOfUsefulSigns*100}% of useful signs.");
+            startTest(currentPercentageOfUsefulSigns);
+            currentPercentageOfUsefulSigns += percentageOfUsefulSignsIncrement;
+        }
+        else {
+            Debug.Log($"Tests for {currentSpawnArea.name} Done");
+            nextSpawnArea();
         }
     }
 
     private void exportCSV() {
-        string filePath = Path.Combine(outputFilePath, Path.GetFileName(testName + ".csv"));
+        Directory.CreateDirectory(outputFilePath);
+        string agentName = currentSpawnArea.name.Replace(" SpawnArea", "");
+        string fileName = $"{testName}-{agentName}-{currentPercentageOfUsefulSigns}.csv";
+        string filePath = Path.Combine(outputFilePath, Path.GetFileName(fileName));
         using StreamWriter writer = new StreamWriter(filePath, false);
         CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture) {
             HasHeaderRecord = true
         };
         using CsvWriter csv = new CsvWriter(writer, config);
         csv.Context.RegisterClassMap(new AgentLoggerResultDataMap());
-        string delimiter = csv.Configuration.Delimiter;
-
-        csv.WriteField("sep=" + csv.Configuration.Delimiter, false);
-        csv.NextRecord();
-        string header = $"Walking Time{delimiter}Path Length";
-        csv.WriteField(header, false);
-        csv.NextRecord();
+        
         csv.WriteRecords(resultsPerAgent);
+        
+        Debug.Log($"CSV Exported in \"{((FileStream)(writer.BaseStream)).Name}\"");
     }
 
     private void onAgentSpawned(Agent agent) {
@@ -126,8 +174,8 @@ public class WandererValidation : MonoBehaviour {
     
     private sealed class AgentLoggerResultDataMap : ClassMap<AgentLogger.Result> {
         public AgentLoggerResultDataMap() {
-            Map(m => m.pathLength).Name("PathLength");
             Map(m => m.timeWalking).Name("WalkingTime");
+            Map(m => m.pathLength).Name("PathLength");
         }
     }
 }

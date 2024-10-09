@@ -14,7 +14,8 @@ public class GoalAgentSpawnArea : SpawnAreaBase {
     [SerializeField] private bool isGoalOrderRandom;
     
     
-    private void Awake() {
+    private new void Awake() {
+        base.Awake();
         markerGen ??= FindObjectOfType<MarkerGenerator>();
         
         if (AgentPrefab.GetComponent<IAgentWithGoal>() == null) {

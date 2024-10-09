@@ -8,7 +8,8 @@ public class TestSpawnArea : SpawnArea {
 
     public MouseButton mouseButton;
 
-    private void Start() {
+    private new void Start() {
+        base.Start();
         PlayerCamera = FindObjectOfType<Camera>();
     }
 

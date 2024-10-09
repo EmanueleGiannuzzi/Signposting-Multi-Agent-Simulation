@@ -6,4 +6,6 @@ public interface IRouteMarker {
     
     public string GetName();
     public Vector3 GetPosition();
+
+    public GameObject GetGameObject();
 }

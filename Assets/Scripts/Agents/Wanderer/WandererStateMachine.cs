@@ -5,11 +5,11 @@ using UnityEngine;
 namespace Agents.Wanderer {
     [RequireComponent(typeof(AgentWanderer), typeof(SignboardAwareAgent))]
     public class WandererStateMachine : MonoBehaviour {
-        private AgentWanderer agentWanderer;
+        protected AgentWanderer agentWanderer;
         private SignboardAwareAgent signboardAwareAgent;
         private MarkersAwareAgent markersAwareAgent;
 
-        private AbstractWandererState currentState;
+        protected AbstractWandererState currentState;
         
         private IRouteMarker currentDestination;
 
@@ -21,12 +21,12 @@ namespace Agents.Wanderer {
             new FailSafeState(),
             new SuccessState()
         };
-        private ExploreState ExploreState => (ExploreState)states[0];
-        private DecisionNodeState DecisionNodeState => (DecisionNodeState)states[1];
-        private SignageDiscoveryState SignageDiscoveryState => (SignageDiscoveryState)states[2];
-        private InformationGainState InformationGainState => (InformationGainState)states[3];
-        private FailSafeState FailSafeState => (FailSafeState)states[4];
-        private SuccessState SuccessState => (SuccessState)states[5];
+        protected ExploreState ExploreState => (ExploreState)states[0];
+        protected DecisionNodeState DecisionNodeState => (DecisionNodeState)states[1];
+        protected SignageDiscoveryState SignageDiscoveryState => (SignageDiscoveryState)states[2];
+        protected InformationGainState InformationGainState => (InformationGainState)states[3];
+        protected FailSafeState FailSafeState => (FailSafeState)states[4];
+        protected SuccessState SuccessState => (SuccessState)states[5];
         
         private static MarkerGenerator markerGen;
         
@@ -58,7 +58,7 @@ namespace Agents.Wanderer {
             currentState?.FixedDo();
         }
 
-        private void setState(AbstractWandererState newState, bool forceReset = false) {
+        protected void setState(AbstractWandererState newState, bool forceReset = false) {
             if (currentState == newState && !forceReset) 
                 return;
             currentState?.Exit();
@@ -67,7 +67,7 @@ namespace Agents.Wanderer {
             currentState.Enter();
         }
 
-        private void SelectState() {
+        protected virtual void SelectState() {
             switch (currentState) {
                 case ExploreState exploreState:
                     switch (exploreState.ExitReason) {
@@ -145,7 +145,7 @@ namespace Agents.Wanderer {
             }
             
             setDebugText(currentState.GetType().Name);
-            Debug.Log($"New State {currentState.GetType().Name}");
+            // Debug.Log($"New State {currentState.GetType().Name}");
         }
     
         private void setDebugText(string text) {

@@ -81,7 +81,7 @@ namespace Agents.Wanderer.States {
 
             int nextDestinationIndex = Utility.GetRandomWeightedIndex(weights);
             NextMarker = markersAroundAgent[nextDestinationIndex];
-            Debug.Log($"Chosen marker {NextMarker.Name} with weight: {weights[nextDestinationIndex]}");
+            // Debug.Log($"Chosen marker {NextMarker.Name} with weight: {weights[nextDestinationIndex]}");
             if (!visitedMarkers.TryAdd(NextMarker, 1)) {
                 visitedMarkers[NextMarker]++;
             }

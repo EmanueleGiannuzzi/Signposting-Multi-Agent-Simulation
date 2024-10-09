@@ -3,16 +3,15 @@ using System.Linq;
 using UnityEngine;
 
 public class GoalGenerator {
-    private readonly string[] goalsIfcTags;
+    // private readonly string[] goalsIfcTags;
     private readonly int numberOfGoalsToAdd;
-    private readonly float percentageOfUsefulSigns;
 
-    public GoalGenerator(string[] goalsIfcTags, int numberOfGoalsToAdd, float percentageOfUsefulSigns) {
-        this.goalsIfcTags = goalsIfcTags;
+    private List<AgentGoal> goalsGenerated;
+
+    public GoalGenerator(int numberOfGoalsToAdd) {
+        // this.goalsIfcTags = goalsIfcTags;
         this.numberOfGoalsToAdd = numberOfGoalsToAdd;
-        this.percentageOfUsefulSigns = percentageOfUsefulSigns;
     }
-
 
     private static void clearAll() {
         clearGoals();
@@ -42,8 +41,10 @@ public class GoalGenerator {
         return goalsGenerated;
     }
 
-    private void addGoalsToSigns(List<AgentGoal> goals) {
-        foreach (AgentGoal goal in goals) {
+    public void AddGoalsToSigns(float percentageOfUsefulSigns) {
+        clearGoalsFromSigns();
+        
+        foreach (AgentGoal goal in goalsGenerated) {
             foreach (IFCSignBoard signboard in getSignboards()) {
                 if (Utility.ProbabilityCheck(percentageOfUsefulSigns)) {
                     SignboardDirections directions = signboard.gameObject.AddComponent<SignboardDirections>();
@@ -57,21 +58,23 @@ public class GoalGenerator {
         return Object.FindObjectsOfType<IFCSignBoard>();
     }
 
-    private bool ifcTagMatchesGoalCandidate(string ifcTag) {
-        return goalsIfcTags.Contains(ifcTag);
-    }
+    // private bool ifcTagMatchesGoalCandidate(string ifcTag) {
+    //     return goalsIfcTags.Contains(ifcTag);
+    // }
     
     private GameObject[] getGoalCandidates() {
-        IFCData[] ifcObjects = Object.FindObjectsOfType<IFCData>();
-        List<IFCData> candidates =  ifcObjects.ToList();
-        candidates.RemoveAll(obj => !ifcTagMatchesGoalCandidate(obj.IFCClass));
+        List<IntermediateMarker> candidates = Object.FindObjectsOfType<IntermediateMarker>().ToList();
         return candidates.Select(candidate => candidate.gameObject).ToArray();
+        
+        // IFCData[] ifcObjects = Object.FindObjectsOfType<IFCData>();
+        // List<IFCData> candidates =  ifcObjects.ToList();
+        // candidates.RemoveAll(obj => !ifcTagMatchesGoalCandidate(obj.IFCClass));
+        // return candidates.Select(candidate => candidate.gameObject).ToArray();
     }
 
     public AgentGoal[] GenerateGoals() {
         clearAll();
-        List<AgentGoal> goalsGenerated = generateRandomGoals();
-        addGoalsToSigns(goalsGenerated);
+        goalsGenerated = generateRandomGoals();
         return goalsGenerated.ToArray();
     }
 }

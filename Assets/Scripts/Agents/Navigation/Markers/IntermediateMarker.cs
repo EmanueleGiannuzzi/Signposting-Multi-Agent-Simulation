@@ -19,6 +19,8 @@ public class IntermediateMarker : MonoBehaviour, IRouteMarker {
     Vector3 IRouteMarker.GetPosition() {
         return transform.position;
     }
-    
-    
+
+    public GameObject GetGameObject() {
+        return this.gameObject;
+    }
 }

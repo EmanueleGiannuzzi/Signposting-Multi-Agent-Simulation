@@ -30,4 +30,8 @@ public class AgentGoal : MonoBehaviour, IRouteMarker {
         
         DebugExtension.DrawArrow(topCenter + Vector3.up*1f, Vector3.down*0.5f, Color.blue);
     }
+
+    public GameObject GetGameObject() {
+        return this.gameObject;
+    }
 }

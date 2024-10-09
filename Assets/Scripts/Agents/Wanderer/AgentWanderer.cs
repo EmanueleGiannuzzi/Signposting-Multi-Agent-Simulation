@@ -83,7 +83,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     protected override void onAnyMarkerReached(IRouteMarker marker) {
         base.onAnyMarkerReached(marker);
         
-        if (marker == destinationMarker) {
+        if (marker == destinationMarker || (destinationMarker != null && marker.GetGameObject() == destinationMarker.GetGameObject())) {
             onDestinationMarkerReached(marker);
         }
     }
@@ -99,7 +99,11 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
             ResetPreferredDirection();
         }
         destinationMarker = marker;
-        SetDestination(marker.Position);
+        Vector3 destinationPositionOnNavmesh = marker.Position;
+        if (NavMesh.SamplePosition(marker.Position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) {
+            destinationPositionOnNavmesh = hit.position;
+        }
+        SetDestination(destinationPositionOnNavmesh);
     }
     
     public void SetDebugText(string text) {

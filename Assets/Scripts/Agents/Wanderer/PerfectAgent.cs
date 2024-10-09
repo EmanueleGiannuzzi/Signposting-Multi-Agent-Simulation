@@ -1,4 +1,6 @@
-﻿namespace Agents {
+﻿using UnityEngine;
+
+namespace Agents {
     public class PerfectAgent : AgentWanderer {
         public override void StartTasks() {
             SetDestinationMarker(CurrentGoal());
