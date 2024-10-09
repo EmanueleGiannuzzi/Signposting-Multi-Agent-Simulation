@@ -30,6 +30,7 @@ public class GoalAgentSpawnArea : SpawnAreaBase {
         this.isGoalOrderRandom = _isGoalOrderRandom;
         this.SpawnRate = spawnRate;
         this.AgentsToSpawn = maxAgentsToSpawn;
+        ResetAgentsToSpawn();
     }
     
     private IRouteMarker[] SelectGoals() {

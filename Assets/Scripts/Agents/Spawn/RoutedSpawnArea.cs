@@ -23,7 +23,8 @@ public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
     
     private Random rand;
     
-    private void Awake() {
+    private new void  Awake() {
+        base.Awake();
         rand = new Random((uint)DateTime.Now.Millisecond);
         MarkerGenerator markerGen = FindObjectOfType<MarkerGenerator>();
         if (markerGen == null) {

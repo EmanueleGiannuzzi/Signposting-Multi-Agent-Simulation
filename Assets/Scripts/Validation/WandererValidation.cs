@@ -43,12 +43,13 @@ public class WandererValidation : MonoBehaviour {
     private void setAllSpawnAreaEnabled(bool enabled) {
         GoalAgentSpawnArea[] spawnAreas = getSpawnAreas();
         foreach (GoalAgentSpawnArea spawnArea in spawnAreas) {
-            spawnArea.enabled = enabled;
+            spawnArea.Enabled = enabled;
         }
     }
     
     private void enableCurrentSpawnArea() {
         setAllSpawnAreaEnabled(false);
+        currentSpawnArea.ResetAgentsToSpawn();
         currentSpawnArea.Enabled = true;
     }
 
@@ -81,6 +82,7 @@ public class WandererValidation : MonoBehaviour {
 
     private void startTest(float percentageOfUsefulSigns) {
         goalGenerator.AddGoalsToSigns(percentageOfUsefulSigns);
+        enableCurrentSpawnArea();
     }
 
     private void initSpawnAreas(AgentGoal[] goals) {

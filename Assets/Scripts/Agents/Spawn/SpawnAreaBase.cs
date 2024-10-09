@@ -9,8 +9,8 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     
     public GameObject AgentPrefab;
 
-    [Header("Agent Spawn Settings")] [SerializeField]
-    private bool _enabled = false;
+    [Header("Agent Spawn Settings")] 
+    [SerializeField] private bool _enabled = false;
     public bool Enabled {
         get => _enabled;
         set {
@@ -30,6 +30,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     [Tooltip("0 = No Limit")] public int AgentsToSpawn;
     
     private readonly List<Agent> agentsSpawned = new();
+    private int remainingAgentsToSpawn;
     private const float SPAWNED_AGENTS_INITIAL_MIN_DISTANCE = 5f;
     private const float SPAWNED_AGENTS_MIN_DISTANCE = 1f;
 
@@ -41,6 +42,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     }
 
     protected void Start() {
+        ResetAgentsToSpawn();
         if(ShouldSpawnAgents()) {
             StartSpawn();
         }
@@ -65,6 +67,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     private void SpawnAgents() {
         if(ShouldSpawnAgents()) {
             Agent agent = SpawnAgentEvent(AgentPrefab);
+            remainingAgentsToSpawn--;
             if (agent != null) {
                 agent.transform.parent = this.transform;
                 OnAgentSpawnedEvent?.Invoke(agent);
@@ -143,7 +146,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     }
 
     private bool canSpawnMoreAgents() {
-        return AgentsToSpawn <= 0 || agentsSpawned.Count < AgentsToSpawn;
+        return remainingAgentsToSpawn > 0;
     }
 
     public void ClearAgents() {
@@ -153,5 +156,9 @@ public abstract class SpawnAreaBase : MonoBehaviour {
                 Destroy(agentGO);
             }
         }
+    }
+
+    public void ResetAgentsToSpawn() {
+        remainingAgentsToSpawn = AgentsToSpawn;
     }
 }
