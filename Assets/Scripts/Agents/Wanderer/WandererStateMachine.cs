@@ -149,7 +149,9 @@ namespace Agents.Wanderer {
         }
     
         private void setDebugText(string text) {
-            agentWanderer.SetDebugText(text);
+            if (agentWanderer) {
+                agentWanderer.SetDebugText(text);
+            }
         }
     }
 }

@@ -5,14 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa69fa30-2d10-43b0-9659-b7890d89d5eb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,05.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,15.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,2.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,25.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,3.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,35.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,4.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,45.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,5000001.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,5500001.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/GoalAgentSpawnArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/GoalAgentSpawnArea.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/RoutedSpawnArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/RoutedSpawnArea.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/SpawnAreaBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/SpawnAreaBase.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Validation/WandererValidation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/WandererValidation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/WandererStateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/WandererStateMachine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,1.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,15.csv" beforeDir="false" afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,15.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +64,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1ef406b3fd3a4bfbac8a7b76b99d890b1fe00/49/28b15b37/Physics.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/701a05767aa048528876500a22329b6c2d400/1b/7d3156d9/GUILayout.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9704bdd68edf4541a8575ee5d57812d0d400/87/dfedc6f5/NavMeshAgent.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9704bdd68edf4541a8575ee5d57812d0d400/a8/d704857e/NavMesh.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/1f/7d4a2fb0/Assert.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/27/b869b19f/AssertionException.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/3f/29f4786f/Random.cs" root0="SKIP_HIGHLIGHTING" />
@@ -303,6 +311,7 @@
       <workItem from="1728311912884" duration="4902000" />
       <workItem from="1728375857975" duration="7115000" />
       <workItem from="1728467772602" duration="13735000" />
+      <workItem from="1728808355518" duration="13514000" />
     </task>
     <servers />
   </component>
@@ -331,24 +340,5 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs</url>
-          <line>266</line>
-          <properties documentPath="C:\Signposting-Multi-Agent-Simulation\Assets\Scripts\Agents\Navigation\MarkerGenerator.cs" containingFunctionPresentation="Method 'spawnMarker'">
-            <startOffsets>
-              <option value="11306" />
-            </startOffsets>
-            <endOffsets>
-              <option value="11307" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

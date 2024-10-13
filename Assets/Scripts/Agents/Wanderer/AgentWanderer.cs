@@ -11,7 +11,6 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     private readonly bool DEBUG = true;
     
     public int agentTypeID { get; private set; } = -1;
-    public float agentHeight => visibilityHandler.agentTypes[agentTypeID].Value;
 
     private static VisibilityHandler visibilityHandler;
     private float agentFOV => agent.AgentFOVDegrees;
@@ -22,7 +21,6 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     public Vector2 PreferredDirection { get; set; }
     public bool HasPreferredDirection => PreferredDirection != Vector2.zero;
 
-    // public AgentGoal Goal { get; private set; }
     private readonly Queue<IRouteMarker> goals = new ();
     private IRouteMarker destinationMarker;
     public Vector3 CurrentDestination => agent.navMeshAgent.destination;
@@ -107,7 +105,8 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     }
     
     public void SetDebugText(string text) {
-        agent.SetDebugNameplateText($"[{agentHeight}] " + text);
+        // agent.SetDebugNameplateText($"[{GetEyeHeight()}] " + text);
+        agent.SetDebugNameplateText($"[{agentTypeID}] " + text);
     }
 
     public void SetDestination(Vector3 destination) {
@@ -151,7 +150,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     }
 
     public float GetEyeHeight() {
-        return visibilityHandler.agentTypes[agentTypeID].Value;
+        return agentTypeID < visibilityHandler.agentTypes.Length ? visibilityHandler.agentTypes[agentTypeID].Value : 0f;
     }
 
     public bool HasPath() {
@@ -192,7 +191,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
         return false;
     }
 
-    private bool isPointVisible(Vector3 point, float precision = 0.1f) {//TODO: Account for FOV
+    private bool isPointVisible(Vector3 point, float precision = 0.1f) {
         Vector3 agentEyePos = this.transform.position;
         agentEyePos.y += this.GetEyeHeight(); // Agent center is in the middle
         Vector3 displacementVector = point - agentEyePos;

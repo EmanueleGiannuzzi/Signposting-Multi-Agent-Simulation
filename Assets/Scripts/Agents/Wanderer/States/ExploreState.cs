@@ -41,7 +41,6 @@ namespace Agents.Wanderer.States {
             if (closestMarker != null) {
                 agentWanderer.SetDestinationMarker(closestMarker);
             }
-            Debug.Log("Going to closest marker");
         }
         
         protected override void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {

@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using Vertx.Debugging;
 
 public class MarkerGenerator : MonoBehaviour {
     public GameObject ifcGameObject;
@@ -247,7 +248,21 @@ public class MarkerGenerator : MonoBehaviour {
     }
 
     public static bool TraversableCenterProjectionOnNavMesh(Vector3 traversableCenter, out Vector3 result) { //TODO: Move to Utility
-        if (NavMesh.SamplePosition(traversableCenter, out NavMeshHit hit, 2.5f, NavMesh.AllAreas)) {
+        VisibilityPlaneData[] visibilityPlanes = VisibilityPlaneHelper.GetVisibilityPlanes();
+        float closestFloorY = float.NegativeInfinity;
+        for (int i = visibilityPlanes.Length-1; i >= 0; i--) {
+            float floorHeight = visibilityPlanes[i].OriginalFloorHeight;
+            if (floorHeight < traversableCenter.y && closestFloorY < floorHeight) {
+                closestFloorY = floorHeight;
+            }
+        }
+        if(float.IsNegativeInfinity(closestFloorY)) {
+            result = Vector3.zero;
+            return false;
+        }
+
+        Vector3 pointOnGround = new Vector3(traversableCenter.x, closestFloorY, traversableCenter.z);
+        if (NavMesh.SamplePosition(pointOnGround, out NavMeshHit hit, 2.5f, NavMesh.AllAreas)) {
             result = hit.position;
             return true;
         }
