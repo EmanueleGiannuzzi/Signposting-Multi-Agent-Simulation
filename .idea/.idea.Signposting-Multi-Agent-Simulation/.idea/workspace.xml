@@ -5,21 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa69fa30-2d10-43b0-9659-b7890d89d5eb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,2.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/CircularBuffer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/CircularBuffer.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/TimeController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/TimeController.cs.meta" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,25.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,3.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,35.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,4.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,45.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,5000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,5500001.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/Markers/AgentGoal.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/Markers/AgentGoal.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/Markers/IntermediateMarker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/Markers/IntermediateMarker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/GoalAgentSpawnArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/GoalAgentSpawnArea.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/InformationGainState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/InformationGainState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/WandererStateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/WandererStateMachine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,1.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,15.csv" beforeDir="false" afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,15.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Signboards/SignboardDirections.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Signboards/SignboardDirections.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Validation/GoalGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/GoalGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Validation/WandererValidation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/WandererValidation.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -311,7 +313,9 @@
       <workItem from="1728311912884" duration="4902000" />
       <workItem from="1728375857975" duration="7115000" />
       <workItem from="1728467772602" duration="13735000" />
-      <workItem from="1728808355518" duration="13514000" />
+      <workItem from="1728808355518" duration="14420000" />
+      <workItem from="1728891699333" duration="15184000" />
+      <workItem from="1728936806127" duration="44000" />
     </task>
     <servers />
   </component>

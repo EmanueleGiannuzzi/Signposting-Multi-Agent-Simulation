@@ -5,6 +5,8 @@ using UnityEngine;
 namespace Agents.Wanderer {
     [RequireComponent(typeof(AgentWanderer), typeof(SignboardAwareAgent))]
     public class WandererStateMachine : MonoBehaviour {
+        private const float OVERWALKING_TOTAL_TIME = 600f;
+        
         protected AgentWanderer agentWanderer;
         private SignboardAwareAgent signboardAwareAgent;
         private MarkersAwareAgent markersAwareAgent;
@@ -52,6 +54,10 @@ namespace Agents.Wanderer {
         }
 
         private void FixedUpdate() {
+            if (agentWanderer.TotalRunningTime > OVERWALKING_TOTAL_TIME) {
+                setState(FailSafeState);
+            }
+            
             if (currentState == null || currentState.IsDone) {
                 SelectState();
             }

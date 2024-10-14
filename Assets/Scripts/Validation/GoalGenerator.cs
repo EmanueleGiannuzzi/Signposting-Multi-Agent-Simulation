@@ -6,36 +6,38 @@ public class GoalGenerator {
     // private readonly string[] goalsIfcTags;
     private readonly int numberOfGoalsToAdd;
 
-    private List<AgentGoal> goalsGenerated;
+    private List<IntermediateMarker> goalsGenerated;
 
     public GoalGenerator(int numberOfGoalsToAdd) {
         // this.goalsIfcTags = goalsIfcTags;
         this.numberOfGoalsToAdd = numberOfGoalsToAdd;
     }
 
-    private static void clearAll() {
+    private static void clearAll() {    
         clearGoals();
         clearGoalsFromSigns();
     }
 
     private static void clearGoals() {
-        Utility.RemoveAllComponentsOfType<AgentGoal>();
+        foreach (IntermediateMarker marker in getGoalCandidates()) {
+            marker.IsGoal = false;
+        }
     }
 
     private static void clearGoalsFromSigns() {
         Utility.RemoveAllComponentsOfType<SignboardDirections>();
     }
     
-    private List<AgentGoal> generateRandomGoals() {
-        List<AgentGoal> goalsGenerated = new ();
-        GameObject[] candidates = getGoalCandidates();
+    private List<IntermediateMarker> generateRandomGoals() {
+        List<IntermediateMarker> goalsGenerated = new ();
+        IntermediateMarker[] candidates = getGoalCandidates();
         candidates.Shuffle();
         int goalsToAdd = Mathf.Min(numberOfGoalsToAdd, candidates.Length);
         
         for (int i = 0; i < goalsToAdd; i++) {
-            GameObject goalCandidate = candidates[i];
-            AgentGoal goal = goalCandidate.AddComponent<AgentGoal>();
-            goalsGenerated.Add(goal);
+            IntermediateMarker goalCandidate = candidates[i];
+            goalCandidate.IsGoal = true;
+            goalsGenerated.Add(goalCandidate);
         }
 
         return goalsGenerated;
@@ -44,7 +46,7 @@ public class GoalGenerator {
     public void AddGoalsToSigns(float percentageOfUsefulSigns) {
         clearGoalsFromSigns();
         
-        foreach (AgentGoal goal in goalsGenerated) {
+        foreach (IntermediateMarker goal in goalsGenerated) {
             foreach (IFCSignBoard signboard in getSignboards()) {
                 if (Utility.ProbabilityCheck(percentageOfUsefulSigns)) {
                     SignboardDirections directions = signboard.gameObject.AddComponent<SignboardDirections>();
@@ -57,22 +59,12 @@ public class GoalGenerator {
     private static IFCSignBoard[] getSignboards() {
         return Object.FindObjectsOfType<IFCSignBoard>();
     }
-
-    // private bool ifcTagMatchesGoalCandidate(string ifcTag) {
-    //     return goalsIfcTags.Contains(ifcTag);
-    // }
     
-    private GameObject[] getGoalCandidates() {
-        List<IntermediateMarker> candidates = Object.FindObjectsOfType<IntermediateMarker>().ToList();
-        return candidates.Select(candidate => candidate.gameObject).ToArray();
-        
-        // IFCData[] ifcObjects = Object.FindObjectsOfType<IFCData>();
-        // List<IFCData> candidates =  ifcObjects.ToList();
-        // candidates.RemoveAll(obj => !ifcTagMatchesGoalCandidate(obj.IFCClass));
-        // return candidates.Select(candidate => candidate.gameObject).ToArray();
+    private static IntermediateMarker[] getGoalCandidates() {
+        return Object.FindObjectsOfType<IntermediateMarker>();
     }
 
-    public AgentGoal[] GenerateGoals() {
+    public IntermediateMarker[] GenerateGoals() {
         clearAll();
         goalsGenerated = generateRandomGoals();
         return goalsGenerated.ToArray();

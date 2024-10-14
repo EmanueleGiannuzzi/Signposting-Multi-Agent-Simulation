@@ -1,7 +1,6 @@
 ﻿
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Agents.Wanderer.States {
     public class ExploreState : AbstractWandererState {
@@ -77,7 +76,6 @@ namespace Agents.Wanderer.States {
                 onGoalFound();
                 return;
             }
-            
         }
 
         private void onGoalFound() {

@@ -6,11 +6,11 @@ using Vertx.Debugging;
 
 [RequireComponent(typeof(IFCSignBoard))]
 public class SignboardDirections : MonoBehaviour {
-    private readonly bool DEBUG = true;
+    private readonly bool DEBUG = false;
     
-    [SerializeField] private List<AgentGoal> destinations = new();
+    [SerializeField] private List<IntermediateMarker> destinations = new();
 
-    public void AddDestination(AgentGoal goal) {
+    public void AddDestination(IntermediateMarker goal) {
         destinations.Add(goal);
     }
 
@@ -69,7 +69,7 @@ public class SignboardDirections : MonoBehaviour {
         }
         
         Vector3 signPosition = this.transform.position;
-        foreach (AgentGoal destination in destinations) {
+        foreach (IntermediateMarker destination in destinations) {
             if(destination == null) continue;
 
             if (getDirectionFromDestination(destination, out IRouteMarker directionPointed)) {

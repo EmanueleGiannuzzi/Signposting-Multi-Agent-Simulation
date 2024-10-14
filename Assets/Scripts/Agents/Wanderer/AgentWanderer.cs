@@ -9,8 +9,17 @@ using Random = UnityEngine.Random;
 
 public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     private readonly bool DEBUG = true;
-    
-    public int agentTypeID { get; private set; } = -1;
+
+    private int _agentTypeID = -1;
+    public int agentTypeID {
+        get {
+            if (_agentTypeID < 0) {
+                selectAgentID();
+            }
+            return _agentTypeID;
+        }
+        private set => _agentTypeID = value;
+    }
 
     private static VisibilityHandler visibilityHandler;
     private float agentFOV => agent.AgentFOVDegrees;
@@ -18,7 +27,20 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     private bool checkDestinationDistance = false;
     private float stopDistanceSqr = 0f;
 
-    public Vector2 PreferredDirection { get; set; }
+    private float startingTime;
+    public float TotalRunningTime => Time.time - startingTime;
+    private float preferredDirectionTimeReceived;
+    [SerializeField] private float preferredDirectionDecayTime = 60f;
+    private float preferredDirectionAge;
+    private Vector2 _preferredDirection;
+    public Vector2 PreferredDirection {
+        get => _preferredDirection;
+        set {
+            preferredDirectionTimeReceived = Time.time;
+            _preferredDirection = value;
+        }
+    }
+
     public bool HasPreferredDirection => PreferredDirection != Vector2.zero;
 
     private readonly Queue<IRouteMarker> goals = new ();
@@ -28,7 +50,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     
     public delegate void OnWithinDestinationRange();
     private OnWithinDestinationRange _withinDestinationRangeDelegate;
-    
+
     public delegate void OnDestinationMarkerReached([NotNull] IRouteMarker marker);
     public event OnDestinationMarkerReached DestinationMarkerReachedEvent;
     
@@ -43,8 +65,11 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
         }
     }
 
-    private void Start() {
+    private void selectAgentID() {
         agentTypeID = Random.Range(0, visibilityHandler.agentTypes.Length);
+    }
+
+    private void Start() {
         // agent.SetModelHeight(agentHeight); //TODO: Fix
     }
 
@@ -54,6 +79,10 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
                 onWithinDestinationRange();
             }
         }
+
+        if (HasPreferredDirection && Time.time - preferredDirectionTimeReceived > preferredDirectionDecayTime) {
+            ResetPreferredDirection();
+        } 
     }
 
     public void AddGoal(IRouteMarker goal) {
@@ -76,12 +105,14 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
         return goals.Dequeue();
     }
 
-    public virtual void StartTasks() {}
+    public virtual void StartTasks() {
+        startingTime = Time.time;
+    }
 
     protected override void onAnyMarkerReached(IRouteMarker marker) {
         base.onAnyMarkerReached(marker);
         
-        if (marker == destinationMarker || (destinationMarker != null && marker.GetGameObject() == destinationMarker.GetGameObject())) {
+        if (marker == destinationMarker || (destinationMarker != null && marker.GetGameObject().Equals(destinationMarker.GetGameObject()))) {
             onDestinationMarkerReached(marker);
         }
     }
@@ -97,15 +128,15 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
             ResetPreferredDirection();
         }
         destinationMarker = marker;
-        Vector3 destinationPositionOnNavmesh = marker.Position;
-        if (NavMesh.SamplePosition(marker.Position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas)) {
-            destinationPositionOnNavmesh = hit.position;
+        Vector3 destinationPosition = marker.Position;
+        if (MarkerGenerator.TraversableCenterProjectionOnNavMesh(marker.Position, out Vector3 destinationPositionOnNavmesh)) {
+            destinationPosition = destinationPositionOnNavmesh;
         }
-        SetDestination(destinationPositionOnNavmesh);
+        SetDestination(destinationPosition);
     }
     
     public void SetDebugText(string text) {
-        // agent.SetDebugNameplateText($"[{GetEyeHeight()}] " + text);
+        // agent.SetDebugNameplateText($"[{GetAgentHeight()}] " + text);
         agent.SetDebugNameplateText($"[{agentTypeID}] " + text);
     }
 
@@ -149,8 +180,8 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
                this.agent.navMeshAgent.remainingDistance < maxDistance;
     }
 
-    public float GetEyeHeight() {
-        return agentTypeID < visibilityHandler.agentTypes.Length ? visibilityHandler.agentTypes[agentTypeID].Value : 0f;
+    public float GetAgentHeight() {
+        return visibilityHandler.agentTypes[agentTypeID].Value;
     }
 
     public bool HasPath() {
@@ -193,7 +224,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
 
     private bool isPointVisible(Vector3 point, float precision = 0.1f) {
         Vector3 agentEyePos = this.transform.position;
-        agentEyePos.y += this.GetEyeHeight(); // Agent center is in the middle
+        agentEyePos.y += this.GetAgentHeight(); // Agent center is in the middle
         Vector3 displacementVector = point - agentEyePos;
         float distance = displacementVector.magnitude;
         

@@ -2,14 +2,8 @@
 
 namespace Agents.Wanderer.States {
     public class InformationGainState : AbstractWandererState {
-        // Lookahead Distance (LD)
-        // Threshold Entropy (TE) = 0.54 bits
-        
-        // Look at grid cells around (Greater LD = loot at more cells)
-        // Go to cell with lower entropy
-        // If cell has entropy < TE -> Execute Sign State //TODO: Change to actual
-        
         private const float DONE_DELAY = 0.5f;
+        private const float GIVE_UP_TIME = 15f;
         
         public IFCSignBoard focusSignboard;
         
@@ -32,7 +26,7 @@ namespace Agents.Wanderer.States {
             if (signboard.TryGetComponent(out SignboardDirections signDirection)) {
                 if (signDirection.TryGetDirection(agentWanderer.CurrentGoal(), out IRouteMarker nextGoal)) {
                     Vector2 nextGoalDirection = (nextGoal.Position - agentWanderer.transform.position).normalized;
-                    agentWanderer.PreferredDirection = nextGoalDirection; //TODO: if it's a stair marker reset it
+                    agentWanderer.PreferredDirection = nextGoalDirection; 
                     agentWanderer.SetDestinationMarker(nextGoal);
                     return true;
                 }
@@ -55,6 +49,14 @@ namespace Agents.Wanderer.States {
 
         protected override void OnDestinationMarkerReached(IRouteMarker marker) {
             onInformationFound();
+        }
+
+        protected override void FixedDoState() {
+            if (runningTime > GIVE_UP_TIME) {
+                onNoInformationFound();
+                this.ExitReason = Reason.NoInformationFound;
+                SetDone();
+            }
         }
     }
 }

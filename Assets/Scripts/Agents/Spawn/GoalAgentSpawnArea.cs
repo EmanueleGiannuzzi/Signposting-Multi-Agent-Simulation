@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 public class GoalAgentSpawnArea : SpawnAreaBase {
     private static MarkerGenerator markerGen;
     
-    [SerializeField] private AgentGoal[] goals;
+    [SerializeField] private IntermediateMarker[] goals;
     [FormerlySerializedAs("GoalsToAdd")]
     [Tooltip("Set to 0 to add all of them")]
     [SerializeField] private int goalsToAdd;
@@ -24,7 +24,7 @@ public class GoalAgentSpawnArea : SpawnAreaBase {
         }
     }
 
-    public void SetParameters(AgentGoal[] _goals, int _goalsToAdd, bool _isGoalOrderRandom, float spawnRate, int maxAgentsToSpawn) {
+    public void SetParameters(IntermediateMarker[] _goals, int _goalsToAdd, bool _isGoalOrderRandom, float spawnRate, int maxAgentsToSpawn) {
         this.goals = _goals;
         this.goalsToAdd = _goalsToAdd;
         this.isGoalOrderRandom = _isGoalOrderRandom;
