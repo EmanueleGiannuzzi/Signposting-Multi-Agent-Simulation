@@ -4,7 +4,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class SocialForceAgent : MonoBehaviour {
-    private readonly bool DEBUG = false;
+    private readonly bool DEBUG = true;
 
     private static readonly List<SocialForceAgent> agents = new ();
     

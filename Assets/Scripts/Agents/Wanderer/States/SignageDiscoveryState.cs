@@ -15,6 +15,7 @@ namespace Agents.Wanderer.States {
         
         private const float SIGN_STOPPING_DISTANCE = 2f;
         private const float DONE_DELAY = 0.5f;
+        private const float GIVE_UP_TIME = 15f;
 
         public enum Reason {
             None,
@@ -52,6 +53,13 @@ namespace Agents.Wanderer.States {
                 
                 agentWanderer.SetDestination(signboardNavmeshProjection, SIGN_STOPPING_DISTANCE, onSignReached);
                 agentWanderer.VisitedSigns.Add(closestSign);
+            }
+        }
+        
+        protected override void FixedDoState() {
+            if (runningTime > GIVE_UP_TIME) {
+                ExitReason = Reason.NoSignFound;
+                SetDone();
             }
         }
         

@@ -131,7 +131,8 @@ public static class Utility {
     public static void RemoveAllComponentsOfType<T>() where T : MonoBehaviour{
         T[] objects = Object.FindObjectsOfType<T>();
         foreach (T obj in objects) {
-            DestroyObject(obj);
+            Object.Destroy(obj);
+            // DestroyObject(obj);
         }
     }
 

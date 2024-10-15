@@ -30,9 +30,9 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     private float startingTime;
     public float TotalRunningTime => Time.time - startingTime;
     private float preferredDirectionTimeReceived;
-    [SerializeField] private float preferredDirectionDecayTime = 60f;
+    [SerializeField] private float preferredDirectionDecayTime = 120f;
     private float preferredDirectionAge;
-    private Vector2 _preferredDirection;
+    private Vector2 _preferredDirection = Vector2.zero;
     public Vector2 PreferredDirection {
         get => _preferredDirection;
         set {
@@ -82,7 +82,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
 
         if (HasPreferredDirection && Time.time - preferredDirectionTimeReceived > preferredDirectionDecayTime) {
             ResetPreferredDirection();
-        } 
+        }
     }
 
     public void AddGoal(IRouteMarker goal) {
@@ -123,15 +123,17 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     }
     
     public void SetDestinationMarker(IRouteMarker marker) {
+        IRouteMarker destMarker = marker;
         if (marker is LinkedMarker { HasLinkedMarker: true } linkedMarker) {
-            marker = linkedMarker.MarkerLinked;
+            destMarker = linkedMarker.MarkerLinked;
             ResetPreferredDirection();
         }
-        destinationMarker = marker;
-        Vector3 destinationPosition = marker.Position;
-        if (MarkerGenerator.TraversableCenterProjectionOnNavMesh(marker.Position, out Vector3 destinationPositionOnNavmesh)) {
+        Vector3 destinationPosition = destMarker.Position;
+        if (MarkerGenerator.TraversableCenterProjectionOnNavMesh(destinationPosition, out Vector3 destinationPositionOnNavmesh)) {
             destinationPosition = destinationPositionOnNavmesh;
         }
+
+        destinationMarker = destMarker;
         SetDestination(destinationPosition);
     }
     
@@ -233,10 +235,12 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     }
     
     public void OnTaskCompleted(bool goalReached) {
+        Debug.Log($"Reached Goal. {GoalCount()} remaining");
         GoalReachedEvent?.Invoke(false, goalReached);
     }
 
     public void OnAllTasksCompleted(bool finalGoalReached) {
+        Debug.Log("Reached last Goal.");
         GoalReachedEvent?.Invoke(true, finalGoalReached);
         Die();
     }
@@ -253,11 +257,13 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
         Gizmos.color = Color.blue;
         Vector3 agentPosition = transform.position;
         Gizmos.DrawLine(agentPosition, agent.navMeshAgent.destination);
-        
-        // Gizmos.color = Color.green;
-        // Gizmos.DrawLine(agentPosition, Goal);
 
-        if (PreferredDirection != Vector2.zero) {
+        if (GoalCount() > 0) {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(agentPosition, CurrentGoal().Position);
+        }
+
+        if (HasPreferredDirection) {
             Handles.color = Color.green;
             Handles.ArrowHandleCap(0, this.transform.position + new Vector3(0f, 1f, 0f), 
                 Quaternion.LookRotation(PreferredDirection), 0.3f, EventType.Repaint);

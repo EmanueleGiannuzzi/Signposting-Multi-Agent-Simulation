@@ -5,6 +5,7 @@ using UnityEngine.AI;
 namespace Agents.Wanderer.States {
     public class DecisionNodeState : AbstractWandererState {
         // Choose a random path to follow, but try to not backtrack -> Explore State
+        private readonly bool DEBUG = false;
         
         private const float MIN_MARKER_DISTANCE = 0.7f;
         private const float MAX_MARKER_DISTANCE = 10f;
@@ -88,8 +89,10 @@ namespace Agents.Wanderer.States {
 
             // Debug.Log("Next dest: " + markersAroundAgent[nextDestinationIndex].Name + " Distance:" + 
             //           (agentWanderer.transform.position - markersAroundAgent[nextDestinationIndex].Position).magnitude);
-    
-            drawDebugLines(markersAroundAgent, weights);
+
+            if (DEBUG) {
+                drawDebugLines(markersAroundAgent, weights);
+            }
             
             SetDoneDelayed(DONE_DELAY);
         }

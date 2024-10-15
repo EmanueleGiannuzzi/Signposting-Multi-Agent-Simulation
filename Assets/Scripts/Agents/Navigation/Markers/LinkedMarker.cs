@@ -4,7 +4,7 @@ using UnityEngine.AI;
 namespace Agents.Navigation.Markers {
     
     public class LinkedMarker : IntermediateMarker {
-        [SerializeField] private LinkedMarker _markerLinked;
+        [SerializeField] private LinkedMarker _markerLinked = null;
         public LinkedMarker MarkerLinked => _markerLinked;
         public bool HasLinkedMarker => MarkerLinked != null;
         private NavMeshPath path;

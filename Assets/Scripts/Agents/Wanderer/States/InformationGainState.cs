@@ -53,7 +53,6 @@ namespace Agents.Wanderer.States {
 
         protected override void FixedDoState() {
             if (runningTime > GIVE_UP_TIME) {
-                onNoInformationFound();
                 this.ExitReason = Reason.NoInformationFound;
                 SetDone();
             }

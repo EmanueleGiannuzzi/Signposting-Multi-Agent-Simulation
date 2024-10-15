@@ -46,7 +46,7 @@ public class TimeController : MonoBehaviour {
         float newTimeScale = Time.timeScale * scaleFactor;
 
         float timeScaleDifference = newTimeScale - Time.timeScale;
-        timeScaleDifference = Mathf.Clamp(timeScaleDifference, -MaxIncrementPerFrame, MaxIncrementPerFrame);
+        timeScaleDifference = Mathf.Clamp(timeScaleDifference, float.NegativeInfinity, MaxIncrementPerFrame);
         Time.timeScale += timeScaleDifference;
         Time.timeScale = Mathf.Clamp(Time.timeScale, 1f, MaxMultiplier);
 

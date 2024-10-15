@@ -1,10 +1,16 @@
 ﻿
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Agents.Wanderer.States {
     public class ExploreState : AbstractWandererState {
         private const float OVERWALKING_TIME = 60f;
+        private const float STAND_STILL_MAX_TICK = 100f;
+        private const float MIN_MOVEMENT_PER_TICK_SQR = float.Epsilon;
+
+        private int standStillCounter = 0;
+        private Vector3 lastPosition;
         
         public enum Reason {
             None,
@@ -25,7 +31,10 @@ namespace Agents.Wanderer.States {
         public Reason ExitReason { get; private set; } = Reason.None;
 
         protected override void EnterState() {
+            standStillCounter = 0;
+            lastPosition = agentWanderer.transform.position;
             ExitReason = Reason.None;
+            
             if (NextMarker != null) {
                 agentWanderer.SetDestinationMarker(NextMarker);
                 NextMarker = null;
@@ -47,9 +56,6 @@ namespace Agents.Wanderer.States {
                 return;
             }
             
-            // VisibleBoards.Clear();
-            // VisibleBoards.AddRange(visibleBoards);
-            
             IEnumerable<IFCSignBoard> relevantSignboards = visibleBoards.Subtract(agentWanderer.VisitedSigns); //TODO: Do not subtract (or add back) when Information is found
             if (relevantSignboards.Any()) {
                 onNewSignboardsFound();
@@ -62,8 +68,8 @@ namespace Agents.Wanderer.States {
         }
 
         protected override void OnDestinationMarkerReached(IRouteMarker marker) {
-            SetDone();
             ExitReason = Reason.ReachedMarker;
+            SetDone();
         }
 
         protected override void FixedDoState() {
@@ -71,6 +77,20 @@ namespace Agents.Wanderer.States {
                 onOverwalked();
                 return;
             }
+
+            Vector3 position = agentWanderer.transform.position;
+            float sqrDistanceMovedThisTick = (lastPosition - position).sqrMagnitude;
+            if (sqrDistanceMovedThisTick < MIN_MOVEMENT_PER_TICK_SQR) {
+                standStillCounter++;
+                if (standStillCounter > STAND_STILL_MAX_TICK) {
+                    ExitReason = Reason.ReachedMarker;
+                    SetDone();
+                }
+            }
+            else {
+                standStillCounter = 0;
+            }
+            lastPosition = position;
 
             if (agentWanderer.IsGoalVisible()) {
                 onGoalFound();

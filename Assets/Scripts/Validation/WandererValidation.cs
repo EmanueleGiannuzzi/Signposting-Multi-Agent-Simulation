@@ -76,7 +76,7 @@ public class WandererValidation : MonoBehaviour {
         initGoalGenerator();
         IntermediateMarker[] goalsGenerated = goalGenerator.GenerateGoals();
         initSpawnAreas(goalsGenerated);
-        
+
         nextSpawnArea();
     }
 
@@ -112,8 +112,22 @@ public class WandererValidation : MonoBehaviour {
         if (agentsDone >= agentsSpawned) {
             setAllSpawnAreaEnabled(false);
             clearAgents();
-            exportCSV();
+            onAgentGroupFinished();
+        }
+    }
+
+    private void onAgentGroupFinished() {
+        exportCSV();
+        resultsPerAgent.Clear();
+        
+        // if (currentSpawnArea.name.Contains("Wanderer") && currentPercentageOfUsefulSigns <= (percentageOfUsefulSignsMax + percentageOfUsefulSignsIncrement) ) {
+        if (currentPercentageOfUsefulSigns <= percentageOfUsefulSignsMax) {
+            currentPercentageOfUsefulSigns += percentageOfUsefulSignsIncrement;
             nextSignPercentTest();
+        }
+        else {
+            Debug.Log($"Tests for {currentSpawnArea.name} Done");
+            nextSpawnArea();
         }
     }
 
@@ -129,21 +143,14 @@ public class WandererValidation : MonoBehaviour {
     }
 
     private void nextSignPercentTest() {
-        if (currentPercentageOfUsefulSigns <= percentageOfUsefulSignsMax) {
-            Debug.Log($"Starting new test {testName} with {currentPercentageOfUsefulSigns*100}% of useful signs.");
-            startTest(currentPercentageOfUsefulSigns);
-            currentPercentageOfUsefulSigns += percentageOfUsefulSignsIncrement;
-        }
-        else {
-            Debug.Log($"Tests for {currentSpawnArea.name} Done");
-            nextSpawnArea();
-        }
+        Debug.Log($"Starting new test {testName} with {currentPercentageOfUsefulSigns*100}% of useful signs.");
+        startTest(currentPercentageOfUsefulSigns);
     }
 
     private void exportCSV() {
         Directory.CreateDirectory(outputFilePath);
         string agentName = currentSpawnArea.name.Replace(" SpawnArea", "");
-        string fileName = $"{testName}-{agentName}-{currentPercentageOfUsefulSigns}.csv";
+        string fileName = $"{testName}-{agentName}-{currentPercentageOfUsefulSigns:n2}.csv";
         string filePath = Path.Combine(outputFilePath, Path.GetFileName(fileName));
         using StreamWriter writer = new StreamWriter(filePath, false);
         CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture) {
