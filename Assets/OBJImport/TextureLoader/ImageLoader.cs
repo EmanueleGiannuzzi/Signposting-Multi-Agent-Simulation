@@ -89,7 +89,7 @@ namespace Dummiesman
             if (!File.Exists(fn))
                 return null;
 
-            var textureBytes = File.ReadAllBytes(fn);
+            byte[] textureBytes = File.ReadAllBytes(fn);
             string ext = Path.GetExtension(fn).ToLower();
             string name = Path.GetFileName(fn);
             Texture2D returnTex = null;
@@ -117,7 +117,7 @@ namespace Dummiesman
                     ushort crnHeight = System.BitConverter.ToUInt16(new byte[2] { crnBytes[15], crnBytes[14] }, 0);
                     byte crnFormatByte = crnBytes[18];
 
-                    var crnTextureFormat = UnityEngine.TextureFormat.RGB24;
+                    UnityEngine.TextureFormat crnTextureFormat = UnityEngine.TextureFormat.RGB24;
                     if (crnFormatByte == 0)
                     {
                         crnTextureFormat = UnityEngine.TextureFormat.DXT1Crunched;

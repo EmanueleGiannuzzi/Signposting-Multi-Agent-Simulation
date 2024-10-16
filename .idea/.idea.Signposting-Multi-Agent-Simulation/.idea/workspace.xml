@@ -1,41 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="fa69fa30-2d10-43b0-9659-b7890d89d5eb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/AbstractWandererState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/AbstractWandererState.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/WandererStateMachine.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/WandererStateMachine.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/PerfectAgent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/PerfectAgent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Validation/GoalGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/GoalGenerator.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/Editor/IfcOpenShellParserEditor.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Editor/MarkerGeneratorEditor.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Editor/VisibilityPlaneGeneratorEditor.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/SpawnArea.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/SpawnAreaBase.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Agents/Spawn/TestSpawnArea.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Utility/Dependencies.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Editor/WandererValidationEditor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/Markers/AgentGoal.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Signboards/SignboardDirections.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Validation/WandererValidation.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Visibility/VisibilityHandler.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Visibility/VisibilityPlane/VisibilityPlaneGenerator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ai.navigation@1.1.5/Editor/NavigationOverlay.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.12/Editor/BurstDisassembler.Core.ARM64.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.12/Editor/BurstDisassembler.Core.ARM64.info.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.12/Editor/BurstDisassembler.Core.x86.info.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.12/Editor/BurstInspectorGUI.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.12/Editor/BurstMath.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.12/Editor/BurstPlatformAotSettings.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.12/Editor/LongTextArea.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.12/Runtime/BurstCompileAttribute.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.12/Runtime/BurstCompiler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mathematics@1.2.6/Unity.Mathematics/random.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.performance.profile-analyzer@1.2.2/Editor/ProfileAnalyzerWindow.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.timeline@1.7.6/Editor/Window/TimelineWindow_StateChange.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Tests/Editor/Canvas/CanvasElementsMaintainValidPositionsWhenCameraOrthoSizeIsZero.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Tests/Editor/Canvas/CanvasWidthAssertionErrorWithRectTransform.cs" root0="SKIP_HIGHLIGHTING" />
@@ -55,23 +49,31 @@
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Tests/Runtime/Canvas/NestedCanvas.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Tests/Runtime/Canvas/NestedCanvasMaintainsCorrectSize.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Tests/Runtime/Canvas/RectMask2DReparentedToDifferentCanvas.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.visualscripting@1.9.1/Runtime/VisualScripting.Core/Utilities/UnityObjectUtility.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.visualscripting@1.9.1/Runtime/VisualScripting.State/State.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/00d2ed804a47477fbcd16b18f553ed824f9400/68/09a9ee8f/Number.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/05f2afe6185f419bbdba66c4cec39481177000/bc/24d8eb48/MouseButton.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0f2ae8ab9582468aba74e46ff923b57a27800/ea/6cd23b0f/Animator.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/228a75ed9d5b4a658c89f48527e7e2e0175400/04/59050f3e/MonoBehaviour.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/228a75ed9d5b4a658c89f48527e7e2e0175400/14/8b681053/GameObject.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/228a75ed9d5b4a658c89f48527e7e2e0175400/27/9534dffd/Color.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/228a75ed9d5b4a658c89f48527e7e2e0175400/5d/7d9b4808/Vector2.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/228a75ed9d5b4a658c89f48527e7e2e0175400/79/e53158cb/Object.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/228a75ed9d5b4a658c89f48527e7e2e0175400/fc/931cfa33/Texture2D.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.vertx.debugging@2.3.0/Runtime/Draw.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.vertx.debugging@2.3.0/Runtime/DrawPhysics.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.vertx.debugging@2.3.0/Runtime/Shapes/Shapes.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1ef406b3fd3a4bfbac8a7b76b99d890b1fe00/49/28b15b37/Physics.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/701a05767aa048528876500a22329b6c2d400/1b/7d3156d9/GUILayout.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9704bdd68edf4541a8575ee5d57812d0d400/87/dfedc6f5/NavMeshAgent.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9704bdd68edf4541a8575ee5d57812d0d400/a8/d704857e/NavMesh.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/1f/7d4a2fb0/Assert.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/27/b869b19f/AssertionException.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/3f/29f4786f/Random.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/53/2faf956a/Object.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/88/995c28a1/Debug.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/92/657d0cbe/Gizmos.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/c9/a582d540/AssertionMessageUtil.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/cd/1c281ace/GameObject.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c5ed782439084ef1bc2ad85eec89e9fe175a00/f8/e0f23267/Gradient.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ffe351aa6232372f4a3b8c3ff36a636f33de226f60e607acbfe569289d7289d/System.IO.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2dMpm8fjsstG7HS4hOeV5vkiklH" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -84,18 +86,49 @@
   &quot;keyToString&quot;: {
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Attach to Unity Editor.Attach to Unity Editor.executor&quot;: &quot;Debug&quot;,
     &quot;Discover.Launch.Via.Unity&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.49844238&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;AgentWanderer&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CodeLensConfigurable&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\emagi\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\emagi\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\emagi\\AppData\\Local\\Symbols\\src&quot;
+    ]
   }
 }</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+    <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="C:\Program Files\2022.3.26f1\Editor\Unity.exe" />
+      <option name="PROGRAM_PARAMETERS" value="-projectPath C:\Signposting-Multi-Agent-Simulation -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="C:\Signposting-Multi-Agent-Simulation" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="C:\Program Files\2022.3.26f1\Editor\Unity.exe" />
+      <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath C:\Signposting-Multi-Agent-Simulation -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="C:\Signposting-Multi-Agent-Simulation" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
     <configuration name="UnitTests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity 2022.3.21f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\2022.3.26f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath C:\Signposting-Multi-Agent-Simulation -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Signposting-Multi-Agent-Simulation" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -160,6 +193,122 @@
       <workItem from="1712132348819" duration="1249000" />
       <workItem from="1712158959102" duration="594000" />
       <workItem from="1713171973597" duration="5473000" />
+      <workItem from="1713200380265" duration="463000" />
+      <workItem from="1713258163842" duration="2992000" />
+      <workItem from="1713515777915" duration="2376000" />
+      <workItem from="1713694119497" duration="1548000" />
+      <workItem from="1713774831658" duration="1539000" />
+      <workItem from="1713859927942" duration="1214000" />
+      <workItem from="1714125761509" duration="594000" />
+      <workItem from="1714294838844" duration="594000" />
+      <workItem from="1714381337339" duration="1189000" />
+      <workItem from="1714462334685" duration="1196000" />
+      <workItem from="1715334498724" duration="1189000" />
+      <workItem from="1715417201941" duration="5494000" />
+      <workItem from="1715585457272" duration="2393000" />
+      <workItem from="1715674187711" duration="595000" />
+      <workItem from="1715767562861" duration="595000" />
+      <workItem from="1715847088987" duration="596000" />
+      <workItem from="1715939958378" duration="2538000" />
+      <workItem from="1716192301448" duration="1796000" />
+      <workItem from="1716277475467" duration="1782000" />
+      <workItem from="1716369405123" duration="1367000" />
+      <workItem from="1716537987619" duration="1783000" />
+      <workItem from="1716803337556" duration="1197000" />
+      <workItem from="1717149631250" duration="1188000" />
+      <workItem from="1717404825750" duration="3232000" />
+      <workItem from="1718012241276" duration="3691000" />
+      <workItem from="1718093616130" duration="7611000" />
+      <workItem from="1718181077426" duration="3744000" />
+      <workItem from="1718270837283" duration="1928000" />
+      <workItem from="1718357297596" duration="595000" />
+      <workItem from="1718440301762" duration="4412000" />
+      <workItem from="1718615251412" duration="6428000" />
+      <workItem from="1718697012189" duration="5641000" />
+      <workItem from="1718871055271" duration="1194000" />
+      <workItem from="1718961523178" duration="6481000" />
+      <workItem from="1719050228385" duration="596000" />
+      <workItem from="1719215116877" duration="4354000" />
+      <workItem from="1719393934555" duration="3211000" />
+      <workItem from="1719476815684" duration="9559000" />
+      <workItem from="1719842463331" duration="1838000" />
+      <workItem from="1719910954635" duration="595000" />
+      <workItem from="1719999705370" duration="2814000" />
+      <workItem from="1720083805286" duration="5634000" />
+      <workItem from="1720172437624" duration="3066000" />
+      <workItem from="1720512604008" duration="2622000" />
+      <workItem from="1720519560702" duration="5206000" />
+      <workItem from="1720602274698" duration="8180000" />
+      <workItem from="1720702518432" duration="6736000" />
+      <workItem from="1720772680229" duration="1939000" />
+      <workItem from="1721204783140" duration="3310000" />
+      <workItem from="1721293209229" duration="4705000" />
+      <workItem from="1721377834940" duration="14200000" />
+      <workItem from="1721408272229" duration="12000" />
+      <workItem from="1721635439364" duration="4322000" />
+      <workItem from="1721740894759" duration="7490000" />
+      <workItem from="1721811159917" duration="7416000" />
+      <workItem from="1721917259119" duration="597000" />
+      <workItem from="1722000495579" duration="2681000" />
+      <workItem from="1722243229251" duration="6321000" />
+      <workItem from="1722420987543" duration="10161000" />
+      <workItem from="1722503673893" duration="8360000" />
+      <workItem from="1722605168955" duration="7232000" />
+      <workItem from="1722851243107" duration="3844000" />
+      <workItem from="1722953514946" duration="3701000" />
+      <workItem from="1723038824566" duration="933000" />
+      <workItem from="1723124606515" duration="4734000" />
+      <workItem from="1723726927406" duration="1380000" />
+      <workItem from="1723728334775" duration="6987000" />
+      <workItem from="1723821799828" duration="1320000" />
+      <workItem from="1724160754682" duration="57947000" />
+      <workItem from="1724225673356" duration="7924000" />
+      <workItem from="1724832376946" duration="4943000" />
+      <workItem from="1724920038386" duration="8847000" />
+      <workItem from="1725008511142" duration="6145000" />
+      <workItem from="1725265937940" duration="6360000" />
+      <workItem from="1725284739616" duration="5687000" />
+      <workItem from="1725353525928" duration="7912000" />
+      <workItem from="1725537245335" duration="7104000" />
+      <workItem from="1725612907527" duration="5428000" />
+      <workItem from="1725803040987" duration="24670000" />
+      <workItem from="1725957771220" duration="4960000" />
+      <workItem from="1726044219845" duration="5079000" />
+      <workItem from="1726129340493" duration="5639000" />
+      <workItem from="1726560061662" duration="15687000" />
+      <workItem from="1726647246635" duration="17319000" />
+      <workItem from="1726736789850" duration="3641000" />
+      <workItem from="1726842600615" duration="1319000" />
+      <workItem from="1727258397316" duration="5096000" />
+      <workItem from="1727359832714" duration="5337000" />
+      <workItem from="1727426485346" duration="805000" />
+      <workItem from="1727429610203" duration="8159000" />
+      <workItem from="1727535826458" duration="3289000" />
+      <workItem from="1727687464742" duration="4861000" />
+      <workItem from="1727772548403" duration="9101000" />
+      <workItem from="1727852920819" duration="2819000" />
+      <workItem from="1727863731989" duration="45000" />
+      <workItem from="1727863820796" duration="26000" />
+      <workItem from="1727863854204" duration="6558000" />
+      <workItem from="1727944180330" duration="6059000" />
+      <workItem from="1727975888024" duration="3552000" />
+      <workItem from="1728031822049" duration="5541000" />
+      <workItem from="1728135069708" duration="5067000" />
+      <workItem from="1728144265488" duration="1506000" />
+      <workItem from="1728221168091" duration="1192000" />
+      <workItem from="1728293087135" duration="4980000" />
+      <workItem from="1728310010910" duration="26000" />
+      <workItem from="1728310054958" duration="1554000" />
+      <workItem from="1728311912884" duration="4902000" />
+      <workItem from="1728375857975" duration="7115000" />
+      <workItem from="1728467772602" duration="13735000" />
+      <workItem from="1728808355518" duration="14420000" />
+      <workItem from="1728891699333" duration="15184000" />
+      <workItem from="1728936806127" duration="44000" />
+      <workItem from="1728936860150" duration="22930000" />
+      <workItem from="1729051223806" duration="271000" />
+      <workItem from="1729074786762" duration="4851000" />
+      <workItem from="1729102383833" duration="683000" />
     </task>
     <servers />
   </component>
@@ -168,6 +317,11 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
+  <component name="UnityProjectDiscoverer">
+    <option name="hasUnityReference" value="true" />
+    <option name="unityProject" value="true" />
+    <option name="unityProjectFolder" value="true" />
+  </component>
   <component name="UnityUnitTestConfiguration" currentTestLauncher="EditMode" />
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

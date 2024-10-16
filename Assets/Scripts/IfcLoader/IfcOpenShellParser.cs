@@ -12,7 +12,7 @@ using System.Globalization;
 public class IfcOpenShellParser : MonoBehaviour {
     [Header("Special Areas")]
     [SerializeField] private string[] walkableObjects = { "IfcSlab", "IfcStair", "IfcStairFlight", "IfcSite" };
-    [SerializeField] private string[] navMeshIgnoredObjects = { "IfcDoor" };
+    [SerializeField] private string[] traversableObjects = { "IfcDoor" };
     // [SerializeField] private string[] wallObjects = { "IfcWallStandardCase", "IfcWallElementedCase", "IfcWall" };
 
     [Header("IFC Signboard Definition")]
@@ -141,8 +141,8 @@ public class IfcOpenShellParser : MonoBehaviour {
         return this.walkableObjects.Contains(ifcClass);
     }
 
-    private bool isIfcIgnoreFromBuildArea(string ifcClass) {
-        return this.navMeshIgnoredObjects.Contains(ifcClass);
+    private bool isIfcTraversable(string ifcClass) {
+        return this.traversableObjects.Contains(ifcClass);
     }
     
     private bool isIfcSign(string ifcClass) {
@@ -153,9 +153,10 @@ public class IfcOpenShellParser : MonoBehaviour {
         MeshFilter goMeshFilter = goElement.GetComponent<MeshFilter>();
         if(goMeshFilter != null && goMeshFilter.sharedMesh != null) {
             goElement.AddComponent<MeshCollider>();
-            if(isIfcIgnoreFromBuildArea(node.Name)) {
+            if(isIfcTraversable(node.Name)) {
                 NavMeshModifier navmeshModifier = goElement.AddComponent<NavMeshModifier>();
                 navmeshModifier.ignoreFromBuild = true;
+                goElement.layer = Constants.TRAVERSABLE_LAYER;
             }
             else if(isIfcSign(node.Name)) {
                 loadSignboardData(ref goElement);
@@ -238,9 +239,9 @@ public class IfcOpenShellParser : MonoBehaviour {
 
                         // run through property values
                         foreach(XmlNode property in propertySet.ChildNodes) {
-                            var propValue = "";
+                            string propValue = "";
                             IFCProperty myProp = new IFCProperty();
-                            var propName = property.Attributes.GetNamedItem("Name").Value;
+                            string propName = property.Attributes.GetNamedItem("Name").Value;
 
                             propValue = property.Name switch {
                                 "IfcPropertySingleValue" => property.Attributes.GetNamedItem("NominalValue").Value,

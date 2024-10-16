@@ -9,7 +9,7 @@ public class VisibilityHandlerEditor : GenericEditor<VisibilityHandler> {
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
         
-        if(GUILayout.Button("Calculate Sign Coverage")) {
+        if(GUILayout.Button("Calculate Visibility Data")) {
             handler.GenerateVisibilityData();
         }
         

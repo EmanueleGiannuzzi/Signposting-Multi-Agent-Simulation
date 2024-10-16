@@ -2,14 +2,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class RoutingGraphCPTSolver : OpenCPTSolver {
     private IRouteMarker[] VertLabels { get; }
     
     public RoutingGraphCPTSolver(IRouteMarker[] vertexLabels) : base(vertexLabels.Length) {
         VertLabels = (IRouteMarker[])vertexLabels.Clone();
-        foreach (var vertex in vertexLabels) {
+        foreach (IRouteMarker vertex in vertexLabels) {
             generateEdgesFrom(vertex);
         }
     }
@@ -19,7 +18,7 @@ public class RoutingGraphCPTSolver : OpenCPTSolver {
             if (vertex1 == vertex2) {
                 continue;
             }
-            if (doesDirectPathExistsBetweenPoints(vertex1, vertex2, out float cost)) {
+            if (MarkerGenerator.DoesDirectPathExistsBetweenPoints(vertex1, vertex2, out float cost)) {
                 addEdge(vertex1, vertex2, cost);
             }
         }
@@ -46,47 +45,6 @@ public class RoutingGraphCPTSolver : OpenCPTSolver {
             }
         }
         throw new Exception($"Unable to find vertex label: {vertex}");
-    }
-
-    private static float GetPathLengthSquared(NavMeshPath path) {
-        Vector3[] corners = path.corners;
-
-        float length = 0f;
-        for (int i = 1; i < corners.Length; i++) {
-            length += (corners[i] -  corners[i - 1]).sqrMagnitude;
-        }
-
-        return length;
-    }
-
-    private static bool doesDirectPathExistsBetweenPoints(IRouteMarker startMarker, IRouteMarker destinationMarker, out float cost) {
-        Vector3 start = startMarker.Position;
-        Vector3 destination = destinationMarker.Position;
-        
-        NavMeshPath path = new ();
-        NavMesh.CalculatePath(start, destination, NavMesh.AllAreas, path);
-        cost = GetPathLengthSquared(path);
-        bool pathExists = path.status == NavMeshPathStatus.PathComplete;
-        bool isDirect = !doesPathIntersectOtherMarkers(path, startMarker, destinationMarker);
-
-        return pathExists && isDirect;
-    }
-    
-    private static bool doesPathIntersectOtherMarkers(NavMeshPath path, IRouteMarker startMarker, IRouteMarker destinationMarker) {
-        const float SPHERE_RADIUS = 0.5f;
-
-        for (int i = 1; i < path.corners.Length; i++) {
-            Vector3 directionTowardsNextCorner = (path.corners[i - 1] - path.corners[i]).normalized;
-            float distanceToNextCorner = Vector3.Distance(path.corners[i - 1], path.corners[i]);
-            //DrawPhysicsSettings.SetDuration(60f);
-            if (Physics.SphereCast(path.corners[i], SPHERE_RADIUS, directionTowardsNextCorner, out RaycastHit hit, distanceToNextCorner + 0.3f, Constants.ONLY_MARKERS_LAYER_MASK)) {
-                IRouteMarker markerHit = hit.collider.GetComponent<IRouteMarker>();
-                if (markerHit != null && markerHit != startMarker && markerHit != destinationMarker) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
     
     public IEnumerable<Tuple<IRouteMarker, IRouteMarker>> GetArcs() {

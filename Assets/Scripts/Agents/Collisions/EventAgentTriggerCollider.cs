@@ -13,7 +13,8 @@ public class EventAgentTriggerCollider : MonoBehaviour {
         collider = GetComponent<Collider>();
         if (!collider.isTrigger) {
             collider.isTrigger = true;
-            Debug.LogWarning($"Collier with {nameof(EventAgentTriggerCollider)} component is not a trigger. Changing to trigger.");
+            Debug.LogWarning($"On GameObject(\"{gameObject.name}\")'s Collier with " +
+                             $"{nameof(EventAgentTriggerCollider)} component is not a trigger. Changing to trigger.");
         }
     }
 

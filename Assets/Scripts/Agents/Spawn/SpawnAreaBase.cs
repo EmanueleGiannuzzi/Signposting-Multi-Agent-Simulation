@@ -5,10 +5,12 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public abstract class SpawnAreaBase : MonoBehaviour {
+    protected static AgentsHandler agentsHandler;
+    
     public GameObject AgentPrefab;
 
-    [Header("Agent Spawn Settings")] [SerializeField]
-    private bool _enabled = false;
+    [Header("Agent Spawn Settings")] 
+    [SerializeField] private bool _enabled = false;
     public bool Enabled {
         get => _enabled;
         set {
@@ -25,15 +27,22 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     [Range(0.0f, 100.0f)]
     public float SpawnRate;
     public bool IsSpawnRandom = true;
+    [Tooltip("0 = No Limit")] public int AgentsToSpawn;
     
-    private static readonly List<Agent> agentsSpawned = new();
+    private readonly List<Agent> agentsSpawned = new();
+    private int remainingAgentsToSpawn;
     private const float SPAWNED_AGENTS_INITIAL_MIN_DISTANCE = 5f;
     private const float SPAWNED_AGENTS_MIN_DISTANCE = 1f;
 
-    protected static AgentsHandler agentsHandler;
-    
-    private void Start() {
+    public delegate void OnAgentSpawned(Agent agent);
+    public event OnAgentSpawned OnAgentSpawnedEvent;
+
+    protected void Awake() {
         agentsHandler ??= FindObjectOfType<AgentsHandler>();
+    }
+
+    protected void Start() {
+        ResetAgentsToSpawn();
         if(ShouldSpawnAgents()) {
             StartSpawn();
         }
@@ -44,14 +53,13 @@ public abstract class SpawnAreaBase : MonoBehaviour {
             Enabled = !Enabled;
         }
     }
-    // ReSharper disable Unity.PerformanceAnalysis
+    
     public void StartSpawn() {
         if(SpawnRate > 0) {
             InvokeRepeating(nameof(SpawnAgents), 0f, 1 / SpawnRate);
         }
     }
 
-    // ReSharper disable Unity.PerformanceAnalysis
     public void StopSpawn() {
         CancelInvoke(nameof(SpawnAgents));
     }
@@ -59,14 +67,12 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     private void SpawnAgents() {
         if(ShouldSpawnAgents()) {
             Agent agent = SpawnAgentEvent(AgentPrefab);
+            remainingAgentsToSpawn--;
             if (agent != null) {
                 agent.transform.parent = this.transform;
+                OnAgentSpawnedEvent?.Invoke(agent);
             }
         }
-    }
-    
-    private static IEnumerable<Agent> GetAgentsSpawnedByThis() {
-        return agentsSpawned;
     }
 
     private static bool isSpawnPointCloseToAgents(IEnumerable<Agent> agents, Vector3 point, float minDistance) {
@@ -88,10 +94,9 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     
     [CanBeNull]
     protected Agent SpawnAgent(GameObject agentPrefab) {
-        return SpawnAgent(GetAgentsSpawnedByThis(), agentPrefab);
+        return SpawnAgent(agentsSpawned, agentPrefab);
     }
 
-    // ReSharper disable Unity.PerformanceAnalysis
     [CanBeNull]
     private Agent SpawnAgent(IEnumerable<Agent> agents, GameObject agentPrefab) {
         Transform spawnAreaTransform = this.transform;
@@ -103,7 +108,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
         float agentsMinDistance = SPAWNED_AGENTS_INITIAL_MIN_DISTANCE;
         bool spawnPointFound;
         do {
-            var tentatives = 0;
+            int tentatives = 0;
             do {
                 float randXOffset = 0f;
                 float randZOffset = 0f;
@@ -124,7 +129,7 @@ public abstract class SpawnAreaBase : MonoBehaviour {
         }
 
         Agent agent = null;
-        if (agentsHandler != null) {
+        if (agentsHandler) {
             agent = agentsHandler.SpawnAgent(agentPrefab, spawnPoint, Quaternion.identity);
         }
         else {
@@ -137,6 +142,23 @@ public abstract class SpawnAreaBase : MonoBehaviour {
     protected abstract Agent SpawnAgentEvent(GameObject agentPrefab);
 
     protected virtual bool ShouldSpawnAgents() {
-        return Enabled;
+        return Enabled && canSpawnMoreAgents();
+    }
+
+    private bool canSpawnMoreAgents() {
+        return remainingAgentsToSpawn > 0;
+    }
+
+    public void ClearAgents() {
+        foreach (Agent agent in agentsSpawned) {
+            if (!agent) continue;
+            if (agent.gameObject is { } agentGO) {
+                Destroy(agentGO);
+            }
+        }
+    }
+
+    public void ResetAgentsToSpawn() {
+        remainingAgentsToSpawn = AgentsToSpawn;
     }
 }

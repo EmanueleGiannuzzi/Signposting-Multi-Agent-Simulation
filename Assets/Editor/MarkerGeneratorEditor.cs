@@ -8,7 +8,7 @@ public class MarkerGeneratorEditor : GenericEditor<MarkerGenerator> {
         DrawDefaultInspector();
 
         if (GUILayout.Button("Generate Markers")) {
-            handler.AddMarkersToTraversables();
+            handler.GenerateMarkers();
         }
     }
 }

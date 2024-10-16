@@ -12,11 +12,11 @@ public static class Utility {
     
     //TODO: Move
     public static bool PolyContainsPoint(Vector3[] polyPoints, Vector3 p) {
-        var j = polyPoints.Length - 1;
-        var inside = false;
+        int j = polyPoints.Length - 1;
+        bool inside = false;
         for(int i = 0; i < polyPoints.Length; j = i++) {
-            var pi = polyPoints[i];
-            var pj = polyPoints[j];
+            Vector3 pi = polyPoints[i];
+            Vector3 pj = polyPoints[j];
             if(((pi.z <= p.z && p.z < pj.z) || (pj.z <= p.z && p.z < pi.z)) &&
                 (p.x < (pj.x - pi.x) * (p.z - pi.z) / (pj.z - pi.z) + pi.x))
                 inside = !inside;
@@ -127,9 +127,31 @@ public static class Utility {
 #endif
         }
     }
+
+    public static void RemoveAllComponentsOfType<T>() where T : MonoBehaviour{
+        T[] objects = Object.FindObjectsOfType<T>();
+        foreach (T obj in objects) {
+            Object.Destroy(obj);
+            // DestroyObject(obj);
+        }
+    }
+
+    #region Math
+    public static bool ProbabilityCheck(float chance) {
+        if (chance < 0f || chance > 1f) {
+            throw new ArgumentOutOfRangeException(nameof(chance), "Chance must be between 0f and 1f.");
+        }
+
+        if (Mathf.Approximately(chance, 1f)) 
+            return true;
+        if (Mathf.Approximately(chance, 0f))
+            return false;
+
+        float randomValue = (float)rng.NextDouble();
+        return randomValue <= chance;
+    }
     
-#region Math
-    public static Vector2 Vector3ToVerctor2NoY(Vector3 v3) {
+    public static Vector2 Vector3ToVector2NoY(Vector3 v3) {
         return new Vector2(v3.x, v3.z);
     }
         
@@ -157,9 +179,49 @@ public static class Utility {
         }
         return normalizedMatrix;
     }
+
+    public static float[] Normalize(float[] array, bool shouldInvert = false) {
+        float min = array.Min();
+        float max = array.Max();
+        float range = max - min;
+
+        if (range == 0) {
+            return array.Select(_ => shouldInvert ? 1f : 0f).ToArray();
+        }
+        
+        float[] normalizedArray = array.Select(value => (value - min) / range).ToArray();
+        return shouldInvert ? normalizedArray.Select(value => 1f - value).ToArray() : normalizedArray;
+    }
+    
+    public static float[] Normalize(int[] array, bool shouldInvert = false) {
+        int min = array.Min();
+        int max = array.Max();
+        int range = max - min;
+
+        if (range == 0) {
+            return array.Select(_ => shouldInvert ? 1f : 0f).ToArray();
+        }
+        
+        float[] normalizedArray = array.Select(value => (value - min) / (float)range).ToArray();
+        return shouldInvert ? normalizedArray.Select(value => 1f - value).ToArray() : normalizedArray;
+    }
+    
+    public static float[] Normalize(float[] array, Func<float, float> function, bool shouldInvert = false) {
+        float[] expArray = array.Select(function).ToArray();
+        return Normalize(array, shouldInvert);
+    }
 #endregion
 
 #region Collections
+    public static T GetRandomItem<T>(this IList<T> list) {
+        if (list == null || list.Count == 0) {
+            throw new ArgumentException("The source list cannot be null or empty.");
+        }
+        
+        int randomIndex = rng.Next(list.Count);
+        return list[randomIndex];
+    }
+
     public static void Shuffle<T>(this IList<T> list) {  
         int n = list.Count;  
         while (n > 1) {  
@@ -196,6 +258,31 @@ public static class Utility {
         return Enumerable.Range(0, matrix.GetLength(1))
             .Select(x => matrix[rowNumber, x])
             .ToArray();
+    }
+    
+    public static int GetRandomWeightedIndex(float[] weights) {
+        float weightSum = 0f;
+        foreach (float weight in weights) {
+            weightSum += weight;
+        }
+ 
+        int index = 0;
+        int lastIndex = weights.Length - 1;
+        while (index < lastIndex) {
+            if (UnityEngine.Random.Range(0, weightSum) < weights[index]) {
+                return index;
+            }
+            weightSum -= weights[index++];
+        }
+        return index;
+    }
+    
+    public static IEnumerable<T> Subtract<T>(this IEnumerable<T> orgList, IEnumerable<T> toRemove) {
+        List<T> list = orgList.ToList();
+        foreach(T x in toRemove) {
+            list.Remove(x);
+        }
+        return list;
     }
 #endregion
 

@@ -95,7 +95,7 @@ namespace Dummiesman {
 			float x = this.ReadFloat();
 			this.SkipWhitespaces();
 			float y = this.ReadFloat();
-			this.SkipWhitespaces(out var newLinePassed);
+			this.SkipWhitespaces(out bool newLinePassed);
 			float z = 0f;
 			if (newLinePassed == false) {
 				z = this.ReadFloat();
@@ -111,7 +111,7 @@ namespace Dummiesman {
 			}
 			
 			while (this.currentChar >= '0' && this.currentChar <= '9') {
-				var digit = this.currentChar - '0';
+				int digit = this.currentChar - '0';
 				result = result * 10 + digit;
 				this.MoveNext();
 			}
@@ -125,14 +125,14 @@ namespace Dummiesman {
 				this.MoveNext();
 			}
 
-			var num = (float)this.ReadInt();
+			float num = (float)this.ReadInt();
 			if (this.currentChar == '.' || this.currentChar == ',') {
 				this.MoveNext();
 				num +=  this.ReadFloatEnd();
 
 				if (this.currentChar == 'e' || this.currentChar == 'E') {
 					this.MoveNext();
-					var exp = this.ReadInt();
+					int exp = this.ReadInt();
 					num = num * Mathf.Pow(10f, exp);
 				}
 			}
@@ -146,9 +146,9 @@ namespace Dummiesman {
 		private float ReadFloatEnd() {
 			float result = 0f;
 
-			var exp = 0.1f;
+			float exp = 0.1f;
 			while (this.currentChar >= '0' && this.currentChar <= '9') {
-				var digit = this.currentChar - '0';
+				int digit = this.currentChar - '0';
 				result += digit * exp;
 
 				exp *= 0.1f;

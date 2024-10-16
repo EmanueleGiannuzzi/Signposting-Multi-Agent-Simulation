@@ -50,7 +50,7 @@ public class OBJObjectBuilder {
 			if (!(obj is ObjLoopHash))
 				return false;
 
-			var hash = obj as ObjLoopHash;
+			ObjLoopHash hash = obj as ObjLoopHash;
 			return (hash.vertexIndex == vertexIndex) && (hash.uvIndex == uvIndex) && (hash.normalIndex == normalIndex);
 		}
 
@@ -64,16 +64,16 @@ public class OBJObjectBuilder {
 	}
 
 	public GameObject Build() {
-		var go = new GameObject(_name);
+		GameObject go = new GameObject(_name);
 
 		//add meshrenderer
-		var mr = go.AddComponent<MeshRenderer>();
+		MeshRenderer mr = go.AddComponent<MeshRenderer>();
 		int submesh = 0;
 
 
 		//locate the material for each submesh
 		Material[] materialArray = new Material[_materialIndices.Count];
-		foreach (var kvp in _materialIndices) {
+		foreach (KeyValuePair<string, List<int>> kvp in _materialIndices) {
 			Material material = null;
 			if (_loader.Materials == null) {
 				material = OBJLoaderHelper.CreateNullMaterial();
@@ -91,10 +91,10 @@ public class OBJObjectBuilder {
 		mr.sharedMaterials = materialArray;
 
 		//add meshfilter
-		var mf = go.AddComponent<MeshFilter>();
+		MeshFilter mf = go.AddComponent<MeshFilter>();
 		submesh = 0;
 
-		var msh = new Mesh() {
+		Mesh msh = new Mesh() {
 			name = _name, 
 			indexFormat = (_vertices.Count > 65535) ? UnityEngine.Rendering.IndexFormat.UInt32 : UnityEngine.Rendering.IndexFormat.UInt16,
 			subMeshCount = _materialIndices.Count 
@@ -106,7 +106,7 @@ public class OBJObjectBuilder {
 		msh.SetUVs(0, _uvs);
 
 		//set faces
-		foreach (var kvp in _materialIndices) {
+		foreach (KeyValuePair<string, List<int>> kvp in _materialIndices) {
 			msh.SetTriangles(kvp.Value, submesh);
 			submesh++;
 		}
@@ -151,7 +151,7 @@ public class OBJObjectBuilder {
 			int normalIndex = normalIndices[i];
 			int uvIndex = uvIndices[i];
 
-			var hashObj = new ObjLoopHash() {
+			ObjLoopHash hashObj = new ObjLoopHash() {
 				vertexIndex = vertexIndex,
 				normalIndex = normalIndex,
 				uvIndex = uvIndex

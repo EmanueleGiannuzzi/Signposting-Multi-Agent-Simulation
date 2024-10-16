@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 
 public class OpenCPTSolver {
     protected readonly List<Arc> arcs = new();

@@ -58,7 +58,7 @@ namespace Dummiesman
                 System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
                 s.Start();
 
-                var loader = new OBJLoader
+                OBJLoader loader = new OBJLoader
                 {
                     SplitMode = SplitMode.Object,
                 };
@@ -99,7 +99,7 @@ namespace Dummiesman
         /// <returns>Returns a GameObject represeting the OBJ file, with each imported object as a child.</returns>
         public GameObject Load(Stream input)
         {
-            var reader = new StreamReader(input);
+            StreamReader reader = new StreamReader(input);
             //var reader = new StringReader(inputReader.ReadToEnd());
 
             Dictionary<string, OBJObjectBuilder> builderDict = new Dictionary<string, OBJObjectBuilder>();
@@ -126,7 +126,7 @@ namespace Dummiesman
             setCurrentObjectFunc.Invoke("default");
 
 			//var buffer = new DoubleBuffer(reader, 256 * 1024);
-			var buffer = new CharWordReader(reader, 4 * 1024);
+			CharWordReader buffer = new CharWordReader(reader, 4 * 1024);
 
 			//do the reading
 			while (true)
@@ -265,13 +265,13 @@ namespace Dummiesman
             GameObject obj = new GameObject(_objInfo != null ? Path.GetFileNameWithoutExtension(_objInfo.Name) : "WavefrontObject");
             obj.transform.localScale = new Vector3(-1f, 1f, 1f);
 
-            foreach (var builder in builderDict)
+            foreach (KeyValuePair<string, OBJObjectBuilder> builder in builderDict)
             {
                 //empty object
                 if (builder.Value.PushedFaceCount == 0)
                     continue;
 
-                var builtObj = builder.Value.Build();
+                GameObject builtObj = builder.Value.Build();
                 builtObj.transform.SetParent(obj.transform, false);
             }
 
@@ -286,7 +286,7 @@ namespace Dummiesman
         /// <returns>Returns a GameObject represeting the OBJ file, with each imported object as a child.</returns>
         public GameObject Load(Stream input, Stream mtlInput)
         {
-            var mtlLoader = new MTLLoader();
+            MTLLoader mtlLoader = new MTLLoader();
             Materials = mtlLoader.Load(mtlInput);
 
             return Load(input);
@@ -303,17 +303,17 @@ namespace Dummiesman
             _objInfo = new FileInfo(path);
             if (!string.IsNullOrEmpty(mtlPath) && File.Exists(mtlPath))
             {
-                var mtlLoader = new MTLLoader();
+                MTLLoader mtlLoader = new MTLLoader();
                 Materials = mtlLoader.Load(mtlPath);
 
-                using (var fs = new FileStream(path, FileMode.Open))
+                using (FileStream fs = new FileStream(path, FileMode.Open))
                 {
                     return Load(fs);
                 }
             }
             else
             {
-                using (var fs = new FileStream(path, FileMode.Open))
+                using (FileStream fs = new FileStream(path, FileMode.Open))
                 {
                     return Load(fs);
                 }

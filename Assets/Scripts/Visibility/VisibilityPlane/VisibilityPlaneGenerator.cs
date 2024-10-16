@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Linq;
 using Unity.AI.Navigation;
 
@@ -7,14 +6,14 @@ using Unity.AI.Navigation;
 [RequireComponent(typeof(VisibilityHandler))]
 public class VisibilityPlaneGenerator : MonoBehaviour {
     public GameObject ifcGameObject;
-    public string[] areaToAnalyze = { "IfcSlab" };
+    public string[] flooringIfcTags = { "IfcSlab" };
 
     private GameObject visibilityPlanesGroup;
     private int analysisResolution => GetComponent<VisibilityHandler>().resolution;
 
 
     private bool ShouldAnalyzeArea(string ifcClass) {
-        return this.areaToAnalyze.Contains(ifcClass);
+        return this.flooringIfcTags.Contains(ifcClass);
     }
 
     public void GenerateVisibilityPlanes() {

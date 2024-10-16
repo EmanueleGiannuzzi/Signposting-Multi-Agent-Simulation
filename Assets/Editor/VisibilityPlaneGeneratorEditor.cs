@@ -16,8 +16,6 @@ public class VisibilityPlaneGeneratorEditor : GenericEditor<VisibilityPlaneGener
             else {
                 Debug.LogError("Unable to generate Visibility Planes");
             }
-            
-            
         }
     }
 }

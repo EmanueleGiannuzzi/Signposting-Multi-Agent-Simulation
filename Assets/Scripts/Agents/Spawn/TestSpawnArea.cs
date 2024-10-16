@@ -3,12 +3,13 @@ using UnityEngine.UIElements;
 
 public class TestSpawnArea : SpawnArea {
     private Camera PlayerCamera;
-    public GameObject AgentPrefab;
+    public new GameObject AgentPrefab;
 
 
     public MouseButton mouseButton;
 
-    private void Start() {
+    private new void Start() {
+        base.Start();
         PlayerCamera = FindObjectOfType<Camera>();
     }
 
