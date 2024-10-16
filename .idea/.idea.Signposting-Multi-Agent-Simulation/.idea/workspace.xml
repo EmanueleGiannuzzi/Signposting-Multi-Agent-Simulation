@@ -5,28 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa69fa30-2d10-43b0-9659-b7890d89d5eb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,00.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,05.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,10.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,15.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,20.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,25.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,30.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,35.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,40.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,45.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,50.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,55.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,60.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,65.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,70.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,75.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,80.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,85.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,90.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,95.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Validation/WandererValidation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/WandererValidation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/PerfectAgent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/PerfectAgent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Validation/GoalGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/GoalGenerator.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -323,6 +307,8 @@
       <workItem from="1728936806127" duration="44000" />
       <workItem from="1728936860150" duration="22930000" />
       <workItem from="1729051223806" duration="271000" />
+      <workItem from="1729074786762" duration="4851000" />
+      <workItem from="1729102383833" duration="683000" />
     </task>
     <servers />
   </component>

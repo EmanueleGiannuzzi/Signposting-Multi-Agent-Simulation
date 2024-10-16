@@ -44,7 +44,6 @@ namespace Agents.Wanderer.States {
             for (int i = 0; i < markersAroundAgent.Count; i++) {
                 IRouteMarker marker = markersAroundAgent[i];
                 
-                
                 Vector3 markerPos = marker.Position;
                 Vector3 displacementVector = markerPos - agentPos;
                 angles[i] = Vector2.Angle(referenceAngle, displacementVector.normalized);

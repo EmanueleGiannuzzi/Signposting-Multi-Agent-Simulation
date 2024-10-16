@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
-using Vertx.Debugging;
 
 public class MarkerGenerator : MonoBehaviour {
     public GameObject ifcGameObject;

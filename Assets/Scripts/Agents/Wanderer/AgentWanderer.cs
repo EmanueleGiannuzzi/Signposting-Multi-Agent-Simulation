@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(SignboardAwareAgent))]
 public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     private readonly bool DEBUG = true;
 
