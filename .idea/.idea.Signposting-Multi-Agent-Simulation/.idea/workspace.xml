@@ -5,109 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa69fa30-2d10-43b0-9659-b7890d89d5eb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,05.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,15.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,2.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,25.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,3.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,35.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,4.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,45.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,5000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,5500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,6000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,6500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,7000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,7500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,8000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,8500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,9000002.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0,9500002.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - no clear/FirstTest-Wanderer-0.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,05.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,15.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,2.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,25.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,3.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,35.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,4.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,45.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,5000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,5500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,6000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,6500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,7000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,7500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,8000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,8500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,9000002.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-0,9500002.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Perfect-1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,05.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,15.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,2.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,25.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,3.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,35.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,4.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,45.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,5000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,5500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,6000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,6500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,7000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,7500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,8000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,8500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,9000002.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-0,9500002.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-SignBlind-1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,05.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,15.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,2.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,25.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,3.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,35.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,4.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,45.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,5000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,5500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,6000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,6500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,7000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,7500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,8000001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,8500001.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,9000002.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-0,9500002.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest - old/FirstTest-Wanderer-1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Perfect-0,00.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-SignBlind-0,00.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,00.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,10.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,20.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,30.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,40.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,50.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,60.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,70.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,00.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,05.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,10.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,15.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,20.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,25.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,30.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,35.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,40.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,45.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,50.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,55.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,60.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,65.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,70.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,75.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,80.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,85.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,90.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/3Goal20Agents2Floors/WandererValidation-Wanderer-0,95.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/AgentWanderer.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/AgentWanderer.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/Markers/LinkedMarker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/Markers/LinkedMarker.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/SocialForceAgent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/SocialForceAgent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/ExploreState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/InformationGainState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/InformationGainState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/SignageDiscoveryState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/SignageDiscoveryState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/TimeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/TimeController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/Utility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/Utility.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Validation/WandererValidation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/WandererValidation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FirstTest/FirstTest-Wanderer-0,25.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -402,7 +321,8 @@
       <workItem from="1728808355518" duration="14420000" />
       <workItem from="1728891699333" duration="15184000" />
       <workItem from="1728936806127" duration="44000" />
-      <workItem from="1728936860150" duration="22280000" />
+      <workItem from="1728936860150" duration="22930000" />
+      <workItem from="1729051223806" duration="271000" />
     </task>
     <servers />
   </component>

@@ -81,7 +81,7 @@ public class WandererValidation : MonoBehaviour {
     }
 
     private void startTest(float percentageOfUsefulSigns) {
-        goalGenerator.AddGoalsToSigns(percentageOfUsefulSigns);
+        goalGenerator.AddGoalsToSigns(Mathf.Clamp(percentageOfUsefulSigns, 0f, 1f));
         enableCurrentSpawnArea();
     }
 
