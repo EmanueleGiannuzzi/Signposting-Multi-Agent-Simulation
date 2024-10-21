@@ -2,7 +2,8 @@
 using UnityEngine;
 
 public class IFCData : MonoBehaviour {
-    public static HashSet<IFCData> DataCache { get; } = new();
+    //TODO: Use this instead of FindObjectsOfType<IFCData>, but it doesn't work in Editor
+    public static HashSet<IFCData> DataCache { get; } = new(); 
     
     public new Collider collider;
     

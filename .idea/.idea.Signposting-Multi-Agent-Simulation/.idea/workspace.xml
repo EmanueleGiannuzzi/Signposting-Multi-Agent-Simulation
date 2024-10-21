@@ -5,12 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa69fa30-2d10-43b0-9659-b7890d89d5eb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/RoutedAgent.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/RoutedAgent.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/SimulationAgent.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/SimulationAgent.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Navigation/MarkerGenerator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/AgentWanderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/PerfectAgent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/PerfectAgent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Agents/Wanderer/States/DecisionNodeState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Validation/GoalGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/GoalGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/IfcLoader/Data/IFCData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/IfcLoader/Data/IFCData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Visibility/VisibilityHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Visibility/VisibilityHandler.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +94,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.49844238&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;AgentWanderer&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -309,6 +311,8 @@
       <workItem from="1729051223806" duration="271000" />
       <workItem from="1729074786762" duration="4851000" />
       <workItem from="1729102383833" duration="683000" />
+      <workItem from="1729411611079" duration="12751000" />
+      <workItem from="1729493057213" duration="5563000" />
     </task>
     <servers />
   </component>

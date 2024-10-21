@@ -17,7 +17,7 @@ public class VisibilityHandler : MonoBehaviour {
     private Dictionary<Vector2Int, VisibilityInfo>[][] visibilityInfo;//1 for each visibility plane mesh
     
     [Header("Texture Color")]
-    public Color nonVisibleColor = new(1f, 0f, 0f, 0.5f);//red
+    public Color nonVisibleColor = new(1f, 1f, 1f, 0.5f);
     private Texture2D[,] resultTextures; //[visPlaneId, agentTypeID]
     
     [HideInInspector]

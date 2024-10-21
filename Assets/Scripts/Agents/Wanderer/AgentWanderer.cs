@@ -23,7 +23,6 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     }
 
     private static VisibilityHandler visibilityHandler;
-    private float agentFOV => agent.AgentFOVDegrees;
 
     private bool checkDestinationDistance = false;
     private float stopDistanceSqr = 0f;
@@ -247,7 +246,7 @@ public class AgentWanderer : MarkersAwareAgent, IAgentWithGoal {
     }
 
     public void Die() {
-        Destroy(this.gameObject);
+        agent.DestroyAgent();
     }
 
     private void OnDrawGizmos() {
