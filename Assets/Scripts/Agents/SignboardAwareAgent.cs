@@ -5,14 +5,15 @@ using UnityEngine;
 public class SignboardAwareAgent : MonoBehaviour {
     [SerializeField] private float updateFrequencyHz = 10f;
 
-    public List<IFCSignBoard> signsAround { get; } = new();
-    public List<IFCSignBoard> visibleSigns { get; } = new (); 
+    public List<IFCSignBoard>[] SignboardsAroundPerAgentType;
+    public List<IFCSignBoard>[] VisibleSignsPerAgentType; 
     
     private VisibilityHandler visibilityHandler;
     private Agent agent;
     
-    public delegate void OnAgentInVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID);
+    public delegate void OnAgentInVisibilityArea(List<IFCSignBoard> visibleBoards, IFCSignBoard signboard, int agentTypeID);
     public event OnAgentInVisibilityArea OnAgentEnterVisibilityArea;
+    public event OnAgentInVisibilityArea OnAgentExitVisibilityArea;
 
     private void Awake() {
         visibilityHandler = FindObjectOfType<VisibilityHandler>();
@@ -23,28 +24,43 @@ public class SignboardAwareAgent : MonoBehaviour {
     }
 
     private void Start() {
-        //TODO: Check if visibility info is available  
-        InvokeRepeating(nameof(simulationUpdate), 0f, 1f / updateFrequencyHz);
+        int agentTypesCount = visibilityHandler.agentTypes.Length;
+        SignboardsAroundPerAgentType = new List<IFCSignBoard>[agentTypesCount];
+        VisibleSignsPerAgentType = new List<IFCSignBoard>[agentTypesCount];
+        for (int i = 0; i < agentTypesCount; i++) {
+            SignboardsAroundPerAgentType[i] = new List<IFCSignBoard>();
+            VisibleSignsPerAgentType[i] = new List<IFCSignBoard>();
+        }
+        
+        InvokeRepeating(nameof(checkSigns), 0f, 1f / updateFrequencyHz);
     }
     
 
-    private void simulationUpdate() {
-        visibleSigns.Clear();
-        signsAround.Clear();
+    private void checkSigns() {
         for(int agentTypeID = 0; agentTypeID < visibilityHandler.agentTypes.Length; agentTypeID++) {
-            List<IFCSignBoard> visibleBoards = visibilityHandler.GetSignboardsVisible(this.transform.position, agentTypeID);
-            if(visibleBoards == null) {
+            List<IFCSignBoard> visibleBoardsThisTick = visibilityHandler.GetSignboardsVisible(this.transform.position, agentTypeID);
+            if(visibleBoardsThisTick == null) {
                 continue;
             }
-            signsAround.AddRange(visibleBoards);
+            SignboardsAroundPerAgentType[agentTypeID].Clear();
+            SignboardsAroundPerAgentType[agentTypeID].AddRange(visibleBoardsThisTick);
             
-            visibleBoards.RemoveAll(visibleBoard => !VisibilityHandler.IsSignboardInFOV(this.transform, visibleBoard, agent.AgentFOVDegrees));
-            if (visibleBoards.Count > 0) {
-                OnAgentEnterVisibilityArea?.Invoke(visibleBoards, agentTypeID); //TODO: Check if it's already inside
+            visibleBoardsThisTick.RemoveAll(visibleBoardThisTick => !VisibilityHandler.IsSignboardInFOV(this.transform, visibleBoardThisTick, agent.AgentFOVDegrees));
+
+            foreach (IFCSignBoard visibleBoardThisTick in visibleBoardsThisTick) {
+                if (!VisibleSignsPerAgentType[agentTypeID].Contains(visibleBoardThisTick)) {
+                    OnAgentEnterVisibilityArea?.Invoke(visibleBoardsThisTick, visibleBoardThisTick, agentTypeID);
+                }
             }
-            visibleSigns.AddRange(visibleBoards);
+            foreach (IFCSignBoard visibleBoardLastTick in VisibleSignsPerAgentType[agentTypeID]) {
+                if (!visibleBoardsThisTick.Contains(visibleBoardLastTick)) {
+                    OnAgentExitVisibilityArea?.Invoke(visibleBoardsThisTick, visibleBoardLastTick, agentTypeID);
+                }
+            }
+            
+            VisibleSignsPerAgentType[agentTypeID].Clear();
+            VisibleSignsPerAgentType[agentTypeID].AddRange(visibleBoardsThisTick);
         }
-        //TODO: Add visible signs to list
     }
     
     

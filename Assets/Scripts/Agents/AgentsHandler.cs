@@ -7,12 +7,20 @@ public class AgentsHandler : MonoBehaviour{
     private static readonly List<Agent> Agents = new();
     public int AgentCount => Agents.Count;
     
+    
+    public delegate void OnAgentsChanged(Agent agent);
+    public event OnAgentsChanged OnAgentSpawnedEvent;
+    public event OnAgentsChanged BeforeAgentDestroyedEvent;
+    public event OnAgentsChanged OnAgentDestroyedEvent;
+    
     public void OnAgentSpawned(Agent agent) {
         Agents.Add(agent);
+        OnAgentSpawnedEvent?.Invoke(agent);
     }
 
     public void OnAgentDestroyed(Agent agent) {
         Agents.Remove(agent);
+        OnAgentDestroyedEvent?.Invoke(agent);
     }
 
     // ReSharper disable Unity.PerformanceAnalysis
@@ -28,6 +36,7 @@ public class AgentsHandler : MonoBehaviour{
     }
 
     public void DestroyAgent(Agent agent) {
+        BeforeAgentDestroyedEvent?.Invoke(agent);
         Destroy(agent.gameObject);
         OnAgentDestroyed(agent);
     }

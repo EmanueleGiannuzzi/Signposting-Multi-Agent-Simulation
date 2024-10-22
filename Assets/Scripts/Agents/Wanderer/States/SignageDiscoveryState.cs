@@ -29,7 +29,7 @@ namespace Agents.Wanderer.States {
         protected override void EnterState() {
             ExitReason = Reason.None;
             
-            IEnumerable<IFCSignBoard> visibleBoards = signboardAwareAgent.visibleSigns.Subtract(agentWanderer.VisitedSigns);
+            IEnumerable<IFCSignBoard> visibleBoards = signboardAwareAgent.VisibleSignsPerAgentType[agentWanderer.agentTypeID].Subtract(agentWanderer.VisitedSigns);
             IFCSignBoard[] visibleBoardsArray = visibleBoards as IFCSignBoard[] ?? visibleBoards.ToArray();
             if (!visibleBoardsArray.Any()) {
                 onNoSignFound();

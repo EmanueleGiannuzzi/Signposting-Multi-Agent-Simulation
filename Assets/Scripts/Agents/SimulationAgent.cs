@@ -3,12 +3,11 @@ using UnityEngine;
 
 [RequireComponent(typeof(SignboardAwareAgent))]
 public class SimulationAgent : MonoBehaviour {
-    
     private VisibilityHandler visibilityHandler;
     private SignboardAwareAgent signboardAwareAgent;
     
-    private List<IFCSignBoard>[] signboardEncounteredPerAgentType;
-    private BoardsEncounter[] boardsEncountersPerAgentType;
+    private Dictionary<IFCSignBoard, float>[] boardsEncountersPerAgentType;
+    private Dictionary<IFCSignBoard, int>[] signboardAgentViewsPerAgentType; //[agentTypeID, signageBoardID]
 
     [SerializeField] private bool _isSimulationEnabled = false;
     public bool simulationEnabled {
@@ -24,11 +23,10 @@ public class SimulationAgent : MonoBehaviour {
         }
     }
     
-    private int agentTypeSize => visibilityHandler.agentTypes.Length;
-
-    private class BoardsEncounter {
-        public readonly Dictionary<IFCSignBoard, float> visibleBoards = new();//Board-First seen time(Time.time)
-    }
+    public delegate void OnSimulationAgentsFinished(SimulationAgent simulationAgent, Dictionary<IFCSignBoard, int>[] signboardAgentViewsPerAgentType);
+    public event OnSimulationAgentsFinished OnSimulationAgentsFinishedEvent;
+    
+    private int agentTypeSize;
 
     private void Awake() {
         visibilityHandler = FindObjectOfType<VisibilityHandler>();
@@ -38,52 +36,50 @@ public class SimulationAgent : MonoBehaviour {
 
         signboardAwareAgent = GetComponent<SignboardAwareAgent>();
         signboardAwareAgent.OnAgentEnterVisibilityArea += onAgentEnterVisibilityArea;
+        signboardAwareAgent.OnAgentExitVisibilityArea += onAgentExitVisibilityArea;
     }
+    
     private void Start() {
-        boardsEncountersPerAgentType = new BoardsEncounter[agentTypeSize];
+        agentTypeSize = visibilityHandler.agentTypes.Length;
+        boardsEncountersPerAgentType = new Dictionary<IFCSignBoard, float>[agentTypeSize];
         if (_isSimulationEnabled) {
             onSimulationStarted();
         }
     }
-
+    
     private void onSimulationStarted() {
-        signboardEncounteredPerAgentType = new List<IFCSignBoard>[agentTypeSize];
-        for(int i = 0; i < agentTypeSize; i++) {
-            signboardEncounteredPerAgentType[i] = new List<IFCSignBoard>();
-        }
+        clearData();
     }
 
     private void onSimulationStopped() {
-        signboardEncounteredPerAgentType = null;
+        OnSimulationAgentsFinishedEvent?.Invoke(this, signboardAgentViewsPerAgentType);
     }
 
-    private void onAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
-        BoardsEncounter boardsEncounters = boardsEncountersPerAgentType[agentTypeID];
-        if(boardsEncounters == null) {
-            boardsEncounters = new BoardsEncounter();
+    private void clearData() {
+        boardsEncountersPerAgentType = new Dictionary<IFCSignBoard, float>[agentTypeSize];
+        signboardAgentViewsPerAgentType = new Dictionary<IFCSignBoard, int>[agentTypeSize];
+        for(int i = 0; i < agentTypeSize; i++) {
+            boardsEncountersPerAgentType[i] = new Dictionary<IFCSignBoard, float>();
+            signboardAgentViewsPerAgentType[i] = new Dictionary<IFCSignBoard, int>();
         }
-        float now = Time.time;
+    }
 
-        foreach(IFCSignBoard signageBoard in visibleBoards) {
-            boardsEncounters.visibleBoards.TryAdd(signageBoard, now);
-        }
-        List<IFCSignBoard> signBoardsToRemove = new ();
-        foreach(KeyValuePair<IFCSignBoard, float> boardEncounter in boardsEncounters.visibleBoards) {
-            IFCSignBoard signboard = boardEncounter.Key;
-            if(!visibleBoards.Contains(signboard)) {
-                signBoardsToRemove.Add(signboard);
-
-                List<IFCSignBoard> signboardEncountered = signboardEncounteredPerAgentType[agentTypeID];
-                if(!signboardEncountered.Contains(signboard)) {
-                    signboardEncountered.Add(signboard);
+    private void onAgentExitVisibilityArea(List<IFCSignBoard> visibleBoards, IFCSignBoard signboard, int agentTypeID) {
+        if (boardsEncountersPerAgentType[agentTypeID].TryGetValue(signboard, out float enterTime)) {
+            float exitTime = Time.time;
+            float residenceTime = exitTime - enterTime;
+            
+            if(residenceTime >= signboard.MinimumReadingTime) {
+                if(!signboardAgentViewsPerAgentType[agentTypeID].TryAdd(signboard, 1)) {
+                    signboardAgentViewsPerAgentType[agentTypeID][signboard]++;
                 }
             }
+            boardsEncountersPerAgentType[agentTypeID].Remove(signboard);
         }
+    }
 
-        foreach(IFCSignBoard signboardToRemove in signBoardsToRemove) {
-            boardsEncounters.visibleBoards.Remove(signboardToRemove);
-        }
-
-        boardsEncountersPerAgentType[agentTypeID] = boardsEncounters;
+    private void onAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, IFCSignBoard signboard, int agentTypeID) {
+        float enterTime = Time.time;
+        boardsEncountersPerAgentType[agentTypeID].TryAdd(signboard, enterTime);
     }
 }

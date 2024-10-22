@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
 
-public class RoutedSpawnArea : SpawnAreaBase, IRouteMarker {
+public class CPTRoutedSpawnArea : SpawnAreaBase, IRouteMarker {
     string IRouteMarker.GetName() {
         return this.name;
     }

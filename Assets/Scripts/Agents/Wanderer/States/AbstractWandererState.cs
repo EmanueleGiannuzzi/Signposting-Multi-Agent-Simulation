@@ -27,9 +27,9 @@ namespace Agents.Wanderer.States {
             agentWanderer.DestinationMarkerReachedEvent += onDestinationMarkerReached;
         }
         
-        private void onAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
+        private void onAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, IFCSignBoard signboard, int agentTypeID) {
             if (isActive) {
-                OnAgentEnterVisibilityArea(visibleBoards, agentTypeID);
+                OnAgentEnterVisibilityArea(visibleBoards, signboard, agentTypeID);
             }
         }
 
@@ -47,7 +47,7 @@ namespace Agents.Wanderer.States {
         
         protected virtual void OnDestinationMarkerReached(IRouteMarker marker) {}
 
-        protected virtual void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {}
+        protected virtual void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, IFCSignBoard signboard, int agentTypeID) {}
 
         public void Initialize() {
             IsDone = false;

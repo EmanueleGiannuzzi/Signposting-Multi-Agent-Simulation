@@ -51,7 +51,7 @@ namespace Agents.Wanderer.States {
             }
         }
         
-        protected override void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, int agentTypeID) {
+        protected override void OnAgentEnterVisibilityArea(List<IFCSignBoard> visibleBoards, IFCSignBoard signboard, int agentTypeID) {
             if (agentTypeID != agentWanderer.agentTypeID) {
                 return;
             }
