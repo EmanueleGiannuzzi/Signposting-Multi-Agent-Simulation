@@ -27,8 +27,13 @@ public class BestSignboard : MonoBehaviour {
 
     private void clearData() {
         totalSignboardViewsPerAgentType = new Dictionary<IFCSignBoard, int>[agentTypeSize];
-        for (int i = 0; i < agentTypeSize; i++) {
-            totalSignboardViewsPerAgentType[i] = new Dictionary<IFCSignBoard, int>();
+        for (int agentTypeID = 0; agentTypeID < agentTypeSize; agentTypeID++) {
+            totalSignboardViewsPerAgentType[agentTypeID] = new Dictionary<IFCSignBoard, int>();
+        }
+
+        foreach (IFCSignBoard signboard in SignboardHelper.GetIFCSignboards()) {
+            SignboardVisibility signboardVisibility = signboard.GetComponent<SignboardVisibility>();
+            signboardVisibility.VisibilityPerAgentType = new float[agentTypeSize];
         }
     }
 
@@ -40,12 +45,14 @@ public class BestSignboard : MonoBehaviour {
     }
 
     private void onAgentSimulationFinished(SimulationAgent simulationAgent, Dictionary<IFCSignBoard, int>[] signboardAgentViewsPerAgentType) {
-        for (int i = 0; i < agentTypeSize; i++) {
-            foreach (IFCSignBoard signboard in signboardAgentViewsPerAgentType[i].Keys) {
-                int viewCount = signboardAgentViewsPerAgentType[i][signboard];
-                if (!totalSignboardViewsPerAgentType[i].TryAdd(signboard, viewCount)) {
-                    totalSignboardViewsPerAgentType[i][signboard] += viewCount;
+        for (int agentTypeID = 0; agentTypeID < agentTypeSize; agentTypeID++) {
+            foreach (IFCSignBoard signboard in signboardAgentViewsPerAgentType[agentTypeID].Keys) {
+                int viewCount = signboardAgentViewsPerAgentType[agentTypeID][signboard];
+                if (!totalSignboardViewsPerAgentType[agentTypeID].TryAdd(signboard, viewCount)) {
+                    totalSignboardViewsPerAgentType[agentTypeID][signboard] += viewCount;
                 }
+                SignboardVisibility signboardVisibility = signboard.GetComponent<SignboardVisibility>();
+                signboardVisibility.VisibilityPerAgentType[agentTypeID] += viewCount;
             }
         }
         agentsHandler.DestroyAgent(simulationAgent.GetComponent<Agent>());
