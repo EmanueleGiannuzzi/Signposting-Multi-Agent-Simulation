@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fa69fa30-2d10-43b0-9659-b7890d89d5eb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Editor/BestSignboardCSVExporterEditor.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Editor/BestSignboardCSVExporterEditor.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/BestSignboardCSVExporter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/BestSignboardCSVExporter.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BestSignboard/Test1-VisibilityData.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BestSignboard/Test2-VisibilityData.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Signposting-Multi-Agent-Simulation/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Validation/BestSignboard.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Validation/BestSignboard.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Visibility/VisibilityHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Visibility/VisibilityHandler.cs" afterDir="false" />
-    </list>
+    <list default="true" id="fa69fa30-2d10-43b0-9659-b7890d89d5eb" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -319,7 +309,7 @@
       <workItem from="1729597615002" duration="228000" />
       <workItem from="1729597854659" duration="15000" />
       <workItem from="1729597878180" duration="14496000" />
-      <workItem from="1729681263251" duration="626000" />
+      <workItem from="1729681263251" duration="1222000" />
     </task>
     <servers />
   </component>
